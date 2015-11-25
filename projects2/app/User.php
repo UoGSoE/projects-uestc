@@ -37,6 +37,32 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $hidden = ['password', 'remember_token'];
 
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function projects()
+    {
+        if ($this->is_student) {
+            return $this->belongsToMany(Project::class, 'project_student');
+        }
+        return $this->hasMany(Project::class);
+    }
+
+    public function assignRole(Role $role)
+    {
+        $this->roles()->save($role);
+    }
+
+    public function hasRole($role)
+    {
+        if (is_string($role)) {
+            return $this->roles->contains('title', $role);
+        }
+        return !! $role->intersect($this->roles)->count();
+    }
+
     public function fullName()
     {
         return $this->forenames . ' ' . $this->surname;
