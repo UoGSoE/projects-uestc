@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"path": "projects2/resources/views"
+		},
+		{
+			"path": "projects2/app"
+		},
+		{
+			"path": "projects2/tests"
+		},
+		{
+			"path": "projects2/database/migrations"
+		}
+	]
+}

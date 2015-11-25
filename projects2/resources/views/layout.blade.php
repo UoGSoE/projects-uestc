@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Student Projects - {{{ $page_title or '' }}}</title>
+    <link rel="stylesheet" href="{!! asset('vendor/bootstrap/css/bootstrap.min.css') !!}" media="print,screen" />
+    <link rel="stylesheet" href="{!! asset('vendor/animate.css') !!}" media="screen" />
+	<script src="{!! asset('vendor/jquery.min.js') !!}"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+
+	@include ('partials.navbar')
+
+	<div class="container">
+
+		<noscript>
+			<div class="alert alert-danger"><strong>Warning:</strong> This site will not work correctly without javascript</div>
+		</noscript>
+
+		@include ('partials.alerts')
+
+        @yield('content')
+	</div><!-- container -->
+
+	<br />
+	<div id="footer">
+	  <hr />
+      <div class="container">
+        <p class="text-muted pull-right">&copy; School of Engineering - University of Glasgow {!! date('Y') !!}</p>
+      </div>
+    </div>
+
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    <script>
+    	$( document ).ready(function() {
+	    	//$(".datepicker").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true });
+    		$('.select2').select2();
+			$('a[data-confirm]').click(function(ev) {
+				var href = $(this).attr('href');
+				if (!$('#dataConfirmModal').length) {
+					$('body').append('<div id="dataConfirmModal" class="modal fade" aria-labelledby="dataConfirmLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-body"></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button><a class="btn btn-primary" id="dataConfirmOK">OK</a></div></div></div>');
+				}
+				$('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+				$('#dataConfirmOK').attr('href', href);
+				$('#dataConfirmModal').modal({show:true});
+				return false;
+			});
+		});
+    </script>
+</body>
+</html>
