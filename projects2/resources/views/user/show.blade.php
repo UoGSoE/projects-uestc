@@ -4,7 +4,7 @@
     <div class="container">
         <h2>
             Details for {{ $user->fullName() }}
-            [<a href="{!! action('UserController@edit', $user->id) !!}">Edit</a>]
+            <a href="{!! action('UserController@edit', $user->id) !!}" class="btn btn-default">Edit</a>
         </h2>
         <dl>
             <dt>Username</dt>
@@ -14,13 +14,17 @@
             <dt>Type</dt>
             <dd>{{ $user->password ? 'External' : 'Internal' }}</dd>
             <dt>Roles</dt>
-            <dd>
-                <ul class="list-inline">
-                    @foreach ($user->roles as $role)
-                        <li>{{ $role->label }}</li>
-                    @endforeach
-                </ul>
-            </dd>
+            @if ($user->roles()->count() > 0)
+                <dd>
+                    <ul class="list-inline">
+                        @foreach ($user->roles as $role)
+                            <li title="@foreach ($role->permissions as $permission) {{ $permission->label }}, @endforeach">{{ $role->label }}</li>
+                        @endforeach
+                    </ul>
+                </dd>
+            @else
+                Regular User
+            @endif
         </dl>
         <h2>Current Projects</h2>
         @if ($user->projects->count() == 0)

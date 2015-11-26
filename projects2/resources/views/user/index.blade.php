@@ -2,7 +2,10 @@
 
 @section('content')
     <div class="container">
-        <h2>Current Users</h2>
+        <h2>
+            Current Users
+            <a href="{!! action('UserController@create') !!}" class="btn btn-default">Add New User</a>
+        </h2>
         <table class="table table-striped table-hover datatable">
             <thead>
                 <tr>

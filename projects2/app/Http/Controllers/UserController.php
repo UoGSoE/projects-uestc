@@ -28,11 +28,23 @@ class UserController extends Controller
     public function create()
     {
         $user = new User;
-        return view('user.create', compact('user'));
+        $roles = Role::orderBy('label')->get();
+        return view('user.create', compact('user', 'roles'));
     }
 
     public function store(Request $request)
     {
+        $user = new User;
+        $user->fill($request->input());
+        if ($user->password) {
+            $user->password = bcrypt($user->password);
+        }
+        $user->save();
+        if ($request->roles) {
+            $role = Role::findOrFail($request->roles);
+            $user->assignRole($role);
+        }
+        return redirect()->action('UserController@show', $user->id);
     }
 
     public function edit($userId)
@@ -44,6 +56,18 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
+        $user = User::findOrFail($request->id);
+        $user->fill($request->input());
+        if ($user->password) {
+            $user->password = bcrypt($user->password);
+        }
+        $user->save();
+        if ($request->roles) {
+            error_log("HASROLE");
+            $role = Role::findOrFail($request->roles);
+            $user->assignRole($role);
+        }
+        return redirect()->action('UserController@show', $user->id);
     }
 
     public function destroy(Request $request)

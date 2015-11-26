@@ -28,7 +28,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['username', 'email', 'password', 'surname', 'forenames'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -68,8 +68,8 @@ class User extends Model implements AuthenticatableContract,
         return $this->forenames . ' ' . $this->surname;
     }
 
-    public function isAdmin()
+    public function isStaff()
     {
-        return true;
+        return ! $this->is_student;
     }
 }

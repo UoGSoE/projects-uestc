@@ -30,8 +30,8 @@
 			              		<li><a href="{!! action('UserController@index') !!}">Create/Edit Users</a></li>
 			              	@endcan
 			              	@can('edit_courses')
-			              		<li><a href="">Edit Courses</a></li>
-			              		<li><a href="">Edit Programmes</a></li>
+			              		<li><a href="{!! action('CourseController@index') !!}">Edit Courses</a></li>
+			              		<li><a href="{!! action('ProgrammeController@index') !!}">Edit Programmes</a></li>
 			              	@endcan
 			              	@can('edit_site_permissions')
 			              		<li><a href="">Edit Site Permissions</a></li>

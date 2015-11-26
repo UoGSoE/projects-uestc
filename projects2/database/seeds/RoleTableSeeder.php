@@ -15,10 +15,6 @@ class RoleTableSeeder extends Seeder
         Model::unguard();
 
         DB::table('roles')->insert([
-            'title' => 'basic_admin',
-            'label' => 'Basic Admin'
-        ]);
-        DB::table('roles')->insert([
             'title' => 'site_admin',
             'label' => 'Site Administrator'
         ]);
