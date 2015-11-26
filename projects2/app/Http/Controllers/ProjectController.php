@@ -58,8 +58,18 @@ class ProjectController extends Controller
         $project->description = $request->description;
         $project->prereq = $request->prereq;
         $project->user_id = $request->user_id;
+        $project->type_id = $request->type_id;
+        $project->is_active = $request->is_active;
+        $project->maximum_students = $request->maximum_students;
+        if ($request->location_id > 0) {
+            $project->location_id = $request->location_id;
+        } else {
+            $project->location_id = null;
+        }
         $project->save();
         $project->courses()->sync($request->courses);
+        $project->programmes()->sync($request->programmes);
+        return redirect()->action('ProjectController@show', $project->id);
     }
 
     /**
@@ -70,7 +80,8 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        //
+        $project = Project::findOrFail($id);
+        return view('project.show', compact('project'));
     }
 
     /**

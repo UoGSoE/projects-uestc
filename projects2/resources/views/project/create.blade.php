@@ -28,7 +28,7 @@
             <label for="inputProgrammes">Programmes</label>
             <select id="inputProgrammes" name="programmes[]" class="form-control select2" multiple required>
                 @foreach ($programmes as $programme)
-                    <option value="$programme->id">{{ $programme->title }}</option>
+                    <option value="{{ $programme->id }}">{{ $programme->title }}</option>
                 @endforeach
             </select>
         </div>
@@ -36,7 +36,7 @@
             <label for="inputCourses">Courses</label>
             <select id="inputCourses" name="courses[]" class="form-control select2" multiple required>
                 @foreach ($courses as $course)
-                    <option value="$course->id">{{ $course->code }} {{ $course->title }}</option>
+                    <option value="{{ $course->id }}">{{ $course->code }} {{ $course->title }}</option>
                 @endforeach
             </select>
         </div>
@@ -53,7 +53,7 @@
         </div>
         <div class="form-group">
             <label for="inputType">Type</label>
-            <select id="inputType" name="location_id" class="form-control" required>
+            <select id="inputType" name="type_id" class="form-control" required>
                 @foreach ($types as $type)
                     <option value="{{ $type->id }}" @if ($project->type_id == $type->id) selected @endif>
                         {{ $type->title }}

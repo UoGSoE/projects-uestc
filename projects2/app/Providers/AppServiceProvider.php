@@ -22,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
                 'Hej', 'Sa-wat-dee', 'Merhaba', 'Vitayu', 'Xin chào', 'Hylo; Sut Mae?', 'Sholem Aleychem', 'Sawubona'
             ]);
         });
+        view()->composer('project.show', function ($view) {
+            $view->with('choices', [
+                '1' => '1st', '2' => '2nd', '3' => '3rd', '4' => '4th', '5' => '5th'
+            ]);
+        });
     }
 
     /**
