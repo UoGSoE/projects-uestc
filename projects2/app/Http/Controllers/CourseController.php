@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
+use App\User;
 use App\Course;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -94,5 +96,48 @@ class CourseController extends Controller
     {
         Course::destroy($id);
         return redirect()->action('CourseController@index');
+    }
+
+    public function editStudents($id)
+    {
+        $course = Course::findOrFail($id);
+        return view('course.edit_students', compact('course'));
+    }
+
+    public function updateStudents(Request $request, $id)
+    {
+        $course = Course::findOrFail($id);
+        $studentIds = [];
+        $sheet = Excel::load($request->file('file'))->get();
+        $rows = $sheet->all();
+        $students = User::students()->get();
+        foreach ($rows[0] as $row) {
+            if (!is_numeric($row[0])) {
+                continue;
+            }
+            $matric = sprintf('%07d', $row[0]);
+            $surname = $row[1];
+            $forenames = $row[2];
+            if (!preg_match('/[a-zA-Z]/', $surname)) {
+                continue;
+            }
+            if (!preg_match('/[a-zA-Z]/', $forenames)) {
+                continue;
+            }
+            $username = $matric . substr(strtolower($surname), 0, 1);
+            $student = $students->where('username', $username)->first();
+            if (!$student) {
+                $student = new User;
+                $student->is_student = true;
+                $student->username = $username;
+                $student->surname = $surname;
+                $student->forenames = $forenames;
+                $student->email = $username . '@student.gla.ac.uk';
+                $student->save();
+            }
+            $studentIds[] = $student->id;
+        }
+        $course->students()->sync($studentIds);
+        return redirect()->action('CourseController@show', $id);
     }
 }

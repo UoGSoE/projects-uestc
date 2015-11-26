@@ -33,6 +33,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/course/{id}/edit', 'CourseController@edit');
     Route::post('/course/{id}/edit', 'CourseController@update');
     Route::delete('/course/{id}', 'CourseController@destroy');
+    Route::get('/course/{id}/editstudents', 'CourseController@editStudents');
+    Route::patch('/course/{id}/editstudents', 'CourseController@updateStudents');
 
     // Programme routes
     Route::resource('programme', 'ProgrammeController');

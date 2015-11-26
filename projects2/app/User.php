@@ -42,6 +42,11 @@ class User extends Model implements AuthenticatableContract,
         return $this->belongsToMany(Role::class);
     }
 
+    public function scopeStudents($query)
+    {
+        return $query->where('is_student', '=', 1);
+    }
+
     public function projects()
     {
         if ($this->is_student) {
@@ -66,6 +71,14 @@ class User extends Model implements AuthenticatableContract,
     public function fullName()
     {
         return $this->forenames . ' ' . $this->surname;
+    }
+
+    public function matric()
+    {
+        if (!$this->is_student) {
+            return 'N/A';
+        }
+        return preg_replace('/[^0-9]+/', '', $this->username);
     }
 
     public function isStaff()
