@@ -24,10 +24,10 @@
                     be at least 12 characters long.
                 </p>
             </div>
+            @can('edit_user_roles')
             <div class="form-group">
-                <label for="inputRoles">Roles</label>
-                <select id="inputRoles" name="roles" class="form-control" required>
-                    <option value="0">Normal User</option>
+                <label for="inputRoles">Roles (Optional)</label>
+                <select id="inputRoles" name="roles[]" class="form-control select2" multiple>
                     @foreach ($roles as $role)
                         <option value="{{ $role->id }}" @if ($user->hasRole($role->title)) selected @endif>
                             {{ $role->label }}
@@ -35,3 +35,9 @@
                     @endforeach
                 </select>
             </div>
+            @endcan
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2();
+            });
+        </script>

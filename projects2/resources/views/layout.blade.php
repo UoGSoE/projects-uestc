@@ -6,6 +6,7 @@
     <title>Student Projects - {{{ $page_title or '' }}}</title>
     <link rel="stylesheet" href="{!! asset('vendor/bootstrap/css/bootstrap.min.css') !!}" media="print,screen" />
     <link rel="stylesheet" href="{!! asset('vendor/animate.css') !!}" media="screen" />
+    <link rel="stylesheet" href="{!! asset('vendor/select2/dist/css/select2.min.css') !!}" media="screen" />
 	<script src="{!! asset('vendor/jquery.min.js') !!}"></script>
 </head>
 <body>
@@ -32,6 +33,7 @@
     </div>
 
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{!! asset('vendor/select2/dist/js/select2.full.min.js') !!}"></script>
     <script>
     	$( document ).ready(function() {
 			$('a[data-confirm]').click(function(ev) {

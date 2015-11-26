@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+use App\ProjectType;
 use App\Http\Requests;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ProjectTypeController extends Controller
@@ -27,7 +27,8 @@ class ProjectTypeController extends Controller
      */
     public function create()
     {
-        //
+        $type = new ProjectType;
+        return view('projecttype.create', compact('type'));
     }
 
     /**
@@ -38,7 +39,10 @@ class ProjectTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $type = new ProjectType;
+        $type->title = $request->title;
+        $type->save();
+        return redirect()->action('ProjectTypeController@index');
     }
 
     /**
@@ -49,7 +53,8 @@ class ProjectTypeController extends Controller
      */
     public function show($id)
     {
-        //
+        $type = ProjectType::findOrFail($id);
+        return view('projecttype.show', compact('type'));
     }
 
     /**
@@ -60,7 +65,8 @@ class ProjectTypeController extends Controller
      */
     public function edit($id)
     {
-        //
+        $type = ProjectType::findOrFail($id);
+        return view('projecttype.edit', compact('type'));
     }
 
     /**
@@ -72,7 +78,10 @@ class ProjectTypeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $type = ProjectType::findOrFail($id);
+        $type->title = $request->title;
+        $type->save();
+        return redirect()->action('ProjectTypeController@index');
     }
 
     /**
@@ -83,6 +92,7 @@ class ProjectTypeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        ProjectType::destroy($id);
+        return redirect()->action('ProjectTypeController@index');
     }
 }

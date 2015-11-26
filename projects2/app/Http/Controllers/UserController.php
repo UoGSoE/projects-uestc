@@ -37,12 +37,14 @@ class UserController extends Controller
         $user = new User;
         $user->fill($request->input());
         if ($user->password) {
+            error_log('Setting password');
             $user->password = bcrypt($user->password);
         }
         $user->save();
         if ($request->roles) {
-            $role = Role::findOrFail($request->roles);
-            $user->assignRole($role);
+            $user->roles()->sync(array_filter($request->roles));
+        } else {
+            $user->roles()->detach();
         }
         return redirect()->action('UserController@show', $user->id);
     }
@@ -63,9 +65,9 @@ class UserController extends Controller
         }
         $user->save();
         if ($request->roles) {
-            error_log("HASROLE");
-            $role = Role::findOrFail($request->roles);
-            $user->assignRole($role);
+            $user->roles()->sync(array_filter($request->roles));
+        } else {
+            $user->roles()->detach();
         }
         return redirect()->action('UserController@show', $user->id);
     }
