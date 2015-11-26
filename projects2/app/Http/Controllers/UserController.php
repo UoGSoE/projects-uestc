@@ -73,6 +73,6 @@ class UserController extends Controller
     public function destroy(Request $request)
     {
         $user = User::destroy($request->id);
-        return redirect()->url('/');
+        return redirect()->action('UserController@index');
     }
 }

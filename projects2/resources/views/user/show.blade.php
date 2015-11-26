@@ -10,7 +10,7 @@
             <dt>Username</dt>
             <dd>{{ $user->username }}</dd>
             <dt>Email</dt>
-            <dd><a href="{{ $user->email }}">{{ $user->email }}</a></dd>
+            <dd><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></dd>
             <dt>Type</dt>
             <dd>{{ $user->password ? 'External' : 'Internal' }}</dd>
             <dt>Roles</dt>

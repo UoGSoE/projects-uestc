@@ -36,6 +36,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/course/{id}/editstudents', 'CourseController@editStudents');
     Route::patch('/course/{id}/editstudents', 'CourseController@updateStudents');
 
+    // Project routes
+    Route::resource('project', 'ProjectController');
+
+    // Project Type routes
+    Route::resource('projecttype', 'ProjectTypeController');
+
     // Programme routes
     Route::resource('programme', 'ProgrammeController');
 

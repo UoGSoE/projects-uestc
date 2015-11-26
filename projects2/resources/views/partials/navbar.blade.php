@@ -32,6 +32,7 @@
 			              	@can('edit_courses')
 			              		<li><a href="{!! action('CourseController@index') !!}">Edit Courses</a></li>
 			              		<li><a href="{!! action('ProgrammeController@index') !!}">Edit Programmes</a></li>
+			              		<li><a href="{!! action('ProjectTypeController@index') !!}">Edit Project Types</a></li>
 			              	@endcan
 			              	@can('edit_site_permissions')
 			              		<li><a href="">Edit Site Permissions</a></li>

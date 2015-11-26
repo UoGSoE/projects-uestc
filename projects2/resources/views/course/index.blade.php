@@ -21,7 +21,7 @@
                 <tr>
                     <td><a href="{!! action('CourseController@show', $course->id) !!}">{{ $course->code }}</a></td>
                     <td>{{ $course->title }}</td>
-                    <td>0</td>
+                    <td>{{ $course->students->count() }}</td>
                     <td>0</td>
                     <td>0</td>
                 </tr>

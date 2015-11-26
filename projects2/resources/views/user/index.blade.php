@@ -23,7 +23,10 @@
                         <td>{{ $user->surname }}</td>
                         <td>{{ $user->forenames }}</td>
                         <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
-                        <td>{{ $user->password ? 'External' : 'Internal' }}</td>
+                        <td>
+                            {{ $user->password ? 'External' : 'Internal' }}
+                            {{ $user->is_student ? 'Student' : 'Staff' }}
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

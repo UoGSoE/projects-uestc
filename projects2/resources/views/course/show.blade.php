@@ -18,7 +18,10 @@
             None
         @else
             @foreach ($course->students()->orderBy('surname')->get() as $student)
-                <li>{{ $student->fullName() }} ({{ $student->matric() }})</li>
+                <li>
+                    <a href="{!! action('UserController@show', $student->id) !!}">{{ $student->fullName() }}</a>
+                    ({{ $student->matric() }})
+                </li>
             @endforeach
         @endif
     </div>
