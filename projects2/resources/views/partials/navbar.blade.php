@@ -31,12 +31,13 @@
 			              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 			              <ul class="dropdown-menu">
 			              	@can('edit_users')
-			              		<li><a href="{!! action('UserController@index') !!}">Create/Edit Users</a></li>
+			              		<li><a href="{!! action('UserController@index') !!}">Users</a></li>
 			              	@endcan
 			              	@can('edit_courses')
-			              		<li><a href="{!! action('CourseController@index') !!}">Edit Courses</a></li>
-			              		<li><a href="{!! action('ProgrammeController@index') !!}">Edit Programmes</a></li>
-			              		<li><a href="{!! action('ProjectTypeController@index') !!}">Edit Project Types</a></li>
+			              		<li><a href="{!! action('CourseController@index') !!}">Courses</a></li>
+			              		<li><a href="{!! action('ProgrammeController@index') !!}">Programmes</a></li>
+			              		<li><a href="{!! action('ProjectTypeController@index') !!}">Project Types</a></li>
+			              		<li><a href="{!! action('LocationController@index') !!}">Locations</a></li>
 			              	@endcan
 			              	@can('edit_site_permissions')
 			              		<li><a href="">Edit Site Permissions</a></li>

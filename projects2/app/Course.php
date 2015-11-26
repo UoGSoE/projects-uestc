@@ -3,6 +3,7 @@
 namespace App;
 
 use App\User;
+use App\Location;
 use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
@@ -12,5 +13,10 @@ class Course extends Model
     public function students()
     {
         return $this->belongsToMany(User::class, 'course_student');
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
     }
 }

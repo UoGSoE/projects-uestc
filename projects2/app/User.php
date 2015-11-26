@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Course;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -47,12 +48,22 @@ class User extends Model implements AuthenticatableContract,
         return $query->where('is_student', '=', 1);
     }
 
+    public function scopeStaff($query)
+    {
+        return $query->where('is_student', '=', 0);
+    }
+
     public function projects()
     {
         if ($this->is_student) {
             return $this->belongsToMany(Project::class, 'project_student');
         }
         return $this->hasMany(Project::class);
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_student');
     }
 
     public function assignRole(Role $role)

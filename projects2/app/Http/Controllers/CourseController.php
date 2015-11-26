@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Excel;
 use App\User;
 use App\Course;
+use App\Location;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -30,7 +31,8 @@ class CourseController extends Controller
     public function create()
     {
         $course = new Course;
-        return view('course.create', compact('course'));
+        $locations = Location::orderBy('title')->get();
+        return view('course.create', compact('course', 'locations'));
     }
 
     /**
@@ -43,6 +45,9 @@ class CourseController extends Controller
     {
         $course = new Course;
         $course->fill($request->input());
+        if ($request->location_id) {
+            $course->location_id = $request->location_id;
+        }
         $course->save();
         return redirect()->action('CourseController@show', $course->id);
     }
@@ -68,7 +73,8 @@ class CourseController extends Controller
     public function edit($id)
     {
         $course = Course::findOrFail($id);
-        return view('course.edit', compact('course'));
+        $locations = Location::orderBy('title')->get();
+        return view('course.edit', compact('course', 'locations'));
     }
 
     /**
@@ -82,6 +88,9 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($id);
         $course->fill($request->input());
+        if ($request->location_id) {
+            $course->location_id = $request->location_id;
+        }
         $course->save();
         return redirect()->action('CourseController@show', $course->id);
     }
@@ -135,6 +144,9 @@ class CourseController extends Controller
                 $student->email = $username . '@student.gla.ac.uk';
                 $student->save();
             }
+            // remove any existing course associations - a student should (ha) only ever be enrolled on one
+            // project course at a time.
+            $student->courses()->detach();
             $studentIds[] = $student->id;
         }
         $course->students()->sync($studentIds);

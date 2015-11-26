@@ -25,6 +25,14 @@
             @else
                 Regular User
             @endif
+            @if ($user->is_student)
+                <dt>Enrolled On</dt>
+                <dd>
+                    <a href="{!! action('CourseController@show', $user->courses->first()->id) !!}">
+                        {{ $user->courses->first()->title }}
+                    </a>
+                </dd>
+            @endif
         </dl>
         <h2>Current Projects</h2>
         @if ($user->projects->count() == 0)

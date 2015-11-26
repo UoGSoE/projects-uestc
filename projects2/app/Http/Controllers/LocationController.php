@@ -2,18 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use App\User;
-use App\Course;
-use App\Project;
 use App\Location;
-use App\Programme;
-use App\ProjectType;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ProjectController extends Controller
+class LocationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,8 +16,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::orderBy('title')->get();
-        return view('project.index', compact('projects'));
+        $locations = Location::orderBy('title')->get();
+        return view('location.index', compact('locations'));
     }
 
     /**
@@ -33,16 +27,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $project = new Project;
-        $project->is_active = true;
-        $project->maximum_students = 1;
-        $project->user_id = Auth::user()->id;
-        $types = ProjectType::orderBy('title')->get();
-        $programmes = Programme::orderBy('title')->get();
-        $courses = Course::orderBy('title')->get();
-        $locations = Location::orderBy('title')->get();
-        $staff = User::staff()->orderBy('surname')->get();
-        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'locations', 'staff'));
+        $location = new Location;
+        return view('location.create', compact('location'));
     }
 
     /**
@@ -53,13 +39,10 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $project = new Project;
-        $project->title = $request->title;
-        $project->description = $request->description;
-        $project->prereq = $request->prereq;
-        $project->user_id = $request->user_id;
-        $project->save();
-        $project->courses()->sync($request->courses);
+        $location = new Location;
+        $location->title = $request->title;
+        $location->save();
+        return redirect()->action('LocationController@index');
     }
 
     /**
@@ -81,7 +64,8 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        //
+        $location = Location::findOrFail($id);
+        return view('location.edit', compact('location'));
     }
 
     /**
@@ -93,7 +77,10 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $location = Location::findOrFail($id);
+        $location->title = $request->title;
+        $location->save();
+        return redirect()->action('LocationController@index');
     }
 
     /**
@@ -104,6 +91,7 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Location::destroy($id);
+        return redirect()->action('LocationController@index');
     }
 }

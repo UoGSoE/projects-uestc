@@ -42,6 +42,9 @@ Route::group(['middleware' => ['auth']], function () {
     // Project Type routes
     Route::resource('projecttype', 'ProjectTypeController');
 
+    // Location routes
+    Route::resource('location', 'LocationController');
+
     // Programme routes
     Route::resource('programme', 'ProgrammeController');
 

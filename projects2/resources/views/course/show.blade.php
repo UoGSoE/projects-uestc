@@ -9,6 +9,8 @@
         <dl>
             <dt>Title</dt>
             <dd>{{ $course->title }}</dd>
+            <dt>Location</dt>
+            <dd>{{ $course->location_id ? $course->location->title : 'Anywhere' }}</dd>
         </dl>
         <h3>
             Students
