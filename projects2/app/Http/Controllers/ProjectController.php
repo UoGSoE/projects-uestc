@@ -154,4 +154,18 @@ class ProjectController extends Controller
         $staff = User::staff()->orderBy('surname')->get();
         return view('project.create', compact('project', 'types', 'programmes', 'courses', 'locations', 'staff'));
     }
+
+    public function acceptStudents(Request $request, $id)
+    {
+        $project = Project::findOrFail($id);
+        if (!$request->has('accepted')) {
+            return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'No changes');
+        }
+        $data = [];
+        foreach ($request->accepted as $student_id => $accepted) {
+            $data[$student_id] = [ 'accepted' => $accepted ];
+        }
+        $project->students()->sync($data);
+        return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'Allocations Saved');
+    }
 }

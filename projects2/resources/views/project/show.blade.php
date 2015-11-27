@@ -53,10 +53,14 @@
     <h3>
         Students
     </h3>
-    @cannot('allocate_students')
-        <p class="help-block">Note: You can only accept students who have made this project their first choice.</p>
-    @endcannot
-    <form method="POST" action="">
+    <p class="help-block">
+        Please be careful accepting or un-accepting students. This triggers an automatic email to the student
+        and can cause some confusion for them if you have made a mistake.
+        @cannot('allocate_students')
+            <br /><b>Note:</b> You can only accept students who have made this project their first choice.
+        @endcannot
+    </p>
+    <form method="POST" action="{!! action('ProjectController@acceptStudents', $project->id) !!}">
     {{ csrf_field() }}
     <table class="table table-hover">
         <thead>
@@ -70,7 +74,12 @@
         <tbody>
             @foreach ($project->students as $student)
                 <tr>
-                    <td>{{ $student->matric() }}</td>
+                    <td>
+                        {{ $student->matric() }}
+                        @if ($student->pivot->accepted)
+                            <span class="glyphicon glyphicon-ok" title="Accepted">
+                        @endif
+                    </td>
                     <td>{{ $student->fullName() }}</td>
                     <td>{{ $choices[$student->pivot->choice] }}</td>
                     <td>
@@ -88,7 +97,7 @@
             @endforeach
         </tbody>
     </table>
-    @if ($project->acceptedStudents->count() < $project->maximum_students)
+    @if ($project->acceptedStudents->count() < $project->maximum_students or Auth::user()->can('allocate_students'))
         <button type="submit" class="btn btn-primary pull-right">Allocate</button>
     @endif
     </form>

@@ -90,7 +90,7 @@ class UserController extends Controller
      */
     public function chooseProjects(Request $request)
     {
-        $student = User::findOrFail(Auth::user()->id);
+        $student = Auth::user();
         $first = $request->first;
         $second = $request->second;
         // $third = $request->third;
@@ -105,6 +105,6 @@ class UserController extends Controller
             // $fifth => ['choice' => 5],
         ];
         $student->projects()->sync($choices);
-        return redirect()->to('/');
+        return redirect()->to('/')->with('success_message', 'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.');
     }
 }
