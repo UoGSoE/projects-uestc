@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Role;
 use App\User;
 use App\Location;
@@ -80,5 +81,30 @@ class UserController extends Controller
     {
         $user = User::destroy($request->id);
         return redirect()->action('UserController@index');
+    }
+
+    /**
+     * Store a students project choices
+     * @param  Request $request
+     * @return Response
+     */
+    public function chooseProjects(Request $request)
+    {
+        $student = User::findOrFail(Auth::user()->id);
+        $first = $request->first;
+        $second = $request->second;
+        // $third = $request->third;
+        // $fourth = $request->fourth;
+        // $fifth = $request->fifth;
+        $student->projects()->detach();
+        $choices = [
+            $first => ['choice' => 1],
+            $second => ['choice' => 2],
+            // $third => ['choice' => 3],
+            // $fourth => ['choice' => 4],
+            // $fifth => ['choice' => 5],
+        ];
+        $student->projects()->sync($choices);
+        return redirect()->to('/');
     }
 }

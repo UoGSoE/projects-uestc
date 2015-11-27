@@ -17,6 +17,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     // User routes
+    Route::post('/user/chooseprojects', 'UserController@chooseProjects');
     Route::get('/user', 'UserController@index');
     Route::get('/user/create', 'UserController@create');
     Route::post('/user/create', 'UserController@store');

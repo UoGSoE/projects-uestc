@@ -50,7 +50,14 @@
             </ul>
         </dd>
     </dl>
-    <h3>Students</h3>
+    <h3>
+        Students
+    </h3>
+    @cannot('allocate_students')
+        <p class="help-block">Note: You can only accept students who have made this project their first choice.</p>
+    @endcannot
+    <form method="POST" action="">
+    {{ csrf_field() }}
     <table class="table table-hover">
         <thead>
             <tr>
@@ -81,4 +88,8 @@
             @endforeach
         </tbody>
     </table>
+    @if ($project->acceptedStudents->count() < $project->maximum_students)
+        <button type="submit" class="btn btn-primary pull-right">Allocate</button>
+    @endif
+    </form>
 @stop

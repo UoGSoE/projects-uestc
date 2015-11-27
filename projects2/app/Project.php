@@ -28,6 +28,11 @@ class Project extends Model
         return $this->belongsToMany(User::class, 'project_student')->withPivot('choice', 'accepted');
     }
 
+    public function acceptedStudents()
+    {
+        return $this->students()->wherePivot('accepted', '=', 1);
+    }
+
     public function type()
     {
         return $this->belongsTo(ProjectType::class, 'type_id');

@@ -8,6 +8,8 @@
 <p>
     Please choose five projects in order of preference.
 </p>
+<form method="POST" action="{!! action('UserController@chooseProjects') !!}">
+{{ csrf_field() }}
 @foreach (Auth::user()->availableProjects() as $project)
     <div class="panel panel-default">
         <div class="panel-heading fake-link">
@@ -38,6 +40,7 @@
         </div>
     </div>
 @endforeach
+<button type="submit" class="btn btn-primary">Submit Choices</button>
 <script>
 $(document).ready(function() {
     $('.panel-title').click(function() {

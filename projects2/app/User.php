@@ -56,7 +56,7 @@ class User extends Model implements AuthenticatableContract,
     public function projects()
     {
         if ($this->is_student) {
-            return $this->belongsToMany(Project::class, 'project_student');
+            return $this->belongsToMany(Project::class, 'project_student')->withPivot('choice', 'accepted');
         }
         return $this->hasMany(Project::class);
     }
