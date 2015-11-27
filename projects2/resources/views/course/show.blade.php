@@ -11,6 +11,18 @@
             <dd>{{ $course->title }}</dd>
             <dt>Location</dt>
             <dd>{{ $course->location_id ? $course->location->title : 'Anywhere' }}</dd>
+            <dt>Projects</dt>
+            <dd>
+                <ul class="list-inline">
+                    @foreach ($course->projects as $project)
+                        <li>
+                            <a href="{!! action('ProjectController@show', $project->id) !!}">
+                                {{ $project->title }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </dd>
         </dl>
         <h3>
             Students

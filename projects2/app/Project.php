@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
+    protected $fillable = ['title', 'description', 'prereq', 'is_active', 'user_id', 'type_id', 'maximum_students'];
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -18,7 +20,7 @@ class Project extends Model
 
     public function type()
     {
-        return $this->hasOne(ProjectType::class, 'type_id');
+        return $this->belongsTo(ProjectType::class, 'type_id');
     }
 
     public function programmes()
@@ -34,5 +36,15 @@ class Project extends Model
     public function location()
     {
         return $this->belongsTo(Location::class);
+    }
+
+    public function hasProgramme($id)
+    {
+        return $this->programmes->contains($id);
+    }
+
+    public function hasCourse($id)
+    {
+        return $this->courses->contains($id);
     }
 }

@@ -4,6 +4,11 @@
 
     <h2>
         Project Details
+        @can('edit_this_project', $project)
+            <a href="{!! action('ProjectController@edit', $project->id) !!}" class="btn btn-default">
+                Edit
+            </a>
+        @endcan
     </h2>
     <dl>
         <dt>Title</dt>
@@ -32,7 +37,15 @@
         <dd>
             <ul class="list-inline">
                 @foreach ($project->courses as $course)
-                    <li>{{ $course->code }} {{ $course->title }}</li>
+                    @can('edit_courses')
+                        <li>
+                            <a href="{!! action('CourseController@show', $course->id) !!}">
+                                {{ $course->code }} {{ $course->title }}</li>
+                            </a>
+                        </li>
+                    @else
+                        <li>{{ $course->code }} {{ $course->title }}</li>
+                    @endcan
                 @endforeach
             </ul>
         </dd>
@@ -54,7 +67,15 @@
                     <td>{{ $student->fullName() }}</td>
                     <td>{{ $choices[$student->pivot->choice] }}</td>
                     <td>
-                        <input type="checkbox" value="1" @if ($student->pivot->accepted) checked @endif>
+                        @can('allocate_students')
+                            <input type="hidden" value="0" name="accepted[{{ $student->id }}]">
+                            <input type="checkbox" value="1" name="accepted[{{ $student->id }}]" @if ($student->pivot->accepted) checked @endif>
+                        @else
+                            @if ($student->pivot->choice == 1)
+                                <input type="hidden" value="0" name="accepted[{{ $student->id }}]">
+                                <input type="checkbox" value="1" name="accepted[{{ $student->id }}]" @if ($student->pivot->accepted) checked @endif>
+                            @endif
+                        @endcan
                     </td>
                 </tr>
             @endforeach

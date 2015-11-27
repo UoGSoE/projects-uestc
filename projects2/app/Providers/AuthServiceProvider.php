@@ -32,6 +32,16 @@ class AuthServiceProvider extends ServiceProvider
                 return $user->hasRole($permission->roles);
             });
         }
+
+        $gate->define('edit_this_project', function ($user, $project) {
+            if ($user->hasRole('teaching_office')) {
+                return true;
+            }
+            if ($user->hasRole('site_admin')) {
+                return true;
+            }
+            return $user->id == $project->user_id;
+        });
     }
 
     protected function getPermissions()

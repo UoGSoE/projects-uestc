@@ -19,4 +19,9 @@ class Course extends Model
     {
         return $this->belongsTo(Location::class);
     }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class);
+    }
 }

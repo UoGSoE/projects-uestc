@@ -54,13 +54,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $project = new Project;
-        $project->title = $request->title;
-        $project->description = $request->description;
-        $project->prereq = $request->prereq;
-        $project->user_id = $request->user_id;
-        $project->type_id = $request->type_id;
-        $project->is_active = $request->is_active;
-        $project->maximum_students = $request->maximum_students;
+        $project->fill($request->input());
         if ($request->location_id > 0) {
             $project->location_id = $request->location_id;
         } else {
@@ -92,7 +86,13 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        //
+        $project = Project::findOrFail($id);
+        $types = ProjectType::orderBy('title')->get();
+        $programmes = Programme::orderBy('title')->get();
+        $courses = Course::orderBy('title')->get();
+        $locations = Location::orderBy('title')->get();
+        $staff = User::staff()->orderBy('surname')->get();
+        return view('project.edit', compact('project', 'types', 'programmes', 'courses', 'locations', 'staff'));
     }
 
     /**
@@ -104,7 +104,17 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $project = Project::findOrFail($id);
+        $project->fill($request->input());
+        if ($request->location_id > 0) {
+            $project->location_id = $request->location_id;
+        } else {
+            $project->location_id = null;
+        }
+        $project->save();
+        $project->courses()->sync($request->courses);
+        $project->programmes()->sync($request->programmes);
+        return redirect()->action('ProjectController@show', $project->id);
     }
 
     /**
@@ -115,6 +125,7 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Project::destroy($id);
+        return redirect()->action('ProjectController@index');
     }
 }
