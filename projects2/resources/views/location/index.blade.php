@@ -23,7 +23,7 @@
                         </a>
                     </td>
                     <td>{{ $location->courses->count() }}</td>
-                    <td>0</td>
+                    <td>{{ $location->activeProjects->count() }}</td>
                 </tr>
             @endforeach
         </tbody>

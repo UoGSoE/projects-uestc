@@ -57,6 +57,9 @@ Route::group(['middleware' => ['auth']], function () {
     // Programme routes
     Route::resource('programme', 'ProgrammeController');
 
+    // Report routes
+    Route::get('/report/projects', 'ReportController@allProjects');
+    Route::get('/report/students', 'ReportController@allStudents');
 });
 
 // Define our authentication middleware controller

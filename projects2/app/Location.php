@@ -12,6 +12,16 @@ class Location extends Model
         return $this->hasMany(Course::class);
     }
 
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function activeProjects()
+    {
+        return $this->projects()->where('is_active', '=', 1);
+    }
+
     public static function getDefault()
     {
         return static::whereTitle('Glasgow')->first();

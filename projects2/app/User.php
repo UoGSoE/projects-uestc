@@ -78,9 +78,6 @@ class User extends Model implements AuthenticatableContract,
     public function availableProjects()
     {
         $course = $this->course();
-        // if ($course->location_id) {
-        //     return Project::active()->forLocation($course->location_id)->orderBy('title')->get();
-        // }
         return Project::active()->forLocation($course->location_id)->orderBy('title')->get();
     }
 
@@ -116,5 +113,10 @@ class User extends Model implements AuthenticatableContract,
     public function isStaff()
     {
         return ! $this->is_student;
+    }
+
+    public function projectChoice($choice = 1)
+    {
+        return $this->projects()->wherePivot('choice', '=', $choice)->first();
     }
 }

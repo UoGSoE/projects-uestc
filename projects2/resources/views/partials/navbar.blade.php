@@ -18,8 +18,8 @@
 			              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
 			              <ul class="dropdown-menu">
 			              	@can('see_reports')
-			              		<li><a href="">View All Projects</a></li>
-			              		<li><a href="">View All Students</a></li>
+			              		<li><a href="{!! action('ReportController@allProjects') !!}">View All Projects</a></li>
+			              		<li><a href="{!! action('ReportController@allStudents') !!}">View All Students</a></li>
 			              		<li><a href="">View All Staff</a></li>
 			              		<li><a href="">View All Allocations</a></li>
 			              	@endcan

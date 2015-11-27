@@ -14,7 +14,7 @@
             <dt>Type</dt>
             <dd>{{ $user->password ? 'External' : 'Internal' }} {{ $user->is_student ? 'Student' : 'Staff' }}</dd>
             <dt>Location</dt>
-            <dd>{{ $user->location->title }}</dd>
+            <dd>{{ $user->location_id ? $user->location->title : 'N/A' }}</dd>
             <dt>Roles</dt>
             @if ($user->roles()->count() > 0)
                 <dd>
@@ -27,7 +27,7 @@
             @else
                 Regular User
             @endif
-            @if ($user->courses->count() > 0)
+            @if ($user->courses()->count() > 0)
                 <dt>Enrolled On</dt>
                 <dd>
                     <a href="{!! action('CourseController@show', $user->courses->first()->id) !!}">
@@ -41,7 +41,10 @@
             None
         @else
             @foreach ($user->projects as $project)
-                <li>{{ $project->title }} ({{ $project->students->count() }} Students)
+                <li>
+                    <a href="{!! action('ProjectController@show', $project->id) !!}">
+                        {{ $project->title }}
+                    </a> ({{ $project->students->count() }} Students)
             @endforeach
         @endif
     </div>

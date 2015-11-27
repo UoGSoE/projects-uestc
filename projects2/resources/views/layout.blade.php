@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{!! asset('vendor/bootstrap/css/bootstrap.min.css') !!}" media="print,screen" />
     <link rel="stylesheet" href="{!! asset('vendor/animate.css') !!}" media="screen" />
     <link rel="stylesheet" href="{!! asset('vendor/select2/dist/css/select2.min.css') !!}" media="screen" />
+    <link rel="stylesheet" href="{!! asset('vendor/datatables/css/jquery.dataTables.min.css') !!}" media="screen" />
+    <link rel="stylesheet" href="{!! asset('vendor/datatables/css/dataTables.bootstrap.css') !!}" media="screen" />
 	<script src="{!! asset('vendor/jquery.min.js') !!}"></script>
     <style>
         .fake-link {
