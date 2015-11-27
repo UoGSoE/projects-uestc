@@ -42,6 +42,10 @@ class PermissionTableSeeder extends Seeder
             'title' => 'edit_courses',
             'label' => 'Create/Edit Courses & Programmes'
         ]);
+        DB::table('permissions')->insert([
+            'title' => 'edit_projects',
+            'label' => 'Create/Edit Projects'
+        ]);
 
         Model::reguard();
     }

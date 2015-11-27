@@ -128,4 +128,22 @@ class ProjectController extends Controller
         Project::destroy($id);
         return redirect()->action('ProjectController@index');
     }
+
+    /**
+     * Make a copy of an existing project.
+     * Note: The replicate() function copies the main object but not it's relations, so we don't copy
+     * students allocations etc to the new version.
+     * @param  integer $id Project ID
+     * @return Response
+     */
+    public function duplicate($id)
+    {
+        $project = Project::findOrFail($id)->replicate();
+        $types = ProjectType::orderBy('title')->get();
+        $programmes = Programme::orderBy('title')->get();
+        $courses = Course::orderBy('title')->get();
+        $locations = Location::orderBy('title')->get();
+        $staff = User::staff()->orderBy('surname')->get();
+        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'locations', 'staff'));
+    }
 }

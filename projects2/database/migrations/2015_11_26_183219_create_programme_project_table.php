@@ -29,6 +29,6 @@ class CreateProgrammeProjectTable extends Migration
      */
     public function down()
     {
-        Schema::drop('program_project');
+        Schema::drop('programme_project');
     }
 }

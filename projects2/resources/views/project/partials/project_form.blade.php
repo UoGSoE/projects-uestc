@@ -63,7 +63,7 @@
             <label for="inputMaximumStudents">Maximum Students</label>
             <input type="number" id="inputMaximumStudents" name="maximum_students" value="{{ $project->maximum_students }}" class="form-control" required min="1">
         </div>
-        @can('edit_courses')
+        @can('edit_projects')
             <div class="form-group">
                 <label for="inputOwner">Run By</label>
                 <select id="inputOwner" name="user_id" class="form-control" required>
