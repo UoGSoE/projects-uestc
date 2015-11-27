@@ -29,7 +29,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['username', 'email', 'password', 'surname', 'forenames'];
+    protected $fillable = ['username', 'email', 'password', 'surname', 'forenames', 'is_student'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -64,6 +64,19 @@ class User extends Model implements AuthenticatableContract,
     public function courses()
     {
         return $this->belongsToMany(Course::class, 'course_student');
+    }
+
+    public function course()
+    {
+        return $this->courses->first();
+    }
+    public function availableProjects()
+    {
+        $course = $this->course();
+        // if ($course->location_id) {
+        //     return Project::active()->forLocation($course->location_id)->orderBy('title')->get();
+        // }
+        return Project::active()->forLocation($course->location_id)->orderBy('title')->get();
     }
 
     public function assignRole(Role $role)

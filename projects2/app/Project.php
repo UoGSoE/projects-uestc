@@ -8,6 +8,16 @@ class Project extends Model
 {
     protected $fillable = ['title', 'description', 'prereq', 'is_active', 'user_id', 'type_id', 'maximum_students'];
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', '=', 1);
+    }
+
+    public function scopeForLocation($query, $location_id)
+    {
+        return $query->where('location_id', '=', $location_id);
+    }
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
