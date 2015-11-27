@@ -38,7 +38,6 @@ class PermissionRoleTableSeeder extends Seeder
         $teachingOffice->givePermissionTo($editCourses);
 
         $convenor = Role::whereTitle('convenor')->first();
-        $convenor->givePermissionTo($basicAdmin);
         $convenor->givePermissionTo($seeReports);
         $convenor->givePermissionTo($allocateStudents);
 

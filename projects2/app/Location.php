@@ -11,4 +11,9 @@ class Location extends Model
     {
         return $this->hasMany(Course::class);
     }
+
+    public static function getDefault()
+    {
+        return static::whereTitle('Glasgow')->first();
+    }
 }

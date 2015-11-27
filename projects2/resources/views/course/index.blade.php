@@ -13,7 +13,7 @@
                 <th>Title</th>
                 <th>Students</th>
                 <th>Projects</th>
-                <th>Programmes</th>
+                <th>Location</th>
             </tr>
         </thead>
         <tbody>
@@ -22,8 +22,8 @@
                     <td><a href="{!! action('CourseController@show', $course->id) !!}">{{ $course->code }}</a></td>
                     <td>{{ $course->title }}</td>
                     <td>{{ $course->students->count() }}</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <td>{{ $course->projects->count() }}</td>
+                    <td>{{ $course->location_id ? $course->location->title : 'Anywhere' }}</td>
                 </tr>
             @endforeach
         </tbody>

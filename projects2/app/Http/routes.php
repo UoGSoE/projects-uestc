@@ -40,6 +40,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('project/{id}/copy', 'ProjectController@duplicate');
     Route::resource('project', 'ProjectController');
 
+    // Permission routes
+    Route::resource('permission', 'PermissionController');
+
+    // Role routes
+    Route::resource('role', 'RoleController');
+
     // Project Type routes
     Route::resource('projecttype', 'ProjectTypeController');
 

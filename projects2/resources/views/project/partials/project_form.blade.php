@@ -39,14 +39,17 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="inputLocation">Limit Location?</label>
+            <label for="inputLocation">Location</label>
             <select id="inputLocation" name="location_id" class="form-control" required>
-                <option value="">Anywhere</option>
-                @foreach ($locations as $location)
-                    <option value="{{ $location->id }}" @if ($project->location_id == $location->id) selected @endif>
-                        {{ $location->title }}
-                    </option>
-                @endforeach
+                @if (Auth::user()->location_id)
+                    <option value="{{ Auth::user()->location_id }}">{{ Auth::user()->location->title }}</option>
+                @else
+                    @foreach ($locations as $location)
+                        <option value="{{ $location->id }}" @if ($project->location_id == $location->id) selected @endif>
+                            {{ $location->title }}
+                        </option>
+                    @endforeach
+                @endif
             </select>
         </div>
         <div class="form-group">

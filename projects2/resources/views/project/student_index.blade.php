@@ -5,6 +5,9 @@
     </h1>
 </div>
 <h2>Available Projects</h2>
+<p>
+    Please choose five projects in order of preference.
+</p>
 @foreach (Auth::user()->availableProjects() as $project)
     <div class="panel panel-default">
         <div class="panel-heading fake-link">

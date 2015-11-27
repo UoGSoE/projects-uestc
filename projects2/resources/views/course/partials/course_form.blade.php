@@ -9,9 +9,8 @@
                 <input type="text" id="inputTitle" name="title" value="{{ $course->title }}" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="inputLocation">Limit Location</label>
+                <label for="inputLocation">Location</label>
                 <select id="inputLocation" name="location_id" class="form-control">
-                    <option value="">Anywhere</option>
                     @foreach ($locations as $location)
                         <option value="{{ $location->id }}" @if ($course->location_id == $location->id) selected @endif>
                             {{ $location->title }}

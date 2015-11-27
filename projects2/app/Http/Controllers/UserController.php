@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Role;
 use App\User;
+use App\Location;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -29,16 +30,18 @@ class UserController extends Controller
     {
         $user = new User;
         $roles = Role::orderBy('label')->get();
-        return view('user.create', compact('user', 'roles'));
+        $user->location_id = Location::getDefault()->id;
+        $locations = Location::orderBy('title')->get();
+        return view('user.create', compact('user', 'roles', 'locations'));
     }
 
     public function store(Request $request)
     {
         $user = new User;
         $user->fill($request->input());
-        if ($user->password) {
+        if ($request->password) {
             error_log('Setting password');
-            $user->password = bcrypt($user->password);
+            $user->password = bcrypt($request->password);
         }
         $user->save();
         if ($request->roles) {
@@ -53,15 +56,16 @@ class UserController extends Controller
     {
         $user = User::findOrFail($userId);
         $roles = Role::orderBy('label')->get();
-        return view('user.edit', compact('user', 'roles'));
+        $locations = Location::orderBy('title')->get();
+        return view('user.edit', compact('user', 'roles', 'locations'));
     }
 
     public function update(Request $request)
     {
         $user = User::findOrFail($request->id);
         $user->fill($request->input());
-        if ($user->password) {
-            $user->password = bcrypt($user->password);
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
         }
         $user->save();
         if ($request->roles) {

@@ -31,6 +31,7 @@ class CourseController extends Controller
     public function create()
     {
         $course = new Course;
+        $course->location_id = Location::getDefault()->id;
         $locations = Location::orderBy('title')->get();
         return view('course.create', compact('course', 'locations'));
     }

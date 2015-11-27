@@ -13,6 +13,8 @@
             <dd><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></dd>
             <dt>Type</dt>
             <dd>{{ $user->password ? 'External' : 'Internal' }} {{ $user->is_student ? 'Student' : 'Staff' }}</dd>
+            <dt>Location</dt>
+            <dd>{{ $user->location->title }}</dd>
             <dt>Roles</dt>
             @if ($user->roles()->count() > 0)
                 <dd>
