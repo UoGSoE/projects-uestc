@@ -4,7 +4,9 @@
     <div class="container">
         <h2>
             Details for {{ $user->fullName() }}
-            <a href="{!! action('UserController@edit', $user->id) !!}" class="btn btn-default">Edit</a>
+            @can('edit_users')
+                <a href="{!! action('UserController@edit', $user->id) !!}" class="btn btn-default">Edit</a>
+            @endcan
         </h2>
         <dl>
             <dt>Username</dt>

@@ -20,7 +20,15 @@
         <dt>Active?</dt>
         <dd>{{ $project->is_active ? 'Yes' : 'No' }}</dd>
         <dt>Run By</dt>
-        <dd>{{ $project->owner->fullName() }}</dd>
+        <dd>
+            @can('view_users')
+                <a href="{!! action('UserController@show', $project->owner->id) !!}">
+                    {{ $project->owner->fullName() }}
+                </a>
+            @else
+                    {{ $project->owner->fullName() }}
+            @endcan
+        </dd>
         <dt>Location</dt>
         <dd>{{ $project->location_id ? $project->location->title : 'Anywhere' }}</dd>
         <dt>Maximum Students</dt>

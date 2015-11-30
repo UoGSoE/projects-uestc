@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Gate;
 use App\User;
 use App\Course;
 use App\Project;
@@ -79,6 +80,9 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = Project::findOrFail($id);
+        if (Gate::denies('view_this_project', $project)) {
+            abort(403);
+        }
         return view('project.show', compact('project'));
     }
 
@@ -155,6 +159,12 @@ class ProjectController extends Controller
         return view('project.create', compact('project', 'types', 'programmes', 'courses', 'locations', 'staff'));
     }
 
+    /**
+     * Accept (or un-accept) students onto projects
+     * @param  Request $request
+     * @param  integer  $id      The project ID
+     * @return Response
+     */
     public function acceptStudents(Request $request, $id)
     {
         $project = Project::findOrFail($id);
@@ -164,6 +174,10 @@ class ProjectController extends Controller
         $data = [];
         foreach ($request->accepted as $student_id => $accepted) {
             $data[$student_id] = [ 'accepted' => $accepted ];
+            if ($accepted) {
+                $student = User::findOrFail($student_id);
+                $student->projects()->sync([$id]);
+            }
         }
         $project->students()->sync($data);
         return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'Allocations Saved');
