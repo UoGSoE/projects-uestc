@@ -52,6 +52,24 @@
                 @endforeach
             </select>
         </div>
+        @if ($user->is_student)
+            <div class="form-group">
+                <label for="inputProject">Allocate to project</label>
+                <select id="inputProject" name="project_id" class="form-control">
+                    <option value="">No Change</option>
+                    @foreach($projects as $project)
+                        @if ($project->isAvailable())
+                            <option value="{{ $project->id }}">
+                                {{ $project->title }} ({{$project->type->title}} - {{ $project->location->title }})
+                            </option>
+                        @endif
+                    @endforeach
+                </select>
+                <p class="help-block">
+                    This will allocate them as their first preference and automatically approve them.
+                </p>
+            </div>
+        @endif
         <script>
             $(document).ready(function() {
                 $('.select2').select2();

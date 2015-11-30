@@ -7,6 +7,9 @@
             @can('edit_users')
                 <a href="{!! action('UserController@edit', $user->id) !!}" class="btn btn-default">Edit</a>
             @endcan
+            @can('login_as_user')
+                <a href="{!! action('UserController@logInAs', $user->id) !!}" class="btn btn-warning pull-right">Log in as</a>
+            @endcan
         </h2>
         <dl>
             <dt>Username</dt>

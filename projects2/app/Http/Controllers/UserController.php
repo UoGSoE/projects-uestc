@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use App\Role;
 use App\User;
+use App\Project;
 use App\Location;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -18,6 +19,18 @@ class UserController extends Controller
     public function index()
     {
         $users = User::orderBy('surname')->get();
+        return view('user.index', compact('users'));
+    }
+
+    public function indexStaff()
+    {
+        $users = User::staff()->orderBy('surname')->get();
+        return view('user.index', compact('users'));
+    }
+
+    public function indexStudents()
+    {
+        $users = User::students()->orderBy('surname')->get();
         return view('user.index', compact('users'));
     }
 
@@ -58,7 +71,8 @@ class UserController extends Controller
         $user = User::findOrFail($userId);
         $roles = Role::orderBy('label')->get();
         $locations = Location::orderBy('title')->get();
-        return view('user.edit', compact('user', 'roles', 'locations'));
+        $projects = Project::active()->orderBy('title')->get();
+        return view('user.edit', compact('user', 'roles', 'locations', 'projects'));
     }
 
     public function update(Request $request)
@@ -67,6 +81,10 @@ class UserController extends Controller
         $user->fill($request->input());
         if ($request->password) {
             $user->password = bcrypt($request->password);
+        }
+        if ($request->project_id) {
+            $choices = [ $request->project_id => ["choice" => 1, "accepted" => true] ];
+            $this->allocateStudentToProjects($user, $choices);
         }
         $user->save();
         if ($request->roles) {
@@ -96,7 +114,6 @@ class UserController extends Controller
         // $third = $request->third;
         // $fourth = $request->fourth;
         // $fifth = $request->fifth;
-        $student->projects()->detach();
         $choices = [
             $first => ['choice' => 1],
             $second => ['choice' => 2],
@@ -104,7 +121,21 @@ class UserController extends Controller
             // $fourth => ['choice' => 4],
             // $fifth => ['choice' => 5],
         ];
-        $student->projects()->sync($choices);
+        $this->allocateStudentToProjects($student, $choices);
         return redirect()->to('/')->with('success_message', 'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.');
+    }
+
+    private function allocateStudentToProjects($student, $choices)
+    {
+        $student->projects()->detach();
+        $student->projects()->sync($choices);
+        return true;
+    }
+
+    public function logInAs($userId)
+    {
+        $this->authorize('login_as_user');
+        Auth::loginUsingId($userId);
+        return redirect()->to('/');
     }
 }

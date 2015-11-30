@@ -30,6 +30,9 @@
         </div>
         <div class="panel-body" style="display: none">
             {{ $project->description }}
+            <div class="help-block">
+                Prerequisites: {{ $project->prereq or 'None' }}
+            </div>
         </div>
         <div class="panel-footer" style="display: none">
             Preference :
@@ -60,7 +63,6 @@ $(document).ready(function() {
     });
     $('#inputProgramme').change(function() {
         var value = $(this).val();
-        console.log('hello ' + value);
         $('.panel, .' + value).show();
         $('.panel').not('.' + value).hide();
     });

@@ -23,11 +23,15 @@
                             {{ $student->matric() }}
                         </a>
                     </td>
-                    <td>{{ $student->fullName() }}</td>
+                    <td @if ($student->unallocated()) class="bg-danger" @endif>
+                        {{ $student->fullName() }}
+                    </td>
                     @for ($i = 1; $i <= 5; $i++)
                         <td>
                             @if ($student->projectChoice($i))
-                                <a href="{!! action('ProjectController@show', $student->projectChoice($i)->id) !!}">
+                                <a href="{!! action('ProjectController@show', $student->projectChoice($i)->id) !!}"
+                                    title="{{ $student->projectChoice($i)->owner->fullName() }}"
+                                >
                                     {{ $student->projectChoice($i)->title }}
                                 </a>
                                 @if ($student->projectChoice($i)->pivot->accepted)

@@ -17,8 +17,11 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     // User routes
+    Route::get('/user/{id}/loginas', 'UserController@logInAs');
     Route::post('/user/chooseprojects', 'UserController@chooseProjects');
     Route::get('/user', 'UserController@index');
+    Route::get('/user/students', 'UserController@indexStudents');
+    Route::get('/user/staff', 'UserController@indexStaff');
     Route::get('/user/create', 'UserController@create');
     Route::post('/user/create', 'UserController@store');
     Route::get('/user/{id}', 'UserController@show');

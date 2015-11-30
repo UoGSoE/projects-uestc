@@ -31,7 +31,8 @@
 			              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 			              <ul class="dropdown-menu">
 			              	@can('edit_users')
-			              		<li><a href="{!! action('UserController@index') !!}">Users</a></li>
+			              		<li><a href="{!! action('UserController@indexStaff') !!}">Staff</a></li>
+			              		<li><a href="{!! action('UserController@indexStudents') !!}">Students</a></li>
 			              	@endcan
 			              	@can('edit_courses')
 			              		<li><a href="{!! action('CourseController@index') !!}">Courses</a></li>

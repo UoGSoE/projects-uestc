@@ -140,4 +140,9 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->projects()->wherePivot('choice', '=', $choice)->first();
     }
+
+    public function unallocated()
+    {
+        return $this->projects()->wherePivot('accepted', '=', true)->count() == 0;
+    }
 }
