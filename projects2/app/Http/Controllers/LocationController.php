@@ -39,8 +39,12 @@ class LocationController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->is_default == 1) {
+            Location::where('is_default', '=', 1)->update(['is_default' => 0]);
+        }
         $location = new Location;
         $location->title = $request->title;
+        $location->is_default = $request->is_default;
         $location->save();
         return redirect()->action('LocationController@index');
     }
@@ -77,8 +81,12 @@ class LocationController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if ($request->is_default == 1) {
+            Location::where('is_default', '=', 1)->update(['is_default' => 0]);
+        }
         $location = Location::findOrFail($id);
         $location->title = $request->title;
+        $location->is_default = $request->is_default;
         $location->save();
         return redirect()->action('LocationController@index');
     }

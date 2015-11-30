@@ -2,6 +2,6 @@
 <script src="{!! asset('vendor/datatables/js/dataTables.bootstrap.min.js') !!}"></script>
 <script>
     $(document).ready(function() {
-        $('.datatable').DataTable({ paging: false });
+        $('.datatable').DataTable({ "pageLength": 100 });
     });
 </script>

@@ -32,4 +32,5 @@
             </tbody>
         </table>
     </div>
+    @include('partials.datatables', ['max' => 100])
 @stop

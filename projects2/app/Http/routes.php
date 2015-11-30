@@ -60,6 +60,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Report routes
     Route::get('/report/projects', 'ReportController@allProjects');
     Route::get('/report/students', 'ReportController@allStudents');
+    Route::get('/report/staff', 'ReportController@allStaff');
 });
 
 // Define our authentication middleware controller

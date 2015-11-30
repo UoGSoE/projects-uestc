@@ -24,6 +24,6 @@ class Location extends Model
 
     public static function getDefault()
     {
-        return static::whereTitle('Glasgow')->first();
+        return static::where('is_default', '=', 1)->first();
     }
 }

@@ -21,6 +21,9 @@
                         <a href="{!! action('LocationController@edit', $location->id) !!}">
                             {{ $location->title }}
                         </a>
+                        @if ($location->is_default)
+                            <span class="glyphicon glyphicon-ok" title="Default">
+                        @endif
                     </td>
                     <td>{{ $location->courses->count() }}</td>
                     <td>{{ $location->activeProjects->count() }}</td>

@@ -21,4 +21,10 @@ class ReportController extends Controller
         $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
         return view('report.all_students', compact('students'));
     }
+
+    public function allStaff()
+    {
+        $users = User::staff()->with('projects')->orderBy('surname')->get();
+        return view('report.all_staff', compact('users'));
+    }
 }

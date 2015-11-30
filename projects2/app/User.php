@@ -58,7 +58,7 @@ class User extends Model implements AuthenticatableContract,
         if ($this->is_student) {
             return $this->belongsToMany(Project::class, 'project_student')->withPivot('choice', 'accepted');
         }
-        return $this->hasMany(Project::class);
+        return $this->hasMany(Project::class)->with('students', 'acceptedStudents');
     }
 
     public function courses()
@@ -69,6 +69,24 @@ class User extends Model implements AuthenticatableContract,
     public function location()
     {
         return $this->belongsTo(Location::class);
+    }
+
+    public function totalStudents()
+    {
+        $total = 0;
+        foreach ($this->projects as $project) {
+            $total = $total + $project->students->count();
+        }
+        return $total;
+    }
+
+    public function totalAcceptedStudents()
+    {
+        $total = 0;
+        foreach ($this->projects as $project) {
+            $total = $total + $project->acceptedStudents->count();
+        }
+        return $total;
     }
 
     public function course()
