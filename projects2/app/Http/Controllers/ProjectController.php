@@ -27,6 +27,12 @@ class ProjectController extends Controller
         return view('project.index', compact('projects'));
     }
 
+    public function indexType($typeId)
+    {
+        $projects = Project::where('type_id', '=', $typeId)->orderBy('title')->get();
+        $types = ProjectType::orderBy('title')->get();
+        return view('report.all_projects', compact('projects', 'types'));
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -95,6 +101,9 @@ class ProjectController extends Controller
     public function edit($id)
     {
         $project = Project::findOrFail($id);
+        if (Gate::denies('edit_this_project', $project)) {
+            abort(403);
+        }
         $types = ProjectType::orderBy('title')->get();
         $programmes = Programme::orderBy('title')->get();
         if (Auth::user()->location_id) {
@@ -117,6 +126,9 @@ class ProjectController extends Controller
     public function update(Request $request, $id)
     {
         $project = Project::findOrFail($id);
+        if (Gate::denies('edit_this_project', $project)) {
+            abort(403);
+        }
         $project->fill($request->input());
         if ($request->location_id > 0) {
             $project->location_id = $request->location_id;

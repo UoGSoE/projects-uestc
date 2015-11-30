@@ -21,7 +21,11 @@
                             {{ $type->title }}
                         </a>
                     </td>
-                    <td>{{ $type->projects->count() }}</td>
+                    <td>
+                        <a href="{!! action('ReportController@allProjectsOfType', $type->id) !!}">
+                            {{ $type->projects->count() }}
+                        </a>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

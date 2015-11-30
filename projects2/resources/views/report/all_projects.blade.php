@@ -12,6 +12,28 @@
             <input type="checkbox" id="only_inactive" value="1"> Inactive
         </label>
     </p>
+    <p>
+        Type :
+        <a href="{!! action('ReportController@allProjects') !!}">
+            All
+        </a>
+        @foreach ($types as $type)
+            <a href="{!! action('ReportController@allProjectsOfType', $type->id) !!}">
+                {{ $type->title }}
+            </a>
+        @endforeach
+    </p>
+    <p>
+        Location :
+        <a href="{!! action('ReportController@allProjects') !!}">
+            All
+        </a>
+        @foreach ($locations as $location)
+            <a href="{!! action('ReportController@allProjectsAtLocation', $location->id) !!}">
+                {{ $location->title }}
+            </a>
+        @endforeach
+    </p>
     <table class="table table-striped table-hover datatable">
         <thead>
             <tr>
@@ -37,8 +59,16 @@
                             {{ $project->owner->fullName() }}
                         </a>
                     </td>
-                    <td>{{ $project->type->title }}</td>
-                    <td>{{ $project->location->title }}</td>
+                    <td>
+                        <a href="{!! action('ReportController@allProjectsOfType', $project->type->id) !!}">
+                            {{ $project->type->title }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{!! action('ReportController@allProjectsAtLocation', $project->location_id) !!}">
+                            {{ $project->location->title }}
+                        </a>
+                    </td>
                     <td>
                         {{ $project->maximum_students }},
                         {{ $project->students->count() }},

@@ -8,10 +8,21 @@
 <p>
     Please choose five projects in order of preference.
 </p>
+<p>
+    <div class="form-group">
+        <label for="inputProgramme">Filter by Degree Programme</label>
+        <select id="inputProgramme" name="programme" class="form-control">
+            <option value="anyprogramme">Any</option>
+            @foreach ($programmes as $programme)
+                <option value="{{ md5($programme->title) }}">{{ $programme->title }}</option>
+            @endforeach
+        </select>
+    </div>
+</p>
 <form method="POST" action="{!! action('UserController@chooseProjects') !!}">
 {{ csrf_field() }}
 @foreach (Auth::user()->availableProjects() as $project)
-    <div class="panel panel-default">
+    <div class="panel panel-default anyprogramme @foreach($project->programmes as $programme) {{md5($programme->title)}} @endforeach">
         <div class="panel-heading fake-link">
             <h3 class="panel-title">
                 {{ $project->title }} ({{ $project->owner->fullName() }})
@@ -46,6 +57,12 @@ $(document).ready(function() {
     $('.panel-title').click(function() {
         var parent = $(this).parent();
         parent.siblings().toggle();
+    });
+    $('#inputProgramme').change(function() {
+        var value = $(this).val();
+        console.log('hello ' + value);
+        $('.panel, .' + value).show();
+        $('.panel').not('.' + value).hide();
     });
 });
 </script>

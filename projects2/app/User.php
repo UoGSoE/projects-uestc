@@ -96,6 +96,9 @@ class User extends Model implements AuthenticatableContract,
     public function availableProjects()
     {
         $course = $this->course();
+        if (!$course) {
+            return [];
+        }
         return Project::active()->forLocation($course->location_id)->orderBy('title')->get();
     }
 

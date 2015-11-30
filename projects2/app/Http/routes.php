@@ -58,6 +58,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('programme', 'ProgrammeController');
 
     // Report routes
+    Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfType');
+    Route::get('/report/projects/bylocation/{id}', 'ReportController@allProjectsAtLocation');
     Route::get('/report/projects', 'ReportController@allProjects');
     Route::get('/report/students', 'ReportController@allStudents');
     Route::get('/report/staff', 'ReportController@allStaff');

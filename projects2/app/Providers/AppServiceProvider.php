@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Programme;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
                 'Salve', 'Ni hao', 'Hallo', "Dzien' dobry", 'Olá', 'Bunã ziua', 'Zdravstvuyte', 'Hola', 'Jambo',
                 'Hej', 'Sa-wat-dee', 'Merhaba', 'Vitayu', 'Xin chào', 'Hylo; Sut Mae?', 'Sholem Aleychem', 'Sawubona'
             ]);
+            $view->with('programmes', Programme::orderBy('title')->get());
         });
         view()->composer('project.show', function ($view) {
             $view->with('choices', [
