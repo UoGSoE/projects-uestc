@@ -72,6 +72,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/report/projects', 'ReportController@allProjects');
     Route::get('/report/students', 'ReportController@allStudents');
     Route::get('/report/staff', 'ReportController@allStaff');
+
+    // Event routes
+    Route::get('events', 'EventLogController@index');
 });
 
 // Define our authentication middleware controller

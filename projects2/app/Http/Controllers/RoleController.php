@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Role;
+use App\EventLog;
 use App\Permission;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -45,6 +47,7 @@ class RoleController extends Controller
         $role->fill($request->input());
         $role->save();
         $role->permissions()->sync($request->permissions);
+        EventLog::log(Auth::user()->id, "Created role {$role->title}");
         return redirect()->action('RoleController@index');
     }
 
@@ -86,6 +89,7 @@ class RoleController extends Controller
         $role->save();
         $role->permissions()->detach();
         $role->permissions()->sync($request->permissions);
+        EventLog::log(Auth::user()->id, "Updated role {$role->title}");
         return redirect()->action('RoleController@index');
     }
 
@@ -97,7 +101,9 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        Role::destroy($id);
+        $role = Role::findOrFail($id);
+        EventLog::log(Auth::user()->id, "Deleted role {$role->title}");
+        $role->delete();
         return redirect()->action('RoleController@index');
     }
 }

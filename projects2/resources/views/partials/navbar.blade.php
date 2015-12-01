@@ -40,6 +40,9 @@
 			              		<li><a href="{!! action('ProjectTypeController@index') !!}">Project Types</a></li>
 			              		<li><a href="{!! action('LocationController@index') !!}">Locations</a></li>
 			              	@endcan
+			              	@can('view_eventlog')
+			              		<li><a href="{!! action('EventLogController@index') !!}">System Log</a></li>
+			              	@endcan
 			              	@can('edit_site_permissions')
 			              		<li><a href="{!! action('PermissionController@index') !!}">Edit Site Permissions</a></li>
 			              		<li><a href="{!! action('RoleController@index') !!}">Edit Site Roles</a></li>

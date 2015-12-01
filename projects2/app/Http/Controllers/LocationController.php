@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use App\EventLog;
 use App\Location;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -46,6 +48,7 @@ class LocationController extends Controller
         $location->title = $request->title;
         $location->is_default = $request->is_default;
         $location->save();
+        EventLog::log(Auth::user()->id, "Created location {$location->title}");
         return redirect()->action('LocationController@index');
     }
 
@@ -88,6 +91,7 @@ class LocationController extends Controller
         $location->title = $request->title;
         $location->is_default = $request->is_default;
         $location->save();
+        EventLog::log(Auth::user()->id, "Updated location {$location->title}");
         return redirect()->action('LocationController@index');
     }
 
@@ -99,7 +103,9 @@ class LocationController extends Controller
      */
     public function destroy($id)
     {
-        Location::destroy($id);
+        $location = Location::findOrFail($id);
+        EventLog::log(Auth::user()->id, "Deleted location {$location->title}");
+        $location->delete();
         return redirect()->action('LocationController@index');
     }
 }

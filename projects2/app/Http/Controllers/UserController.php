@@ -6,6 +6,7 @@ use Auth;
 use App\Role;
 use App\User;
 use App\Project;
+use App\EventLog;
 use App\Location;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -63,6 +64,7 @@ class UserController extends Controller
         } else {
             $user->roles()->detach();
         }
+        EventLog::log(Auth::user()->id, "Created new user $user->username");
         return redirect()->action('UserController@show', $user->id);
     }
 
@@ -83,7 +85,9 @@ class UserController extends Controller
             $user->password = bcrypt($request->password);
         }
         if ($request->project_id) {
+            $project = Project::findOrFail($request->project_id);
             $choices = [ $request->project_id => ["choice" => 1, "accepted" => true] ];
+            EventLog::log(Auth::user()->id, "Allocated student {$user->username} to project {$project->title}");
             $this->allocateStudentToProjects($user, $choices);
         }
         $user->save();
@@ -92,12 +96,15 @@ class UserController extends Controller
         } else {
             $user->roles()->detach();
         }
+        EventLog::log(Auth::user()->id, "Updated user $user->username");
         return redirect()->action('UserController@show', $user->id);
     }
 
-    public function destroy(Request $request)
+    public function destroy($userId)
     {
-        $user = User::destroy($request->id);
+        $user = User::findOrFail($userId);
+        EventLog::log(Auth::user()->id, "Deleted user {$user->username}");
+        $user->delete();
         return redirect()->action('UserController@index');
     }
 
@@ -122,6 +129,8 @@ class UserController extends Controller
             // $fifth => ['choice' => 5],
         ];
         $this->allocateStudentToProjects($student, $choices);
+        $projects = Project::whereIn('id', array_keys($choices))->lists('title')->toArray();
+        EventLog::log(Auth::user()->id, "Chose projects " . implode(', ', $projects));
         return redirect()->to('/')->with('success_message', 'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.');
     }
 
@@ -146,6 +155,8 @@ class UserController extends Controller
     public function logInAs($userId)
     {
         $this->authorize('login_as_user');
+        $user = User::findOrFail($userId);
+        EventLog::log(Auth::user()->id, "Logged in as user {$user->username}");
         Auth::loginUsingId($userId);
         return redirect()->to('/');
     }

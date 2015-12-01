@@ -7,6 +7,7 @@ use Gate;
 use App\User;
 use App\Course;
 use App\Project;
+use App\EventLog;
 use App\Location;
 use App\Programme;
 use App\ProjectType;
@@ -27,12 +28,6 @@ class ProjectController extends Controller
         return view('project.index', compact('projects'));
     }
 
-    public function indexType($typeId)
-    {
-        $projects = Project::where('type_id', '=', $typeId)->orderBy('title')->get();
-        $types = ProjectType::orderBy('title')->get();
-        return view('report.all_projects', compact('projects', 'types'));
-    }
     /**
      * Show the form for creating a new resource.
      *
@@ -74,6 +69,7 @@ class ProjectController extends Controller
         $project->save();
         $project->courses()->sync($request->courses);
         $project->programmes()->sync($request->programmes);
+        EventLog::log(Auth::user()->id, "Created project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id);
     }
 
@@ -138,6 +134,7 @@ class ProjectController extends Controller
         $project->save();
         $project->courses()->sync($request->courses);
         $project->programmes()->sync($request->programmes);
+        EventLog::log(Auth::user()->id, "Updated project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id);
     }
 
@@ -149,7 +146,9 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        Project::destroy($id);
+        $project = Project::findOrFail($id);
+        EventLog::log(Auth::user()->id, 'Deleted project {$project->title}');
+        $project->delete();
         return redirect()->action('ProjectController@index');
     }
 
@@ -168,6 +167,7 @@ class ProjectController extends Controller
         $courses = Course::orderBy('title')->get();
         $locations = Location::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
+        EventLog::log(Auth::user()->id, "Made a copy of project {$project->title}");
         return view('project.create', compact('project', 'types', 'programmes', 'courses', 'locations', 'staff'));
     }
 
@@ -192,6 +192,7 @@ class ProjectController extends Controller
             }
         }
         $project->students()->sync($data);
+        EventLog::log(Auth::user()->id, "Accepted students onto project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'Allocations Saved');
     }
 }

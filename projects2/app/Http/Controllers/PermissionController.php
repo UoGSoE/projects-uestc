@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use App\EventLog;
 use App\Permission;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -42,6 +44,7 @@ class PermissionController extends Controller
         $permission = new Permission;
         $permission->fill($request->input());
         $permission->save();
+        EventLog::log(Auth::user()->id, "Created permission {$permission->title}");
         return redirect()->action('PermissionController@index');
     }
 
@@ -80,6 +83,7 @@ class PermissionController extends Controller
         $permission = Permission::findOrFail($id);
         $permission->fill($request->input());
         $permission->save();
+        EventLog::log(Auth::user()->id, "Updated permission {$permission->title}");
         return redirect()->action('PermissionController@index');
     }
 
@@ -91,7 +95,9 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        Permission::destroy($id);
+        $permission = Permission::findOrFail($id);
+        EventLog::log(Auth::user()->id, "Deleted permission {$permission->title}");
+        $permission->delete();
         return redirect()->action('PermissionController@index');
     }
 }

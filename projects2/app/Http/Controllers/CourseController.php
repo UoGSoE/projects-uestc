@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Excel;
 use App\User;
 use App\Course;
+use App\EventLog;
 use App\Location;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -50,6 +52,7 @@ class CourseController extends Controller
             $course->location_id = $request->location_id;
         }
         $course->save();
+        EventLog::log(Auth::user()->id, "Created course {$course->title} {$course->code}");
         return redirect()->action('CourseController@show', $course->id);
     }
 
@@ -93,6 +96,7 @@ class CourseController extends Controller
             $course->location_id = $request->location_id;
         }
         $course->save();
+        EventLog::log(Auth::user()->id, "Updated course {$course->title} {$course->code}");
         return redirect()->action('CourseController@show', $course->id);
     }
 
@@ -104,7 +108,9 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        Course::destroy($id);
+        $course = Course::findOrFail($id);
+        EventLog::log(Auth::user()->id, "Deleted course {$course->title} {$course->code}");
+        $course->delete();
         return redirect()->action('CourseController@index');
     }
 
@@ -126,6 +132,7 @@ class CourseController extends Controller
         }
         $studentIds = array_filter($studentIds);    // strip out any null-like keys
         $course->students()->sync($studentIds);
+        EventLog::log(Auth::user()->id, "Updated student list for course {$course->title} {$course->code}");
         return redirect()->action('CourseController@show', $id);
     }
 
@@ -177,6 +184,7 @@ class CourseController extends Controller
             // Note: this will remove any allocations to projects too
             $student->delete();
         }
+        EventLog::log(Auth::user()->id, "Removed all students on course {$course->title} {$course->code}");
         return redirect()->action('CourseController@show', $courseId);
     }
 }

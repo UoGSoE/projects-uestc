@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use App\EventLog;
 use App\Programme;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -42,6 +44,7 @@ class ProgrammeController extends Controller
         $programme = new Programme;
         $programme->fill($request->input());
         $programme->save();
+        EventLog::log(Auth::user()->id, "Created programme {$programme->title}");
         return redirect()->action('ProgrammeController@show', $programme->id);
     }
 
@@ -81,6 +84,7 @@ class ProgrammeController extends Controller
         $programme = Programme::findOrFail($id);
         $programme->fill($request->input());
         $programme->save();
+        EventLog::log(Auth::user()->id, "Updated programme {$programme->title}");
         return redirect()->action('ProgrammeController@show', $programme->id);
     }
 
@@ -92,7 +96,9 @@ class ProgrammeController extends Controller
      */
     public function destroy($id)
     {
-        Programme::destroy($id);
+        $programme = Programme::findOrFail($id);
+        EventLog::log(Auth::user()->id, "Deleted programme {$programme->title}");
+        $programme->delete();
         return redirect()->action('ProgrammeController@index');
     }
 }
