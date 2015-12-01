@@ -14,7 +14,7 @@ class EventLogController extends Controller
     public function index()
     {
         $cutoff = Carbon::create()->subMonths(3);
-        $events = EventLog::where('created_at', '>', $cutoff)->orderBy('created_at', 'DESC')->get();
+        $events = EventLog::where('created_at', '>', $cutoff)->with('user')->orderBy('created_at', 'DESC')->get();
         return view('event.index', compact('events'));
     }
 }

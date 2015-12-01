@@ -4,6 +4,190 @@
 		"selected_items":
 		[
 			[
+				"data",
+				"datatables"
+			],
+			[
+				"Pro",
+				"Programme"
+			],
+			[
+				"Course",
+				"CourseController@show"
+			],
+			[
+				"allPro",
+				"action('ReportController@allProjectsOfType"
+			],
+			[
+				"Project",
+				"ProjectType"
+			],
+			[
+				"order",
+				"orderBy"
+			],
+			[
+				"or",
+				"orderBy"
+			],
+			[
+				"all",
+				"allocate_students"
+			],
+			[
+				"Proje",
+				"ProjectController"
+			],
+			[
+				"cs",
+				"csrf_field	(student_index.blade.php)"
+			],
+			[
+				"fill",
+				"fillable	(Course.php)"
+			],
+			[
+				"permi",
+				"permission"
+			],
+			[
+				"perm",
+				"permission_id"
+			],
+			[
+				"bsta",
+				"bs3-table	bs3-table"
+			],
+			[
+				"Perm",
+				"Permission	(create.blade.php)"
+			],
+			[
+				"locatio",
+				"location_id	(staff_index.blade.php)"
+			],
+			[
+				"Proj",
+				"ProjectController"
+			],
+			[
+				"location",
+				"location_id	(CourseController.php)"
+			],
+			[
+				"belon",
+				"belongsToMany"
+			],
+			[
+				"full",
+				"fullName"
+			],
+			[
+				"belong",
+				"belongsTo"
+			],
+			[
+				"is_a",
+				"is_active"
+			],
+			[
+				"max",
+				"maximum_students"
+			],
+			[
+				"Loc",
+				"LocationController@index"
+			],
+			[
+				"Loca",
+				"Location"
+			],
+			[
+				"loc",
+				"locations"
+			],
+			[
+				"loca",
+				"location_id"
+			],
+			[
+				"project",
+				"projecttype"
+			],
+			[
+				"prot",
+				"projecttype"
+			],
+			[
+				"studen",
+				"studentIds"
+			],
+			[
+				"stu",
+				"studentIds"
+			],
+			[
+				"Prog",
+				"ProgrammeController"
+			],
+			[
+				"progr",
+				"programme"
+			],
+			[
+				"Cou",
+				"CourseController@show	(CourseController.php)"
+			],
+			[
+				"req",
+				"request"
+			],
+			[
+				"CourseC",
+				"CourseController	(CourseController.php)"
+			],
+			[
+				"CourseCon",
+				"CourseController@show	(CourseController.php)"
+			],
+			[
+				"Cour",
+				"CourseController	(CourseController.php)"
+			],
+			[
+				"UserController",
+				"UserController@show	(routes.php)"
+			],
+			[
+				"alloc",
+				"allocateStudents"
+			],
+			[
+				"create",
+				"createUsers"
+			],
+			[
+				"basic",
+				"basicAdmin"
+			],
+			[
+				"teac",
+				"teachingOffice"
+			],
+			[
+				"teach",
+				"teaching_office"
+			],
+			[
+				"crea",
+				"create_users	(navbar.blade.php)"
+			],
+			[
+				"edit_",
+				"edit_user_permissions	(navbar.blade.php)"
+			],
+			[
 				"Swi",
 				"Swift_SmtpTransport"
 			],
@@ -38,10 +222,6 @@
 			[
 				"tot",
 				"totalRuntime"
-			],
-			[
-				"permi",
-				"permission_id	(JwncUserPermission.php)"
 			],
 			[
 				"user_permi",
@@ -126,10 +306,6 @@
 			[
 				"sa",
 				"sampleId"
-			],
-			[
-				"fill",
-				"fillable〔variable〕"
 			],
 			[
 				"eq",
@@ -240,20 +416,12 @@
 				"managepermissions	(UserAdminPageLoader.php)"
 			],
 			[
-				"perm",
-				"permissionId"
-			],
-			[
 				"permId",
 				"permissionId"
 			],
 			[
 				"JwncUserP",
 				"JwncUserPermissionMap	(JwncUserPermissionMap.php)"
-			],
-			[
-				"order",
-				"order_by_asc"
 			],
 			[
 				"fun",
@@ -346,174 +514,6 @@
 			[
 				"endfo",
 				"endforeach〔keyword〕"
-			],
-			[
-				"sec",
-				"securityLevels〔variable〕"
-			],
-			[
-				"publ",
-				"publish_at"
-			],
-			[
-				"Create",
-				"CreateAdmin	(CreateAdmin.php)"
-			],
-			[
-				"Hash",
-				"Hash-check	Hash-check"
-			],
-			[
-				"pass",
-				"password2"
-			],
-			[
-				"make",
-				"makeThumbnailImage〔function〕"
-			],
-			[
-				"Photogra",
-				"Photography	(home.blade.php)"
-			],
-			[
-				"pub",
-				"publicblog"
-			],
-			[
-				"Photo",
-				"Photography	(home.blade.php)"
-			],
-			[
-				"ord",
-				"orderBy	(AdminController.php)"
-			],
-			[
-				"font",
-				"font-family"
-			],
-			[
-				"set",
-				"setTimeout〔function〕"
-			],
-			[
-				"json",
-				"json_encode〔function〕"
-			],
-			[
-				"partial",
-				"partial_index_photographs	(photo_index.blade.php)"
-			],
-			[
-				"galler",
-				"galleryList"
-			],
-			[
-				"gallery",
-				"galleryList	(edit_photo.blade.php)"
-			],
-			[
-				"form",
-				"form	Tag"
-			],
-			[
-				"gall",
-				"gallery_id"
-			],
-			[
-				"JwncNano",
-				"JwncNanojob"
-			],
-			[
-				"JwncNan",
-				"JwncNanojob"
-			],
-			[
-				"c",
-				"create"
-			],
-			[
-				"JwncN",
-				"JwncNanojob"
-			],
-			[
-				"array_key",
-				"array_key_exists"
-			],
-			[
-				"array_ke",
-				"array_key_exists"
-			],
-			[
-				"em",
-				"emailBody"
-			],
-			[
-				"uploa",
-				"uploadedFile"
-			],
-			[
-				"intne",
-				"internal_jobname"
-			],
-			[
-				"high",
-				"highlightBelleKey"
-			],
-			[
-				"HttpRe",
-				"HttpRequest"
-			],
-			[
-				"belle",
-				"belleFile"
-			],
-			[
-				"test",
-				"test_bellefile"
-			],
-			[
-				"inter",
-				"internal"
-			],
-			[
-				"con",
-				"container"
-			],
-			[
-				"error",
-				"errorMessage"
-			],
-			[
-				"int",
-				"internalJob"
-			],
-			[
-				"inte",
-				"internal"
-			],
-			[
-				"new",
-				"newFilename"
-			],
-			[
-				"user",
-				"username"
-			],
-			[
-				"files",
-				"filesystem"
-			],
-			[
-				"subst",
-				"substrate"
-			],
-			[
-				"creat",
-				"creationRules"
-			],
-			[
-				"see",
-				"seeResponseIsJson"
 			]
 		]
 	},
@@ -662,6 +662,107 @@
 	],
 	"file_history":
 	[
+		"/Users/billy/Documents/code/projects2/projects2/database/seeds/PermissionRoleTableSeeder.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/seeds/RoleTableSeeder.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/User.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/partials/alerts.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/RoleController.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/PermissionController.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Permission.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Role.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_25_142754_create_roles_and_permissions_tables.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_26_155140_add_location_to_courses.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_26_155502_add_location_to_users.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/partials/datatables.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/factories/ModelFactory.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_30_095006_add_default_flag_to_locations.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/report/all_staff.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_12_01_092213_create_event_logs_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/report/all_projects.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/ReportController.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/location/index.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Location.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/LocationController.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/user/show.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/user/partials/user_form.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/EventLog.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/EventLogController.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/event/index.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/UserController.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/permission/index.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/layout.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/Auth/AuthController.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/home.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/project/student_index.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/project/staff_index.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/user/index.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/user/index_staff.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/user/index_students.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/user/partials/user_list.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/CourseController.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/course/edit_students.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Course.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/course/index.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_26_100523_create_programmes_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Programme.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/user/edit.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/user/create.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/permission/create.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/role/create.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/role/edit.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/permission/edit.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/course/create.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/programme/create.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/course/edit.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/programme/edit.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_26_104426_create_course_student_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/course/show.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/permission/partials/permission_form.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/role/partials/role_form.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/course/partials/course_form.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/programme/partials/programme_form.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/ProjectType.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_25_183647_create_project_types_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Project.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_26_183359_create_course_project_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2014_10_12_000000_create_users_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/login_form.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/routes.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Providers/AppServiceProvider.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/role/index.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/ProjectTypeController.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/projecttype/index.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/projecttype/create.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/location/create.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/projecttype/edit.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/location/edit.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/projecttype/partials/type_form.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/location/partials/location_form.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/ProgrammeController.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Http/Controllers/ProjectController.php",
+		"/Users/billy/Documents/code/projects2/projects2/app/Providers/AuthServiceProvider.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/project/show.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/seeds/PermissionTableSeeder.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/project/create.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/project/edit.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/project/partials/project_form.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/programme/show.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/programme/index.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_26_093622_create_courses_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/partials/navbar.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/report/all_students.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/report/partials/student_list.blade.php",
+		"/Users/billy/Desktop/timer.html",
+		"/Users/billy/Documents/code/projects2/projects2/config/app.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_26_183219_create_programme_project_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_26_154829_create_locations_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_26_154932_add_location_to_projects.php",
+		"/Users/billy/Documents/code/projects2/projects2/resources/views/projecttype/show.blade.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_25_184336_create_project_student_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_25_184257_create_project_student_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/migrations/2015_11_25_182639_create_projects_table.php",
+		"/Users/billy/Documents/code/projects2/projects2/database/seeds/DatabaseSeeder.php",
+		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/EquipmentAdminController.php",
 		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/user_reregister.blade.php",
 		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/user_edit.blade.php",
 		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/JwncEmailController.php",
@@ -688,108 +789,7 @@
 		"/Users/billy/Documents/code/jwnc_current/tmpl/page.jwnc.header.html",
 		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/ApiUserController.php",
 		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/ReportsController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/reports/nanobeam_job_by_user.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/reports/ebeam_job_by_user.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/generic/datatables.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/partials/user_list.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/classes/equipment.admin.class.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/partials/equipment_form.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncEquipment.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/EquipmentAdminController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/EquipmentCategory.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/FinanceCategory.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/nanobeam/partials/booking_form_js.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/sample/show.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/InitialsController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncSample.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncNanobeamBelleFile.php",
-		"/Users/billy/Documents/code/jwnc_current/pulsion/hamstar-Wikimate/Wikimate.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/sample/search_results.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/EquipmentController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/SampleController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/user_permissions.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncUserPermission.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/api/NanobeamCept.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/acceptance/EquipmentAdminCept.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/acceptance/EbeamSearchCalibrationsCept.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/acceptance/EbeamPendingThenLoadingCept.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncInternalEbeamjob.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/acceptance/EbeamBookingCept.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncEbeamjob.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/unit/NanobeamApiTest.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/unit/NanobeamChuckControllerTest.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/unit/NanobeamControllerFunctionalTest.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/unit/NanobeamControllerTest.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/unit/NanobeamPageLoaderTest.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/unit/UserAdminFunctionalTest.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncPlantEquipment.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/EquipmentCategoryController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/PlantEquipmentAdminController.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/unit/EquipmentAdminFunctionalTest.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/UserRegistrationController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/UserPermissionController.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/acceptance/NanobeamViewBelledataForJobCept.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/ApiNanobeamController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncInternalNanojob.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncSampleLog.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/acceptance/SearchCalibrationsCept.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncUserPermissionMap.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/UserPhotoController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/css/jwnc_new.css",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/config/orm.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Equipment/EquipmentAdminPageLoader.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/config/eloquent.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Sample/SamplePageLoader.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/equipment_create.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/sample/search_form.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/EquipmentService.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncUserHistory.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncUserPhoto.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncFavouriteSample.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/nanobeam/completed_jobs.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/partials/equipment_category_form.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/equipment_category_create.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/equipment_category_edit.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/equipment_categories.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/equipment_show.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/classes/module.samplepage.class.php",
-		"/Users/billy/Documents/code/jwnc_current/classes/sample.manager.class.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/sample/edit.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/sample/create.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/user_list_deleted.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/admin/user_list_lateworking.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Helpers/HttpResponse.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncNanojobImage.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncNanobeamCalibration.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncEbeamCalibration.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/nanobeam/pending_jobs.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncNanobeamChuck.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/nanobeam/viewloaded.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/nanobeam/partials/view_job.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/nanobeam/loading.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncNanobeamTsv.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/nanobeam/partials/calibration_summary.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/nanobeam/calibration_detail.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/NanobeamCalibrationController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/NanobeamChuckController.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/nanobeam/review.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncNanojobBookingImage.php",
-		"/Users/billy/Dropbox/jwnc_todo.txt",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncEquipmentAuthorisation.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Controllers/TrainingController.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/acceptance/NanobeamBookingFormWorksCept.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/nanobeam/partials/chuck_list.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Helpers/UserHelper.php",
-		"/Users/billy/Documents/code/jwnc_current/api.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/acceptance/LoginPageCept.php",
-		"/Users/billy/Documents/code/jwnc_current/index_testing.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/Models/JwncEquipmentTrainingAuthorisation.php",
-		"/Users/billy/Documents/code/jwnc_current/tests/acceptance/_steps/ValidUserSteps.php",
-		"/Users/billy/Documents/code/jwnc_current/classes/session.class.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/sample/register_form.blade.php",
-		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/sample/searcch_form.blade.php",
-		"/Users/billy/Library/Application Support/Sublime Text 3/Packages/User/checkbox-field.sublime-snippet",
-		"/Users/billy/Documents/code/jwnc_current/classes/admin.class.php"
+		"/Users/billy/Documents/code/jwnc_current/Jwnc/views/reports/nanobeam_job_by_user.blade.php"
 	],
 	"find":
 	{
@@ -808,6 +808,73 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"permission",
+			"location",
+			"programme",
+			"aff",
+			"type",
+			"Type",
+			"type",
+			"sentance",
+			"1",
+			"project",
+			"first",
+			"permission",
+			"{{ $permission->id }}",
+			"permission",
+			"Permission",
+			"permission",
+			"Permission",
+			"permission",
+			"Permission",
+			"permission",
+			"Permission",
+			"permission",
+			"Permission",
+			"permission",
+			"Permission::",
+			"permission",
+			"Permission",
+			"td",
+			"inlineRadioOptions",
+			"third",
+			"inlineRadio3",
+			"inlineRadio2",
+			"programme",
+			"project",
+			"courses",
+			"text",
+			"location",
+			"inputLocation",
+			"programme",
+			"programmes",
+			"Programmes",
+			"programmes",
+			"Programmes",
+			"inputProgrammes",
+			"Description",
+			"Edit ",
+			"inputRoles",
+			"Roles",
+			"student",
+			"course",
+			"get",
+			"}}}",
+			"{{{",
+			"}}}",
+			"{{{",
+			"user",
+			"create",
+			"teachingOffice",
+			"permissions",
+			"Permissions",
+			"permissions",
+			"Permissions",
+			"permissions",
+			"permission",
+			"role",
+			"description",
+			"}}",
 			"register",
 			"needs",
 			"f_rere",
@@ -868,74 +935,7 @@
 			"Create",
 			"bookinglimit",
 			"boolean",
-			"$",
-			"_report",
-			"require",
-			" required",
-			"Specs",
-			"Guide",
-			"Description",
-			"Status",
-			"equipmentnew",
-			"useradmin",
-			"useradm",
-			"useradmin",
-			"this->",
-			"3",
-			"input",
-			"}}",
-			"{{",
-			"Registration",
-			"this->",
-			"}}",
-			"{{",
-			"}}",
-			"{{",
-			"}}",
-			"{{",
-			"}}",
-			"{{",
-			"}}",
-			"{{",
-			"alpha_space",
-			"history",
-			"<?php $this->insert",
-			"/",
-			"<?php foreach",
-			"quiz",
-			"moodle",
-			"accepted",
-			"public",
-			"ond",
-			"new",
-			"updated",
-			"moodle",
-			"accept",
-			"dl",
-			"new",
-			"equipment",
-			"delete",
-			"user",
-			"optional",
-			"username",
-			",'",
-			"supervisor",
-			"name",
-			"00",
-			"min.",
-			"public/",
-			"'Monkeytwizzle Photography'",
-			"1280",
-			"photo",
-			"$image = ",
-			"this",
-			"private",
-			"1280",
-			"255",
-			"-44",
-			"255",
-			"1280",
-			"2"
+			"$"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1022,516 +1022,516 @@
 		"selected_items":
 		[
 			[
-				"usesh",
-				"Jwnc/views/admin/user_show.blade.php"
+				"nav",
+				"views/partials/navbar.blade.php"
+			],
+			[
+				"lay",
+				"views/layout.blade.php"
 			],
 			[
 				"",
-				"Jwnc/Controllers/UserAdminController.php"
+				"app/Http/Controllers/Auth/AuthController.php"
 			],
 			[
-				"jwnus",
-				"Jwnc/Models/JwncUser.php"
+				"usesh",
+				"views/user/show.blade.php"
+			],
+			[
+				"lo",
+				"app/Location.php"
+			],
+			[
+				"authco",
+				"app/Http/Controllers/Auth/AuthController.php"
+			],
+			[
+				"evloco",
+				"app/Http/Controllers/EventLogController.php"
+			],
+			[
+				"evein",
+				"views/event/index.blade.php"
+			],
+			[
+				"partda",
+				"views/partials/datatables.blade.php"
+			],
+			[
+				"parstuli",
+				"views/report/partials/student_list.blade.php"
+			],
+			[
+				"usecon",
+				"app/Http/Controllers/UserController.php"
+			],
+			[
+				"rolco",
+				"app/Http/Controllers/RoleController.php"
+			],
+			[
+				"perco",
+				"app/Http/Controllers/PermissionController.php"
+			],
+			[
+				"locaco",
+				"app/Http/Controllers/LocationController.php"
+			],
+			[
+				"progcon",
+				"app/Http/Controllers/ProgrammeController.php"
+			],
+			[
+				"courco",
+				"app/Http/Controllers/CourseController.php"
+			],
+			[
+				"procont",
+				"app/Http/Controllers/ProjectController.php"
+			],
+			[
+				"rout",
+				"app/Http/routes.php"
+			],
+			[
+				"userco",
+				"app/Http/Controllers/UserController.php"
+			],
+			[
+				"evlco",
+				"app/Http/Controllers/EventLogController.php"
+			],
+			[
+				"rou",
+				"app/Http/routes.php"
+			],
+			[
+				"eveloc",
+				"app/Http/Controllers/EventLogController.php"
+			],
+			[
+				"eve",
+				"app/EventLog.php"
+			],
+			[
+				"usercon",
+				"app/Http/Controllers/UserController.php"
+			],
+			[
+				"evenlogs",
+				"migrations/2015_12_01_092213_create_event_logs_table.php"
+			],
+			[
+				"user",
+				"app/User.php"
+			],
+			[
+				"stulist",
+				"views/report/partials/student_list.blade.php"
 			],
 			[
 				"usered",
-				"Jwnc/views/admin/user_edit.blade.php"
+				"views/user/edit.blade.php"
 			],
 			[
-				"useradc",
-				"Jwnc/Controllers/UserAdminController.php"
+				"progr",
+				"app/Programme.php"
 			],
 			[
-				"useadpa",
-				"Jwnc/Admin/UserAdminPageLoader.php"
+				"progin",
+				"views/programme/index.blade.php"
 			],
 			[
-				"usead",
-				"Jwnc/Controllers/UserAdminController.php"
+				"proind",
+				"views/projecttype/index.blade.php"
 			],
 			[
-				"useman",
-				"classes/user.manager.class.php"
+				"proged",
+				"views/programme/edit.blade.php"
 			],
 			[
-				"useradm",
-				"classes/user.admin.class.php"
+				"loced",
+				"views/location/edit.blade.php"
 			],
 			[
-				"log",
-				"classes/login.manager.class.php"
+				"projty",
+				"app/Http/Controllers/ProjectTypeController.php"
 			],
 			[
-				"useadm",
-				"Jwnc/Controllers/UserAdminController.php"
+				"typedi",
+				"views/projecttype/edit.blade.php"
 			],
 			[
-				"jwncu",
-				"Jwnc/Models/JwncUser.php"
+				"courcont",
+				"app/Http/Controllers/CourseController.php"
 			],
 			[
-				"userma",
-				"classes/user.manager.class.php"
+				"coured",
+				"views/course/edit.blade.php"
 			],
 			[
-				"mailer.php",
-				"Jwnc/Helpers/SwiftMailer.php"
+				"useed",
+				"views/user/edit.blade.php"
 			],
 			[
-				"useadco",
-				"Jwnc/Controllers/UserAdminController.php"
+				"coush",
+				"views/course/show.blade.php"
 			],
 			[
-				"mailc",
-				"Jwnc/Controllers/JwncEmailController.php"
+				"couco",
+				"app/Http/Controllers/CourseController.php"
 			],
 			[
-				"userlis",
-				"Jwnc/views/admin/partials/user_list.blade.php"
+				"allstu",
+				"views/report/all_students.blade.php"
 			],
 			[
-				"repal",
-				"Jwnc/Reports/ReportsPageLoader.php"
+				"userind",
+				"views/user/index.blade.php"
 			],
 			[
-				"nanjby",
-				"Jwnc/views/reports/nanobeam_job_by_user.blade.php"
-			],
-			[
-				"jwus",
-				"Jwnc/Models/JwncUser.php"
-			],
-			[
-				"sampleman",
-				"Jwnc/views/sample/manage.blade.php"
-			],
-			[
-				"samfo",
-				"Jwnc/views/sample/partials/sample_form.blade.php"
-			],
-			[
-				"usehis",
-				"Jwnc/views/admin/partials/user_history.blade.php"
-			],
-			[
-				"repag",
-				"Jwnc/Reports/ReportsPageLoader.php"
-			],
-			[
-				"useradco",
-				"Jwnc/Controllers/UserAdminController.php"
-			],
-			[
-				"userfo",
-				"Jwnc/views/admin/partials/user_form.blade.php"
-			],
-			[
-				"di",
-				"Jwnc/config/di.php"
-			],
-			[
-				"eqpal",
-				"Jwnc/Equipment/EquipmentPageLoader.php"
-			],
-			[
-				"eqcat",
-				"Jwnc/Models/EquipmentCategory.php"
-			],
-			[
-				"finca",
-				"Jwnc/Models/FinanceCategory.php"
-			],
-			[
-				"eqadco",
-				"Jwnc/Controllers/EquipmentAdminController.php"
-			],
-			[
-				"jwneq",
-				"Jwnc/Models/JwncEquipment.php"
-			],
-			[
-				"eqfo",
-				"Jwnc/views/admin/partials/equipment_form.blade.php"
-			],
-			[
-				"eqad",
-				"classes/equipment.admin.class.php"
-			],
-			[
-				"apicon",
-				"Jwnc/Controllers/ApiUserController.php"
-			],
-			[
-				"nanj",
-				"Jwnc/Models/JwncNanojob.php"
-			],
-			[
-				"nanbco",
-				"Jwnc/Controllers/NanobeamController.php"
-			],
-			[
-				"userfor",
-				"Jwnc/views/admin/partials/user_form.blade.php"
-			],
-			[
-				"bookfo",
-				"Jwnc/views/nanobeam/partials/booking_form.blade.php"
-			],
-			[
-				"samse",
-				"Jwnc/views/sample/search_results.blade.php"
-			],
-			[
-				"samco",
-				"Jwnc/Controllers/SampleController.php"
-			],
-			[
-				"samsh",
-				"Jwnc/views/sample/show.blade.php"
-			],
-			[
-				"initco",
-				"Jwnc/Controllers/InitialsController.php"
-			],
-			[
-				"jwnsam",
-				"Jwnc/Models/JwncSample.php"
-			],
-			[
-				"jwnabe",
-				"Jwnc/Models/JwncNanobeamBelleFile.php"
-			],
-			[
-				"nanco",
-				"Jwnc/Controllers/NanobeamController.php"
-			],
-			[
-				"emacont",
-				"Jwnc/Controllers/JwncEmailController.php"
-			],
-			[
-				"eqcon",
-				"Jwnc/Controllers/EquipmentController.php"
-			],
-			[
-				"jwin",
-				"Jwnc/Models/JwncInternalNanojob.php"
-			],
-			[
-				"apinan",
-				"Jwnc/Controllers/ApiNanobeamController.php"
-			],
-			[
-				"nanbcep",
-				"tests/api/NanobeamCept.php"
-			],
-			[
-				"equifo",
-				"Jwnc/views/admin/partials/equipment_form.blade.php"
-			],
-			[
-				"eqadce",
-				"tests/acceptance/EquipmentAdminCept.php"
-			],
-			[
-				"ebsea",
-				"tests/acceptance/EbeamSearchCalibrationsCept.php"
-			],
-			[
-				"ebp",
-				"tests/acceptance/EbeamPendingThenLoadingCept.php"
-			],
-			[
-				"jwnine",
-				"Jwnc/Models/JwncInternalEbeamjob.php"
-			],
-			[
-				"ebboc",
-				"tests/acceptance/EbeamBookingCept.php"
-			],
-			[
-				"jwnceb",
-				"Jwnc/Models/JwncEbeamjob.php"
-			],
-			[
-				"nanap",
-				"tests/unit/NanobeamApiTest.php"
-			],
-			[
-				"jwpleq",
-				"Jwnc/Models/JwncPlantEquipment.php"
-			],
-			[
-				"plaeqco",
-				"Jwnc/Controllers/PlantEquipmentAdminController.php"
-			],
-			[
-				"eqcate",
-				"Jwnc/Models/EquipmentCategory.php"
-			],
-			[
-				"equadfu",
-				"tests/unit/EquipmentAdminFunctionalTest.php"
-			],
-			[
-				"planeq",
-				"Jwnc/Models/JwncPlantEquipment.php"
-			],
-			[
-				"eqadfu",
-				"tests/unit/EquipmentAdminFunctionalTest.php"
-			],
-			[
-				"nanpit",
-				"tests/unit/NanobeamApiTest.php"
-			],
-			[
-				"nanchcot",
-				"tests/unit/NanobeamChuckControllerTest.php"
-			],
-			[
-				"nanfun",
-				"tests/unit/NanobeamControllerFunctionalTest.php"
-			],
-			[
-				"jwnaj",
-				"Jwnc/Models/JwncNanojob.php"
-			],
-			[
-				"jwnanj",
-				"Jwnc/Models/JwncNanojob.php"
-			],
-			[
-				"jwsalo",
-				"Jwnc/Models/JwncSampleLog.php"
-			],
-			[
-				"nancote",
-				"tests/unit/NanobeamControllerTest.php"
-			],
-			[
-				"nanpaglo",
-				"tests/unit/NanobeamPageLoaderTest.php"
-			],
-			[
-				"useradfu",
-				"tests/unit/UserAdminFunctionalTest.php"
-			],
-			[
-				"useadfun",
-				"tests/unit/UserAdminFunctionalTest.php"
-			],
-			[
-				"ebece",
-				"tests/acceptance/EbeamBookingCept.php"
-			],
-			[
-				"searcal",
-				"tests/acceptance/SearchCalibrationsCept.php"
-			],
-			[
-				"apico",
-				"Jwnc/Controllers/ApiNanobeamController.php"
-			],
-			[
-				"viewbe",
-				"tests/acceptance/NanobeamViewBelledataForJobCept.php"
-			],
-			[
-				"perm",
-				"Jwnc/views/admin/user_permissions.blade.php"
-			],
-			[
-				"permap",
-				"Jwnc/Models/JwncUserPermissionMap.php"
-			],
-			[
-				"jwnusep",
-				"Jwnc/Models/JwncUserPermission.php"
-			],
-			[
-				"userper",
-				"Jwnc/Controllers/UserPermissionController.php"
-			],
-			[
-				"jw",
-				"Jwnc/Models/JwncUser.php"
-			],
-			[
-				"userpho",
-				"Jwnc/Controllers/UserPhotoController.php"
-			],
-			[
-				"regi",
-				"Jwnc/Controllers/UserRegistrationController.php"
-			],
-			[
-				"jwnccss",
-				"Jwnc/css/jwnc_new.css"
+				"pro",
+				"app/Project.php"
 			],
 			[
 				"usefo",
-				"Jwnc/views/admin/partials/user_form.blade.php"
+				"views/user/partials/user_form.blade.php"
 			],
 			[
-				"bookfojs",
-				"Jwnc/views/nanobeam/partials/booking_form_js.blade.php"
+				"usersh",
+				"views/user/show.blade.php"
 			],
 			[
-				"jwnsa",
-				"Jwnc/Models/JwncSample.php"
+				"projfo",
+				"views/project/partials/project_form.blade.php"
 			],
 			[
-				"jobfo",
-				"Jwnc/views/nanobeam/partials/booking_form.blade.php"
+				"appser",
+				"app/Providers/AppServiceProvider.php"
 			],
 			[
-				"viewco",
-				"Jwnc/views/nanobeam/completed_jobs.blade.php"
+				"stuin",
+				"views/project/student_index.blade.php"
 			],
 			[
-				"nanch",
-				"Jwnc/Models/JwncNanobeamChuck.php"
+				"repoc",
+				"app/Http/Controllers/ReportController.php"
 			],
 			[
-				"chuco",
-				"Jwnc/Controllers/NanobeamChuckController.php"
+				"allpro",
+				"views/report/all_projects.blade.php"
 			],
 			[
-				"review",
-				"Jwnc/views/nanobeam/review.blade.php"
+				"typeind",
+				"views/projecttype/index.blade.php"
 			],
 			[
-				"calde",
-				"Jwnc/views/nanobeam/calibration_detail.blade.php"
+				"repc",
+				"app/Http/Controllers/ReportController.php"
 			],
 			[
-				"calsum",
-				"Jwnc/views/nanobeam/partials/calibration_summary.blade.php"
+				"projco",
+				"app/Http/Controllers/ProjectController.php"
 			],
 			[
-				"nancal",
-				"Jwnc/Models/JwncNanobeamCalibration.php"
+				"procon",
+				"app/Http/Controllers/ProgrammeController.php"
 			],
 			[
-				"calco",
-				"Jwnc/Controllers/NanobeamCalibrationController.php"
+				"reproja",
+				"views/report/all_projects.blade.php"
 			],
 			[
-				"chucli",
-				"Jwnc/views/nanobeam/partials/chuck_list.blade.php"
+				"projcon",
+				"app/Http/Controllers/ProjectController.php"
 			],
 			[
-				"load",
-				"Jwnc/views/nanobeam/loading.blade.php"
+				"proco",
+				"app/Http/Controllers/ProgrammeController.php"
 			],
 			[
-				"userhe",
-				"Jwnc/Helpers/UserHelper.php"
+				"tyind",
+				"views/projecttype/index.blade.php"
 			],
 			[
-				"nantsv",
-				"Jwnc/Models/JwncNanobeamTsv.php"
+				"authse",
+				"app/Providers/AuthServiceProvider.php"
 			],
 			[
-				"bellfi",
-				"Jwnc/Models/JwncNanobeamBelleFile.php"
+				"projcont",
+				"app/Http/Controllers/ProjectController.php"
 			],
 			[
-				"viewj",
-				"Jwnc/views/nanobeam/partials/view_job.blade.php"
+				"proshow",
+				"views/project/show.blade.php"
 			],
 			[
-				"jwnantsv",
-				"Jwnc/Models/JwncNanobeamTsv.php"
+				"repstu",
+				"views/report/all_students.blade.php"
 			],
 			[
-				"viewload",
-				"Jwnc/views/nanobeam/viewloaded.blade.php"
+				"stu",
+				"views/project/student_index.blade.php"
 			],
 			[
-				"nants",
-				"Jwnc/Models/JwncNanobeamTsv.php"
+				"projfor",
+				"views/project/partials/project_form.blade.php"
 			],
 			[
-				"nanchu",
-				"Jwnc/Controllers/NanobeamChuckController.php"
+				"progfor",
+				"views/programme/partials/programme_form.blade.php"
 			],
 			[
-				"pendi",
-				"Jwnc/views/nanobeam/pending_jobs.blade.php"
+				"loc",
+				"app/Location.php"
 			],
 			[
-				"jwnan",
-				"Jwnc/Models/JwncNanojob.php"
+				"locind",
+				"views/location/index.blade.php"
 			],
 			[
-				"jwfavs",
-				"Jwnc/Models/JwncFavouriteSample.php"
+				"locco",
+				"app/Http/Controllers/LocationController.php"
 			],
 			[
-				"api",
-				"~/Documents/code/jwnc_current/api.php"
+				"locfo",
+				"views/location/partials/location_form.blade.php"
 			],
 			[
-				"favsam",
-				"Jwnc/Models/JwncFavouriteSample.php"
+				"deffl",
+				"migrations/2015_11_30_095006_add_default_flag_to_locations.php"
 			],
 			[
-				"nanbooim",
-				"Jwnc/Models/JwncNanojobBookingImage.php"
+				"proj",
+				"app/Project.php"
 			],
 			[
-				"calib",
-				"Jwnc/Models/JwncEbeamCalibration.php"
+				"repo",
+				"app/Http/Controllers/ReportController.php"
 			],
 			[
-				"nanjoi",
-				"Jwnc/Models/JwncNanojobImage.php"
+				"dat",
+				"views/partials/datatables.blade.php"
 			],
 			[
-				"jwnin",
-				"Jwnc/Models/JwncInternalNanojob.php"
+				"prosho",
+				"views/project/show.blade.php"
 			],
 			[
-				"nancept",
-				"tests/acceptance/NanobeamBookingFormWorksCept.php"
+				"usershow",
+				"views/user/show.blade.php"
 			],
 			[
-				"ebc",
-				"tests/acceptance/EbeamBookingCept.php"
+				"repoco",
+				"app/Http/Controllers/ReportController.php"
 			],
 			[
-				"eqca",
-				"Jwnc/Controllers/EquipmentCategoryController.php"
+				"loca",
+				"app/Location.php"
 			],
 			[
-				"equca",
-				"Jwnc/Models/EquipmentCategory.php"
+				"locatinde",
+				"views/location/index.blade.php"
 			],
 			[
-				"jweq",
-				"Jwnc/Models/JwncEquipment.php"
+				"projsho",
+				"views/project/show.blade.php"
 			],
 			[
-				"eqsh",
-				"Jwnc/views/admin/equipment_show.blade.php"
+				"stui",
+				"views/project/student_index.blade.php"
 			],
 			[
-				"logce",
-				"tests/acceptance/LoginPageCept.php"
+				"stuind",
+				"views/project/student_index.blade.php"
 			],
 			[
-				"logcep",
-				"tests/acceptance/LoginPageCept.php"
+				"usersho",
+				"views/user/show.blade.php"
 			],
 			[
-				"validu",
-				"tests/acceptance/_steps/ValidUserSteps.php"
+				"role",
+				"app/Role.php"
 			],
 			[
-				"logpac",
-				"tests/acceptance/LoginPageCept.php"
+				"roledi",
+				"views/role/edit.blade.php"
+			],
+			[
+				"project",
+				"app/Project.php"
+			],
+			[
+				"permfor",
+				"views/permission/partials/permission_form.blade.php"
+			],
+			[
+				"percre",
+				"views/permission/create.blade.php"
+			],
+			[
+				"pered",
+				"views/permission/edit.blade.php"
+			],
+			[
+				"perminde",
+				"views/permission/index.blade.php"
+			],
+			[
+				"permfo",
+				"views/permission/partials/permission_form.blade.php"
+			],
+			[
+				"permi",
+				"app/Permission.php"
+			],
+			[
+				"permcon",
+				"app/Http/Controllers/PermissionController.php"
+			],
+			[
+				"userfor",
+				"views/user/partials/user_form.blade.php"
+			],
+			[
+				"usercrea",
+				"views/user/create.blade.php"
+			],
+			[
+				"permco",
+				"app/Http/Controllers/PermissionController.php"
+			],
+			[
+				"perm",
+				"~/Documents/code/projects2/projects2/database/seeds/PermissionRoleTableSeeder.php"
+			],
+			[
+				"usercont",
+				"app/Http/Controllers/UserController.php"
+			],
+			[
+				"courfo",
+				"views/course/partials/course_form.blade.php"
+			],
+			[
+				"userfo",
+				"views/user/partials/user_form.blade.php"
+			],
+			[
+				"courind",
+				"views/course/index.blade.php"
+			],
+			[
+				"course",
+				"app/Course.php"
+			],
+			[
+				"profo",
+				"views/project/partials/project_form.blade.php"
+			],
+			[
+				"proform",
+				"views/project/partials/project_form.blade.php"
+			],
+			[
+				"usefor",
+				"views/user/partials/user_form.blade.php"
+			],
+			[
+				"couind",
+				"views/course/index.blade.php"
+			],
+			[
+				"progproj",
+				"migrations/2015_11_26_183219_create_programme_project_table.php"
+			],
+			[
+				"authser",
+				"app/Providers/AuthServiceProvider.php"
+			],
+			[
+				"projedi",
+				"views/project/edit.blade.php"
+			],
+			[
+				"proed",
+				"views/programme/edit.blade.php"
+			],
+			[
+				"servi",
+				"app/Providers/AppServiceProvider.php"
+			],
+			[
+				"sta",
+				"views/project/staff_index.blade.php"
+			],
+			[
+				"edi",
+				"views/project/edit.blade.php"
+			],
+			[
+				"procre",
+				"views/project/create.blade.php"
+			],
+			[
+				"proc",
+				"app/Http/Controllers/ProjectController.php"
+			],
+			[
+				"home",
+				"views/home.blade.php"
+			],
+			[
+				"cour",
+				"app/Course.php"
+			],
+			[
+				"use",
+				"app/User.php"
+			],
+			[
+				"coupro",
+				"migrations/2015_11_26_183359_create_course_project_table.php"
+			],
+			[
+				"creproprj",
+				"migrations/2015_11_26_183219_create_programme_project_table.php"
+			],
+			[
+				"coucont",
+				"app/Http/Controllers/CourseController.php"
+			],
+			[
+				"cours",
+				"app/Course.php"
+			],
+			[
+				"coufor",
+				"views/course/partials/course_form.blade.php"
+			],
+			[
+				"locin",
+				"views/location/index.blade.php"
+			],
+			[
+				"typed",
+				"views/projecttype/edit.blade.php"
+			],
+			[
+				"typpar",
+				"views/projecttype/partials/type_form.blade.php"
+			],
+			[
+				"typcre",
+				"views/projecttype/create.blade.php"
+			],
+			[
+				"adlocus",
+				"migrations/2015_11_26_155502_add_location_to_users.php"
+			],
+			[
+				"adloccou",
+				"migrations/2015_11_26_155140_add_location_to_courses.php"
 			]
 		],
 		"width": 0.0

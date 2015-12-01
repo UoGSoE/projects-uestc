@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents');
     Route::get('project/{id}/copy', 'ProjectController@duplicate');
     Route::resource('project', 'ProjectController');
+    Route::get('project/{id}/delete', 'ProjectController@destroy');
 
     // Permission routes
     Route::resource('permission', 'PermissionController');

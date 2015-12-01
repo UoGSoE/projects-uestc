@@ -7,14 +7,9 @@
         <a href="{!! action('ProjectController@duplicate', $project->id) !!}" class="btn btn-default">
             Copy This Project
         </a>
-        @can('edit_projects')
-            <form method="POST" action="{!! action('ProjectController@destroy', $project->id) !!}" class="pull-right">
-                {{ csrf_field() }}
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit" value="Delete" class="btn btn-danger" data-toggle="modal" data-target="#confirm-model">Delete</button>
-            </form>
-        @endcan
-
+        <a action-href="{!! action('ProjectController@destroy', $project->id) !!}" data-confirm="Really delete this project?" class="btn btn-danger pull-right data-confirm">
+            Delete
+        </a>
     </h2>
     <form method="POST" action="{!! action('ProjectController@update', $project->id) !!}">
         <input type="hidden" name="_method" value="PATCH">

@@ -1,13 +1,15 @@
 <?php namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Auth\Ldap;
-use Illuminate\Http\Request;
-use App\User;
 use Auth;
-use App\FundingType;
+use App\User;
+use App\EventLog;
+use App\Location;
 use App\UserType;
 use App\UserGroup;
+use App\FundingType;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\Ldap;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller {
 
@@ -26,6 +28,7 @@ class AuthController extends Controller {
             if (Auth::attempt(['username' => $username, 'password' => $password])) {
                 Auth::user()->last_login = \Carbon\Carbon::now();
                 Auth::user()->save();
+                EventLog::log(Auth::user()->id, 'Logged in');
                 return redirect()->intended('/');
             } else {
                 return redirect()->refresh()->with('errors', 'Username and/or password are incorrect.');
@@ -56,10 +59,13 @@ class AuthController extends Controller {
                 $user->surname = $result['surname'];
                 $user->forenames = $result['forenames'];
                 $user->email = $result['email'];
+                $defaultLocation = Location::getDefault();
+                $user->location_id = $defaultLocation->id;
                 if (preg_match('/^[0-9]{6}[a-z]$/i', $username)) {
                     $user->is_student = true;
                 }
         		$user->save();
+                EventLog::log($user->id, 'Created new @glasgow user');
         	}
 
             //$user = User::where('username', Input::get('username'))->first();
@@ -67,6 +73,7 @@ class AuthController extends Controller {
             Auth::login( $user );
             Auth::user()->last_login = \Carbon\Carbon::now();
             Auth::user()->save();
+            EventLog::log(Auth::user()->id, 'Logged in');
 
             return redirect()->intended('/');
         }

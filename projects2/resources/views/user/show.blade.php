@@ -20,6 +20,8 @@
             <dd>{{ $user->password ? 'External' : 'Internal' }} {{ $user->is_student ? 'Student' : 'Staff' }}</dd>
             <dt>Location</dt>
             <dd>{{ $user->location_id ? $user->location->title : 'N/A' }}</dd>
+            <dt>Last Login</dt>
+            <dd>{{ $user->last_login }}</dd>
             <dt>Roles</dt>
             @if ($user->roles()->count() > 0)
                 <dd>

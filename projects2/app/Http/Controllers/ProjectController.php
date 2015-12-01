@@ -149,7 +149,7 @@ class ProjectController extends Controller
         $project = Project::findOrFail($id);
         EventLog::log(Auth::user()->id, 'Deleted project {$project->title}');
         $project->delete();
-        return redirect()->action('ProjectController@index');
+        return redirect()->to('/')->with('success_message', 'Project deleted');
     }
 
     /**
