@@ -4,11 +4,9 @@
 
     <h2>
         Edit Location
-        <form method="POST" action="{!! action('LocationController@destroy', $location->id) !!}" class="pull-right">
-            {{ csrf_field() }}
-            <input type="hidden" name="_method" value="DELETE">
-            <button type="submit" value="Delete" class="btn btn-danger" data-toggle="modal" data-target="#confirm-model">Delete</button>
-        </form>
+        <a action-href="{!! action('LocationController@destroy', $location->id) !!}" data-confirm="Really delete this location? This will remove ALL projects, courses and users with this location!" class="btn btn-danger pull-right data-confirm">
+            Delete
+        </a>
     </h2>
     <form method="POST" action="{!! action('LocationController@update', $location->id) !!}">
         <input type="hidden" name="_method" value="PATCH">

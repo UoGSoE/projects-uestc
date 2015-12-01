@@ -4,11 +4,9 @@
     <div class="container">
         <h2>
             Edit Programme {{ $programme->title }}
-            <form method="POST" action="{!! action('ProgrammeController@destroy', $programme->id) !!}" class="pull-right">
-                {{ csrf_field() }}
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit" value="Delete" class="btn btn-danger" data-toggle="modal" data-target="#confirm-model">Delete</button>
-            </form>
+            <a action-href="{!! action('ProgrammeController@destroy', $programme->id) !!}" data-confirm="Really delete this programme?" class="btn btn-danger pull-right data-confirm">
+                Delete
+            </a>
 
         </h2>
 

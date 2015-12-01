@@ -17,7 +17,11 @@
         <tbody>
             @foreach ($programmes as $programme)
                 <tr>
-                    <td>{{ $programme->title }}</td>
+                    <td>
+                        <a href="{!! action('ProgrammeController@edit', $programme->id) !!}">
+                            {{ $programme->title }}
+                        </a>
+                    </td>
                     <td>0</td>
                     <td>0</td>
                 </tr>

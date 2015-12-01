@@ -28,6 +28,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/user/{id}/edit', 'UserController@edit');
     Route::post('/user/{id}/edit', 'UserController@update');
     Route::delete('/user/{id}', 'UserController@destroy');
+    Route::get('/user/{id}/delete', 'UserController@destroy');
 
     // Course routes
     Route::get('/course', 'CourseController@index');
@@ -37,8 +38,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/course/{id}/edit', 'CourseController@edit');
     Route::post('/course/{id}/edit', 'CourseController@update');
     Route::delete('/course/{id}', 'CourseController@destroy');
+    Route::get('course/{id}/delete', 'CourseController@destroy');
     Route::get('/course/{id}/editstudents', 'CourseController@editStudents');
     Route::patch('/course/{id}/editstudents', 'CourseController@updateStudents');
+    Route::get('/course/{id}/removestudents', 'CourseController@removeStudents');
 
     // Project routes
     Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents');
@@ -53,12 +56,15 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Project Type routes
     Route::resource('projecttype', 'ProjectTypeController');
+    Route::get('projecttype/{id}/delete', 'ProjectTypeController@destroy');
 
     // Location routes
     Route::resource('location', 'LocationController');
+    Route::get('location/{id}/delete', 'LocationController@destroy');
 
     // Programme routes
     Route::resource('programme', 'ProgrammeController');
+    Route::get('programme/{id}/delete', 'ProgrammeController@destroy');
 
     // Report routes
     Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfType');

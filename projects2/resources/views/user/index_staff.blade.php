@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h2>
-            Current Users
+            Current Staff
             <a href="{!! action('UserController@create') !!}" class="btn btn-default">Add New User</a>
         </h2>
         @include('user.partials.user_list')

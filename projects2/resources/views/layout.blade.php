@@ -46,7 +46,7 @@
     <script>
     	$( document ).ready(function() {
 			$('a[data-confirm]').click(function(ev) {
-				var href = $(this).attr('href');
+				var href = $(this).attr('action-href');
 				if (!$('#dataConfirmModal').length) {
 					$('body').append('<div id="dataConfirmModal" class="modal fade" aria-labelledby="dataConfirmLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-body"></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button><a class="btn btn-primary" id="dataConfirmOK">OK</a></div></div></div>');
 				}

@@ -122,35 +122,61 @@ class CourseController extends Controller
         $rows = $sheet->all();
         $students = User::students()->get();
         foreach ($rows[0] as $row) {
-            if (!is_numeric($row[0])) {
-                continue;
-            }
-            $matric = sprintf('%07d', $row[0]);
-            $surname = $row[1];
-            $forenames = $row[2];
-            if (!preg_match('/[a-zA-Z]/', $surname)) {
-                continue;
-            }
-            if (!preg_match('/[a-zA-Z]/', $forenames)) {
-                continue;
-            }
-            $username = $matric . substr(strtolower($surname), 0, 1);
-            $student = $students->where('username', $username)->first();
-            if (!$student) {
-                $student = new User;
-                $student->is_student = true;
-                $student->username = $username;
-                $student->surname = $surname;
-                $student->forenames = $forenames;
-                $student->email = $username . '@student.gla.ac.uk';
-                $student->save();
-            }
-            // remove any existing course associations - a student should (ha) only ever be enrolled on one
-            // project course at a time.
-            $student->courses()->detach();
-            $studentIds[] = $student->id;
+            $studentIds[] = $this->parseExcelRow($row, $students);
         }
+        $studentIds = array_filter($studentIds);    // strip out any null-like keys
         $course->students()->sync($studentIds);
         return redirect()->action('CourseController@show', $id);
+    }
+
+    private function parseExcelRow($row, $students)
+    {
+        if (!is_numeric($row[0])) {
+            return null;
+        }
+        $matric = sprintf('%07d', $row[0]);
+        $surname = $row[1];
+        $forenames = $row[2];
+        if (!$this->validName($surname)) {
+            return null;
+        }
+        if (!$this->validName($forenames)) {
+            return null;
+        }
+        $username = $this->makeStudentUsername($matric, $surname);
+        $student = $students->where('username', $username)->first();
+        if (!$student) {
+            $student = new User;
+            $student->is_student = true;
+            $student->username = $username;
+            $student->surname = $surname;
+            $student->forenames = $forenames;
+            $student->email = $username . '@student.gla.ac.uk';
+            $student->save();
+        }
+        // remove any existing course associations - a student should (ha) only ever be enrolled on one
+        // project course at a time.
+        $student->courses()->detach();
+        return $student->id;
+    }
+
+    private function validName($name)
+    {
+        return preg_match('/[a-zA-Z]/', $name);
+    }
+
+    private function makeStudentUsername($matric, $surname)
+    {
+        return $matric . substr(strtolower($surname), 0, 1);
+    }
+
+    public function removeStudents($courseId)
+    {
+        $course = Course::findOrFail($courseId);
+        foreach ($course->students as $student) {
+            // Note: this will remove any allocations to projects too
+            $student->delete();
+        }
+        return redirect()->action('CourseController@show', $courseId);
     }
 }

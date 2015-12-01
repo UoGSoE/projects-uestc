@@ -4,11 +4,9 @@
 
     <h2>
         Edit Project Type
-        <form method="POST" action="{!! action('ProjectTypeController@destroy', $type->id) !!}" class="pull-right">
-            {{ csrf_field() }}
-            <input type="hidden" name="_method" value="DELETE">
-            <button type="submit" value="Delete" class="btn btn-danger" data-toggle="modal" data-target="#confirm-model">Delete</button>
-        </form>
+        <a action-href="{!! action('ProjectTypeController@destroy', $type->id) !!}" data-confirm="Really delete this type? This will remove ALL projects of this type!" class="btn btn-danger pull-right data-confirm">
+            Delete
+        </a>
     </h2>
     <form method="POST" action="{!! action('ProjectTypeController@update', $type->id) !!}">
         <input type="hidden" name="_method" value="PATCH">

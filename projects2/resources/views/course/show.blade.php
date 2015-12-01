@@ -27,16 +27,14 @@
         <h3>
             Students
             <a href="{!! action('CourseController@editStudents', $course->id) !!}" class="btn btn-default">Import</a>
+            <a action-href="{!! action('CourseController@removeStudents', $course->id) !!}" data-confirm="Really remove all students?" class="btn btn-danger pull-right data-confirm">
+                Remove All Students
+            </a>
         </h3>
         @if ($course->students->count() == 0)
             None
         @else
-            @foreach ($course->students()->orderBy('surname')->get() as $student)
-                <li>
-                    <a href="{!! action('UserController@show', $student->id) !!}">{{ $student->fullName() }}</a>
-                    ({{ $student->matric() }})
-                </li>
-            @endforeach
+            @include('report.partials.student_list', ['students' => $course->students])
         @endif
     </div>
 @stop

@@ -25,13 +25,13 @@ class UserController extends Controller
     public function indexStaff()
     {
         $users = User::staff()->orderBy('surname')->get();
-        return view('user.index', compact('users'));
+        return view('user.index_staff', compact('users'));
     }
 
     public function indexStudents()
     {
         $users = User::students()->orderBy('surname')->get();
-        return view('user.index', compact('users'));
+        return view('user.index_students', compact('users'));
     }
 
     public function show($userId)
@@ -125,6 +125,12 @@ class UserController extends Controller
         return redirect()->to('/')->with('success_message', 'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.');
     }
 
+    /**
+     * Syncs the students project choices
+     * @param  User $student
+     * @param  array $choices Array of choices (see chooseProjects for instance)
+     * @return true
+     */
     private function allocateStudentToProjects($student, $choices)
     {
         $student->projects()->detach();
@@ -132,6 +138,11 @@ class UserController extends Controller
         return true;
     }
 
+    /**
+     * Log in as a different user (mostly so you can see what they see, do their work etc)
+     * @param  integer $userId The user ID to log in as
+     * @return Redirect
+     */
     public function logInAs($userId)
     {
         $this->authorize('login_as_user');
