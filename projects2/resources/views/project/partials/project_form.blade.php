@@ -41,15 +41,15 @@
         <div class="form-group">
             <label for="inputLocation">Location</label>
             <select id="inputLocation" name="location_id" class="form-control" required>
-                @if (Auth::user()->location_id)
-                    <option value="{{ Auth::user()->location_id }}">{{ Auth::user()->location->title }}</option>
-                @else
+                @can('choose_any_location')
                     @foreach ($locations as $location)
                         <option value="{{ $location->id }}" @if ($project->location_id == $location->id) selected @endif>
                             {{ $location->title }}
                         </option>
                     @endforeach
-                @endif
+                @else
+                    <option value="{{ Auth::user()->location_id }}">{{ Auth::user()->location->title }}</option>
+                @endcan
             </select>
         </div>
         <div class="form-group">

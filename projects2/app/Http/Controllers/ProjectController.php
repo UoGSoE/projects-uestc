@@ -41,10 +41,10 @@ class ProjectController extends Controller
         $project->user_id = Auth::user()->id;
         $types = ProjectType::orderBy('title')->get();
         $programmes = Programme::orderBy('title')->get();
-        if (Auth::user()->location_id) {
-            $courses = Course::where('location_id', '=', Auth::user()->location_id)->orderBy('title')->get();
-        } else {
+        if (Auth::user()->can('choose_any_location')) {
             $courses = Course::orderBy('title')->get();
+        } else {
+            $courses = Course::where('location_id', '=', Auth::user()->location_id)->orderBy('title')->get();
         }
         $locations = Location::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();

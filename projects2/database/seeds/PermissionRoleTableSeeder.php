@@ -28,6 +28,10 @@ class PermissionRoleTableSeeder extends Seeder
         $seeReports = Permission::whereTitle('see_reports')->first();
         $allocateStudents = Permission::whereTitle('allocate_students')->first();
         $editCourses = Permission::whereTitle('edit_courses')->first();
+        $viewUsers = Permission::whereTitle('view_users')->first();
+        $editProjects = Permission::whereTitle('edit_projects')->first();
+        $loginAsUser = Permission::whereTitle('login_as_user')->first();
+        $viewEventLog = Permission::whereTitle('view_eventlog')->first();
 
         $teachingOffice = Role::whereTitle('teaching_office')->first();
         $teachingOffice->givePermissionTo($basicAdmin);
@@ -36,6 +40,10 @@ class PermissionRoleTableSeeder extends Seeder
         $teachingOffice->givePermissionTo($seeReports);
         $teachingOffice->givePermissionTo($allocateStudents);
         $teachingOffice->givePermissionTo($editCourses);
+        $teachingOffice->givePermissionTo($viewUsers);
+        $teachingOffice->givePermissionTo($editProjects);
+        $teachingOffice->givePermissionTo($loginAsUser);
+        $teachingOffice->givePermissionTo($viewEventLog);
 
         $convenor = Role::whereTitle('convenor')->first();
         $convenor->givePermissionTo($seeReports);

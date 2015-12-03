@@ -46,6 +46,22 @@ class PermissionTableSeeder extends Seeder
             'title' => 'edit_projects',
             'label' => 'Create/Edit Projects'
         ]);
+        DB::table('permissions')->insert([
+            'title' => 'login_as_user',
+            'label' => 'Log in as another user'
+        ]);
+        DB::table('permissions')->insert([
+            'title' => 'view_users',
+            'label' => 'View users details'
+        ]);
+        DB::table('permissions')->insert([
+            'title' => 'choose_any_location',
+            'label' => 'Choose from any location'
+        ]);
+        DB::table('permissions')->insert([
+            'title' => 'view_eventlog',
+            'label' => 'View the activity log'
+        ]);
 
         Model::reguard();
     }
