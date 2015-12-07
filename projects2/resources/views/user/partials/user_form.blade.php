@@ -42,16 +42,6 @@
                     </select>
                 </div>
             @endcan
-        <div class="form-group">
-            <label for="inputLocation">Location</label>
-            <select id="inputLocation" name="location_id" class="form-control" required>
-                @foreach ($locations as $location)
-                    <option value="{{ $location->id }}" @if ($user->location_id == $location->id) selected @endif>
-                        {{ $location->title }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
         @if ($user->is_student)
             <div class="form-group">
                 <label for="inputProject">Allocate to project</label>

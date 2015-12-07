@@ -8,6 +8,9 @@ Route::get('/auth/login', function () {
 Route::post('/auth/login', 'Auth\AuthController@login');
 Route::get('/logout', 'Auth\AuthController@logout');
 
+Route::get('/resetpassword/{token}', 'Auth\AuthController@password');
+Route::post('/resetpassword/{token}', 'Auth\AuthController@resetPassword');
+
 // Routes you can only get to once authenticated
 Route::group(['middleware' => ['auth']], function () {
 

@@ -23,24 +23,12 @@
             </a>
         @endforeach
     </p>
-    <p>
-        Location :
-        <a href="{!! action('ReportController@allProjects') !!}">
-            All
-        </a>
-        @foreach ($locations as $location)
-            <a href="{!! action('ReportController@allProjectsAtLocation', $location->id) !!}">
-                {{ $location->title }}
-            </a>
-        @endforeach
-    </p>
     <table class="table table-striped table-hover datatable">
         <thead>
             <tr>
                 <th>Title</th>
                 <th>Owner</th>
                 <th>Type</th>
-                <th>Location</th>
                 <th title="Max, Applied, Accepted">Students</th>
             </tr>
         </thead>
@@ -62,11 +50,6 @@
                     <td>
                         <a href="{!! action('ReportController@allProjectsOfType', $project->type->id) !!}">
                             {{ $project->type->title }}
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{!! action('ReportController@allProjectsAtLocation', $project->location_id) !!}">
-                            {{ $project->location->title }}
                         </a>
                     </td>
                     <td>

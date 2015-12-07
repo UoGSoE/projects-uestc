@@ -8,7 +8,6 @@ use App\User;
 use App\Course;
 use App\Project;
 use App\EventLog;
-use App\Location;
 use App\Programme;
 use App\ProjectType;
 use App\Http\Requests;
@@ -41,14 +40,9 @@ class ProjectController extends Controller
         $project->user_id = Auth::user()->id;
         $types = ProjectType::orderBy('title')->get();
         $programmes = Programme::orderBy('title')->get();
-        if (Auth::user()->can('choose_any_location')) {
-            $courses = Course::orderBy('title')->get();
-        } else {
-            $courses = Course::where('location_id', '=', Auth::user()->location_id)->orderBy('title')->get();
-        }
-        $locations = Location::orderBy('title')->get();
+        $courses = Course::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
-        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'locations', 'staff'));
+        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff'));
     }
 
     /**
@@ -61,11 +55,6 @@ class ProjectController extends Controller
     {
         $project = new Project;
         $project->fill($request->input());
-        if ($request->location_id > 0) {
-            $project->location_id = $request->location_id;
-        } else {
-            $project->location_id = null;
-        }
         $project->save();
         $project->courses()->sync($request->courses);
         $project->programmes()->sync($request->programmes);
@@ -102,14 +91,9 @@ class ProjectController extends Controller
         }
         $types = ProjectType::orderBy('title')->get();
         $programmes = Programme::orderBy('title')->get();
-        if (Auth::user()->location_id) {
-            $courses = Course::where('location_id', '=', Auth::user()->location_id)->orderBy('title')->get();
-        } else {
-            $courses = Course::orderBy('title')->get();
-        }
-        $locations = Location::orderBy('title')->get();
+        $courses = Course::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
-        return view('project.edit', compact('project', 'types', 'programmes', 'courses', 'locations', 'staff'));
+        return view('project.edit', compact('project', 'types', 'programmes', 'courses', 'staff'));
     }
 
     /**
@@ -126,11 +110,6 @@ class ProjectController extends Controller
             abort(403);
         }
         $project->fill($request->input());
-        if ($request->location_id > 0) {
-            $project->location_id = $request->location_id;
-        } else {
-            $project->location_id = null;
-        }
         $project->save();
         $project->courses()->sync($request->courses);
         $project->programmes()->sync($request->programmes);
@@ -165,10 +144,9 @@ class ProjectController extends Controller
         $types = ProjectType::orderBy('title')->get();
         $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
-        $locations = Location::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
         EventLog::log(Auth::user()->id, "Made a copy of project {$project->title}");
-        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'locations', 'staff'));
+        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff'));
     }
 
     /**

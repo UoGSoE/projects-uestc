@@ -16,30 +16,27 @@ class ReportController extends Controller
     {
         $projects = Project::with('owner', 'students', 'acceptedStudents', 'location', 'type')->orderBy('title')->get();
         $types = ProjectType::orderBy('title')->get();
-        $locations = Location::orderBy('title')->get();
-        return view('report.all_projects', compact('projects', 'types', 'locations'));
+        return view('report.all_projects', compact('projects', 'types'));
     }
 
     public function allProjectsOfType($typeId)
     {
         $projects = Project::where('type_id', '=', $typeId)
-                    ->with('owner', 'students', 'acceptedStudents', 'location', 'type')
+                    ->with('owner', 'students', 'acceptedStudents', 'type')
                     ->orderBy('title')
                     ->get();
         $types = ProjectType::orderBy('title')->get();
-        $locations = Location::orderBy('title')->get();
-        return view('report.all_projects', compact('projects', 'types', 'locations'));
+        return view('report.all_projects', compact('projects', 'types'));
     }
 
     public function allProjectsAtLocation($locationId)
     {
         $projects = Project::where('location_id', '=', $locationId)
-                    ->with('owner', 'students', 'acceptedStudents', 'location', 'type')
+                    ->with('owner', 'students', 'acceptedStudents', 'type')
                     ->orderBy('title')
                     ->get();
         $types = ProjectType::orderBy('title')->get();
-        $locations = Location::orderBy('title')->get();
-        return view('report.all_projects', compact('projects', 'types', 'locations'));
+        return view('report.all_projects', compact('projects', 'types'));
     }
 
     public function allStudents()

@@ -7,7 +7,6 @@ use App\Role;
 use App\User;
 use App\Project;
 use App\EventLog;
-use App\Location;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -45,9 +44,7 @@ class UserController extends Controller
     {
         $user = new User;
         $roles = Role::orderBy('label')->get();
-        $user->location_id = Location::getDefault()->id;
-        $locations = Location::orderBy('title')->get();
-        return view('user.create', compact('user', 'roles', 'locations'));
+        return view('user.create', compact('user', 'roles'));
     }
 
     public function store(Request $request)
@@ -72,9 +69,8 @@ class UserController extends Controller
     {
         $user = User::findOrFail($userId);
         $roles = Role::orderBy('label')->get();
-        $locations = Location::orderBy('title')->get();
         $projects = Project::active()->orderBy('title')->get();
-        return view('user.edit', compact('user', 'roles', 'locations', 'projects'));
+        return view('user.edit', compact('user', 'roles', 'projects'));
     }
 
     public function update(Request $request)
