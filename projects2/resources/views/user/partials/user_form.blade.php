@@ -50,7 +50,7 @@
                     @foreach($projects as $project)
                         @if ($project->isAvailable())
                             <option value="{{ $project->id }}">
-                                {{ $project->title }} ({{$project->type->title}} - {{ $project->location->title }})
+                                {{ $project->title }} ({{$project->type->title}})
                             </option>
                         @endif
                     @endforeach

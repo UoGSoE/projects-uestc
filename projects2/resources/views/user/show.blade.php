@@ -18,8 +18,6 @@
             <dd><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></dd>
             <dt>Type</dt>
             <dd>{{ $user->password ? 'External' : 'Internal' }} {{ $user->is_student ? 'Student' : 'Staff' }}</dd>
-            <dt>Location</dt>
-            <dd>{{ $user->location_id ? $user->location->title : 'N/A' }}</dd>
             <dt>Last Login</dt>
             <dd>{{ $user->last_login }}</dd>
             <dt>Roles</dt>

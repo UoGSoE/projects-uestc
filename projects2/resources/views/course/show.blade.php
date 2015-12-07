@@ -9,8 +9,6 @@
         <dl>
             <dt>Title</dt>
             <dd>{{ $course->title }}</dd>
-            <dt>Location</dt>
-            <dd>{{ $course->location_id ? $course->location->title : 'Anywhere' }}</dd>
             <dt>Projects</dt>
             <dd>
                 <ul class="list-inline">

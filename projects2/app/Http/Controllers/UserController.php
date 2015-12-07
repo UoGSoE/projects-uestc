@@ -112,14 +112,15 @@ class UserController extends Controller
     public function chooseProjects(Request $request)
     {
         $student = Auth::user();
+        $picked = $request->choice;
         $first = $request->first;
         $second = $request->second;
         // $third = $request->third;
         // $fourth = $request->fourth;
         // $fifth = $request->fifth;
         $choices = [
-            $first => ['choice' => 1],
-            $second => ['choice' => 2],
+            $picked[1] => ['choice' => 1],
+            $picked[2] => ['choice' => 2],
             // $third => ['choice' => 3],
             // $fourth => ['choice' => 4],
             // $fifth => ['choice' => 5],

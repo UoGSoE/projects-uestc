@@ -29,8 +29,6 @@
                     {{ $project->owner->fullName() }}
             @endcan
         </dd>
-        <dt>Location</dt>
-        <dd>{{ $project->location_id ? $project->location->title : 'Anywhere' }}</dd>
         <dt>Maximum Students</dt>
         <dd>{{ $project->maximum_students }}</dd>
         <dt>Programmes</dt>
@@ -59,7 +57,7 @@
         </dd>
     </dl>
     <h3>
-        Students
+        Students who applied for this project
     </h3>
     <p class="help-block">
         Please be careful accepting or un-accepting students. This triggers an automatic email to the student

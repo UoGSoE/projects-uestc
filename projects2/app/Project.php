@@ -13,11 +13,6 @@ class Project extends Model
         return $query->where('is_active', '=', 1);
     }
 
-    public function scopeForLocation($query, $location_id)
-    {
-        return $query->where('location_id', '=', $location_id);
-    }
-
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -51,11 +46,6 @@ class Project extends Model
     public function courses()
     {
         return $this->belongsToMany(Course::class);
-    }
-
-    public function location()
-    {
-        return $this->belongsTo(Location::class);
     }
 
     public function hasProgramme($id)

@@ -12,7 +12,7 @@
             <label for="inputFile">Upload an Excel file</label>
             <input type="file" id="inputFile" name="file" value="" required>
             <p class="help-block">
-                Spreadsheet must in of the form <pre>matric|surname|forenames</pre>
+                Spreadsheet must in of the form <pre>matric|surname|forenames|email</pre>
             </p>
         </div>
         <button type="submit" class="btn btn-primary">Import</button>

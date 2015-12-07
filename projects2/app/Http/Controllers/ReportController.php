@@ -14,7 +14,7 @@ class ReportController extends Controller
 {
     public function allProjects()
     {
-        $projects = Project::with('owner', 'students', 'acceptedStudents', 'location', 'type')->orderBy('title')->get();
+        $projects = Project::with('owner', 'students', 'acceptedStudents', 'type')->orderBy('title')->get();
         $types = ProjectType::orderBy('title')->get();
         return view('report.all_projects', compact('projects', 'types'));
     }
@@ -22,16 +22,6 @@ class ReportController extends Controller
     public function allProjectsOfType($typeId)
     {
         $projects = Project::where('type_id', '=', $typeId)
-                    ->with('owner', 'students', 'acceptedStudents', 'type')
-                    ->orderBy('title')
-                    ->get();
-        $types = ProjectType::orderBy('title')->get();
-        return view('report.all_projects', compact('projects', 'types'));
-    }
-
-    public function allProjectsAtLocation($locationId)
-    {
-        $projects = Project::where('location_id', '=', $locationId)
                     ->with('owner', 'students', 'acceptedStudents', 'type')
                     ->orderBy('title')
                     ->get();

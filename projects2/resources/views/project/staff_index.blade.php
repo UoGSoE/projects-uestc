@@ -8,7 +8,6 @@
                 <th>Title</th>
                 <th>Students</th>
                 <th>Type</th>
-                <th>Location</th>
             </tr>
         </thead>
         <tbody>
@@ -25,13 +24,6 @@
                     </td>
                     <td>{{ $project->students->count() }} ({{ $project->maximum_students }} max)</td>
                     <td>{{ $project->type->title }}</td>
-                    <td>
-                        @if ($project->location_id)
-                            {{ $project->location->title }}
-                        @else
-                            Anywhere
-                        @endif
-                    </td>
                 </tr>
             @endforeach
         </tbody>

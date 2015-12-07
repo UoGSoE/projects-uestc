@@ -19,9 +19,10 @@
         </select>
     </div>
 </p>
-<form method="POST" action="{!! action('UserController@chooseProjects') !!}">
+<form method="POST" action="{!! action('UserController@chooseProjects') !!}" id="vueform">
 {{ csrf_field() }}
 @foreach (Auth::user()->availableProjects() as $project)
+    @if ($project->isAvailable())
     <div class="panel panel-default anyprogramme @foreach($project->programmes as $programme) {{md5($programme->title)}} @endforeach">
         <div class="panel-heading fake-link">
             <h3 class="panel-title">
@@ -37,34 +38,52 @@
         <div class="panel-footer" style="display: none">
             Preference :
             <label class="radio-inline">
-                <input type="radio" name="first" value="{{ $project->id }}"> 1
+                <input type="radio" name="choice[1]" value="{{ $project->id }}"> 1
             </label>
             <label class="radio-inline">
-                <input type="radio" name="second" value="{{ $project->id }}"> 2
+                <input type="radio" name="choice[2]" value="{{ $project->id }}"> 2
             </label>
             <label class="radio-inline">
-                <input type="radio" name="third" value="{{ $project->id }}"> 3
+                <input type="radio" name="choice[3]" value="{{ $project->id }}"> 3
             </label>
             <label class="radio-inline">
-                <input type="radio" name="fourth" value="{{ $project->id }}"> 4
+                <input type="radio" name="choice[4]" value="{{ $project->id }}"> 4
             </label>
             <label class="radio-inline">
-                <input type="radio" name="fifth" value="{{ $project->id }}"> 5
+                <input type="radio" name="choice[5]" value="{{ $project->id }}"> 5
             </label>
         </div>
     </div>
+    @endif
 @endforeach
 <button type="submit" class="btn btn-primary">Submit Choices</button>
+<script src="vendor/vue.min.js"></script>
+
 <script>
-$(document).ready(function() {
-    $('.panel-title').click(function() {
-        var parent = $(this).parent();
-        parent.siblings().toggle();
+    $(document).ready(function() {
+        $('.panel-title').click(function() {
+            var parent = $(this).parent();
+            parent.siblings().toggle();
+        });
+        $('#inputProgramme').change(function() {
+            var value = $(this).val();
+            $('.panel, .' + value).show();
+            $('.panel').not('.' + value).hide();
+        });
     });
-    $('#inputProgramme').change(function() {
-        var value = $(this).val();
-        $('.panel, .' + value).show();
-        $('.panel').not('.' + value).hide();
+    new Vue({
+        el: 'vueform',
+        data: {
+            first: null,
+            second: null,
+            third: null,
+            fourth: null,
+            fifth: null
+        },
+        computed: {
+            chosenFive: function() {
+                return this.first && this.second;
+            }
+        }
     });
-});
 </script>

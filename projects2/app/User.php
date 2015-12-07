@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Course;
+use App\PasswordReset;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -61,6 +62,11 @@ class User extends Model implements AuthenticatableContract,
         return $this->hasMany(Project::class)->with('students', 'acceptedStudents');
     }
 
+    public function resetToken()
+    {
+        return $this->hasOne(PasswordReset::class);
+    }
+
     public function courses()
     {
         return $this->belongsToMany(Course::class, 'course_student');
@@ -94,7 +100,7 @@ class User extends Model implements AuthenticatableContract,
         if (!$course) {
             return [];
         }
-        return Project::active()->forLocation($course->location_id)->orderBy('title')->get();
+        return Project::active()->orderBy('title')->get();
     }
 
     public function assignRole(Role $role)

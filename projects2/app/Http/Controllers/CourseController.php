@@ -7,8 +7,8 @@ use Excel;
 use App\User;
 use App\Course;
 use App\EventLog;
-use App\Location;
 use App\Http\Requests;
+use App\PasswordReset;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -33,9 +33,7 @@ class CourseController extends Controller
     public function create()
     {
         $course = new Course;
-        $course->location_id = Location::getDefault()->id;
-        $locations = Location::orderBy('title')->get();
-        return view('course.create', compact('course', 'locations'));
+        return view('course.create', compact('course'));
     }
 
     /**
@@ -48,9 +46,6 @@ class CourseController extends Controller
     {
         $course = new Course;
         $course->fill($request->input());
-        if ($request->location_id) {
-            $course->location_id = $request->location_id;
-        }
         $course->save();
         EventLog::log(Auth::user()->id, "Created course {$course->title} {$course->code}");
         return redirect()->action('CourseController@show', $course->id);
@@ -77,8 +72,7 @@ class CourseController extends Controller
     public function edit($id)
     {
         $course = Course::findOrFail($id);
-        $locations = Location::orderBy('title')->get();
-        return view('course.edit', compact('course', 'locations'));
+        return view('course.edit', compact('course'));
     }
 
     /**
@@ -92,9 +86,6 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($id);
         $course->fill($request->input());
-        if ($request->location_id) {
-            $course->location_id = $request->location_id;
-        }
         $course->save();
         EventLog::log(Auth::user()->id, "Updated course {$course->title} {$course->code}");
         return redirect()->action('CourseController@show', $course->id);
@@ -144,6 +135,7 @@ class CourseController extends Controller
         $matric = sprintf('%07d', $row[0]);
         $surname = $row[1];
         $forenames = $row[2];
+        $email = $row[3];
         if (!$this->validName($surname)) {
             return null;
         }
@@ -158,8 +150,13 @@ class CourseController extends Controller
             $student->username = $username;
             $student->surname = $surname;
             $student->forenames = $forenames;
-            $student->email = $username . '@student.gla.ac.uk';
+            $student->email = $email;
             $student->save();
+            $token = PasswordReset::create([
+                'user_id' => $student->id,
+                'token' => strtolower(str_random(64)),
+            ]);
+            $token->save();
         }
         // remove any existing course associations - a student should (ha) only ever be enrolled on one
         // project course at a time.

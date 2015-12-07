@@ -13,7 +13,6 @@
                 <th>Title</th>
                 <th>Students</th>
                 <th>Projects</th>
-                <th>Location</th>
             </tr>
         </thead>
         <tbody>
@@ -23,7 +22,6 @@
                     <td>{{ $course->title }}</td>
                     <td>{{ $course->students->count() }}</td>
                     <td>{{ $course->projects->count() }}</td>
-                    <td>{{ $course->location_id ? $course->location->title : 'Anywhere' }}</td>
                 </tr>
             @endforeach
         </tbody>

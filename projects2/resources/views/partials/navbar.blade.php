@@ -36,7 +36,6 @@
 				              		<li><a href="{!! action('CourseController@index') !!}">Courses</a></li>
 				              		<li><a href="{!! action('ProgrammeController@index') !!}">Programmes</a></li>
 				              		<li><a href="{!! action('ProjectTypeController@index') !!}">Project Types</a></li>
-				              		<li><a href="{!! action('LocationController@index') !!}">Locations</a></li>
 				              	@endcan
 				              	@can('view_eventlog')
 				              		<li><a href="{!! action('EventLogController@index') !!}">Activity Log</a></li>
