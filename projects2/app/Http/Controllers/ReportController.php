@@ -40,4 +40,11 @@ class ReportController extends Controller
         $users = User::staff()->with('projects')->orderBy('surname')->get();
         return view('report.all_staff', compact('users'));
     }
+
+    public function bulkAllocate()
+    {
+        $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
+        return view('report.bulk_allocation', compact('students'));
+    }
+
 }

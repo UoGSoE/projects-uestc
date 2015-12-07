@@ -49,9 +49,9 @@ Route::group(['middleware' => ['auth']], function () {
     // Project routes
     Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents');
     Route::get('project/{id}/copy', 'ProjectController@duplicate');
+    Route::post('project/bulkallocate', 'ProjectController@bulkAllocate');
     Route::resource('project', 'ProjectController');
     Route::get('project/{id}/delete', 'ProjectController@destroy');
-
     // Permission routes
     Route::resource('permission', 'PermissionController');
 
@@ -76,6 +76,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/report/projects', 'ReportController@allProjects');
     Route::get('/report/students', 'ReportController@allStudents');
     Route::get('/report/staff', 'ReportController@allStaff');
+    Route::get('/report/bulkallocate', 'ReportController@bulkAllocate');
 
     // Event routes
     Route::get('events', 'EventLogController@index');

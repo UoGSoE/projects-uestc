@@ -20,7 +20,7 @@
 			              		<li><a href="{!! action('ReportController@allProjects') !!}">View All Projects</a></li>
 			              		<li><a href="{!! action('ReportController@allStudents') !!}">View All Students</a></li>
 			              		<li><a href="{!! action('ReportController@allStaff') !!}">View All Staff</a></li>
-			              		<li><a href="">View All Allocations</a></li>
+			              		<li><a href="{!! action('ReportController@bulkAllocate') !!}">Bulk Allocations</a></li>
 				              </ul>
 				            </li>
 			            @endcan

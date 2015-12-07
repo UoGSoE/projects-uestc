@@ -173,4 +173,20 @@ class ProjectController extends Controller
         EventLog::log(Auth::user()->id, "Accepted students onto project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'Allocations Saved');
     }
+
+    public function bulkAllocate(Request $request)
+    {
+        if (!$request->has('student')) {
+            return redirect()->back();
+        }
+        foreach ($request->student as $student_id => $project_id) {
+            $student = User::findOrFail($student_id);
+            $data[$project_id] = [
+                'accepted' => true
+            ];
+            $student->projects()->sync($data);
+        }
+        return redirect()->action('ReportController@bulkAllocate')->with('success_message', 'Allocations saved');
+    }
+
 }
