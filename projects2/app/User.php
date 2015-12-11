@@ -90,10 +90,16 @@ class User extends Model implements AuthenticatableContract,
         return $total;
     }
 
+    public function setEmailAttribute($email)
+    {
+        $this->attributes['email'] = strtolower(trim($email));
+    }
+
     public function course()
     {
         return $this->courses->first();
     }
+
     public function availableProjects()
     {
         $course = $this->course();

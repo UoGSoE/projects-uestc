@@ -131,7 +131,7 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         $project = Project::findOrFail($id);
-        EventLog::log(Auth::user()->id, 'Deleted project {$project->title}');
+        EventLog::log(Auth::user()->id, "Deleted project {$project->title}");
         $project->delete();
         return redirect()->to('/')->with('success_message', 'Project deleted');
     }

@@ -126,10 +126,18 @@ class UserController extends Controller
             // $fourth => ['choice' => 4],
             // $fifth => ['choice' => 5],
         ];
+        if (!$this->choicesAreAllDifferent($picked)) {
+            return redirect()->to('/')->withErrors(['choices' => 'You must pick five *different* projects']);
+        }
         $this->allocateStudentToProjects($student, $choices);
         $projects = Project::whereIn('id', array_keys($choices))->lists('title')->toArray();
         EventLog::log(Auth::user()->id, "Chose projects " . implode(', ', $projects));
         return redirect()->to('/')->with('success_message', 'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.');
+    }
+
+    private function choicesAreAllDifferent($choices)
+    {
+        return count($choices) == count(array_unique($choices));
     }
 
     /**

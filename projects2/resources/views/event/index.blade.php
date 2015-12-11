@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <h2>System Log</h2>
+    <h2>Activity Log</h2>
     <table class="table table-striped table-hover datatable">
         <thead>
             <tr>
