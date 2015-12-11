@@ -4,7 +4,7 @@
     <div class="container">
         <h2>
             Current Students
-            <a href="{!! action('UserController@create') !!}" class="btn btn-default">Add New User</a>
+            <a href="{!! action('UserController@create') !!}" class="btn btn-default">Add New Student</a>
         </h2>
         @include('user.partials.user_list')
     </div>
