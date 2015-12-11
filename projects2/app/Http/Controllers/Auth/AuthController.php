@@ -14,8 +14,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\Ldap;
 use App\Http\Controllers\Controller;
 
-class AuthController extends Controller {
-
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
+class AuthController extends Controller
+{
     public function __construct(Ldap $ldap)
     {
         $this->ldap = $ldap;
@@ -23,55 +26,55 @@ class AuthController extends Controller {
 
     public function login(Request $request)
     {
-        $username = trim($request->input('username'));
+        $username = trim(strtolower($request->input('username')));
         $password = $request->input('password');
 
         // handle local users first
-        if (User::where('username','=',$username)->whereNotNull('password')->count() == 1) {
+        if (User::where('username', '=', $username)->whereNotNull('password')->count() == 1) {
             if (Auth::attempt(['username' => $username, 'password' => $password])) {
                 Auth::user()->last_login = \Carbon\Carbon::now();
                 Auth::user()->save();
                 EventLog::log(Auth::user()->id, 'Logged in');
                 return redirect()->intended('/');
-            } else {
-                return redirect()->refresh()->with('errors', 'Username and/or password are incorrect.');
             }
+            return redirect()->refresh()->with('errors', 'Username and/or password are incorrect.');
         }
 
-        // try and LDAP auth if we are not in emergency "passwordless" mode. See app/Console/Commands/Passwordless.php
-        if (!file_exists(storage_path() . '/.passwordless')) {
-            $result = $this->ldap->authenticate( $username, $password );
-        } else {
-            // if we *are* in passwordless mode just grab their details from the existing User entry
-            $result = User::whereUsername($username)->first()->toArray();
-            if (!$result) {
-                // new or invalid user - we should probably do something?
-                $x = 1;
+        // if the username is an email address, try and find them
+        if (preg_match('/\@/', $username)) {
+            if (Auth::attempt(['email' => $username, 'password' => $password])) {
+                Auth::user()->last_login = \Carbon\Carbon::now();
+                Auth::user()->save();
+                EventLog::log(Auth::user()->id, 'Logged in');
+                return redirect()->intended('/');
             }
+            return redirect()->refresh()->with('errors', 'Username and/or password are incorrect.');
         }
-        if ( $result )
-        {
-        	$username = $result['username'];
+
+        // try and LDAP auth
+        $result = $this->ldap->authenticate($username, $password);
+        if ($result) {
+            $username = $result['username'];
 
             // check if the user already exists in the database
             //  ** should we check withTrashed and restore deleted account?
-        	$user = User::where('username','=',$username)->first();
-        	if (is_null($user)) {
-        		$user = new User;
-        		$user->username = $username;
+            $user = User::where('username', '=', $username)->first();
+            if (is_null($user)) {
+                $user = new User;
+                $user->username = $username;
                 $user->surname = $result['surname'];
                 $user->forenames = $result['forenames'];
-                $user->email = $result['email'];
+                $user->email = strtolower($result['email']);
                 if (preg_match('/^[0-9]{6}[a-z]$/i', $username)) {
                     $user->is_student = true;
                 }
-        		$user->save();
+                $user->save();
                 EventLog::log($user->id, 'Created new @glasgow user');
-        	}
+            }
 
             //$user = User::where('username', Input::get('username'))->first();
 
-            Auth::login( $user );
+            Auth::login($user);
             Auth::user()->last_login = \Carbon\Carbon::now();
             Auth::user()->save();
             EventLog::log(Auth::user()->id, 'Logged in');
@@ -85,16 +88,28 @@ class AuthController extends Controller {
     public function logout()
     {
 
-        if ( ! Auth::guest())
-        {
+        if (!Auth::guest()) {
             Auth::logout();
 
             return redirect('auth/login');
-                    //->with('message', 'You just logged out.');                  
         }
 
-        return redirect('auth/login');   
+        return redirect('auth/login');
 
+    }
+
+    public function generateResetLink(Request $request)
+    {
+        $email = strtolower(trim($request->email));
+        $user = User::where('email', '=', $email)->first();
+        if (!$user) {
+            return redirect()->refresh()->with('errors', 'Could not find that email address');
+        }
+        $token = PasswordReset::create([
+            'user_id' => $user->id,
+            'token' => strtolower(str_random(64)),
+        ]);
+        return 'Would have emailed a link to ' . action('Auth\AuthController@password', ['token' => $token->token]);
     }
 
     public function password($token)

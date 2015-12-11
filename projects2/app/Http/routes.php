@@ -8,6 +8,7 @@ Route::get('/auth/login', function () {
 Route::post('/auth/login', 'Auth\AuthController@login');
 Route::get('/logout', 'Auth\AuthController@logout');
 
+Route::post('/resetgenerate', 'Auth\AuthController@generateResetLink');
 Route::get('/resetpassword/{token}', 'Auth\AuthController@password');
 Route::post('/resetpassword/{token}', 'Auth\AuthController@resetPassword');
 
