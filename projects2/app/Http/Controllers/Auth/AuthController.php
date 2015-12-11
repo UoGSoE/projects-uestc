@@ -107,7 +107,7 @@ class AuthController extends Controller
         }
         $token = PasswordReset::create([
             'user_id' => $user->id,
-            'token' => strtolower(str_random(64)),
+            'token' => strtolower(str_random(32)),
         ]);
         return 'Would have emailed a link to ' . action('Auth\AuthController@password', ['token' => $token->token]);
     }

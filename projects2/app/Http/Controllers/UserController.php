@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Excel;
 use App\Role;
 use App\User;
 use App\Project;
@@ -156,5 +157,52 @@ class UserController extends Controller
         EventLog::log(Auth::user()->id, "Logged in as user {$user->username}");
         Auth::loginUsingId($userId);
         return redirect()->to('/');
+    }
+
+    public function import()
+    {
+        return view('user.import');
+    }
+
+    public function updateStaff(Request $request)
+    {
+        $sheet = Excel::load($request->file('file'))->get();
+        $rows = $sheet->all();
+        foreach ($rows[0] as $row) {
+            $email = strtolower(trim($row[0]));
+            $surname = $row[1];
+            $forenames = $row[2];
+            if (!$this->validEmail($email)) {
+                abort(401);
+            }
+            if (!$this->validName($surname)) {
+                abort(401);
+            }
+            if (!$this->validName($forenames)) {
+                abort(401);
+            }
+            $user = User::where('email', '=', $email)->first();
+            if (!$user) {
+                $user = new User;
+                $user->email = $email;
+                $user->username = User::generateUsername($surname . $forenames);
+                $user->password = bcrypt(str_random(40));
+            }
+            $user->surname = $surname;
+            $user->forenames = $forenames;
+            $user->save();
+        }
+        EventLog::log(Auth::user()->id, "Updated staff list");
+        return redirect()->action('UserController@indexStaff')->with('success_message', 'Updated staff list');
+    }
+
+    private function validName($name)
+    {
+        return preg_match('/[a-zA-Z]/', $name);
+    }
+
+    private function validEmail($email)
+    {
+        return preg_match('/[a-zA-Z0-9]+\@[a-zA-Z0-9\.]+/', $email);
     }
 }

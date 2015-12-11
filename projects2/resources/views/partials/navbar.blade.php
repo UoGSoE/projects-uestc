@@ -34,7 +34,6 @@
 				              	@endcan
 				              	@can('edit_courses')
 				              		<li><a href="{!! action('CourseController@index') !!}">Courses</a></li>
-				              		<li><a href="{!! action('ProgrammeController@index') !!}">Programmes</a></li>
 				              		<li><a href="{!! action('ProjectTypeController@index') !!}">Project Types</a></li>
 				              	@endcan
 				              	@can('view_eventlog')

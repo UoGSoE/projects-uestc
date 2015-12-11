@@ -13,7 +13,7 @@
         	</div>
     	@endif
         <p>
-            Students can log in using your University of Glasgow username &amp; password. Staff should use their
+            Students can log in using your University of Glasgow username &amp; password. Staff should use your
             email address.
         </p>
 		<form class="form-inline" role="form" method="POST" action="{{ url("/auth/login") }}" id="loginform">

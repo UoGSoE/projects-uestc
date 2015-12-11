@@ -31,14 +31,16 @@
         </dd>
         <dt>Maximum Students</dt>
         <dd>{{ $project->maximum_students }}</dd>
-        <dt>Programmes</dt>
-        <dd>
-            <ul class="list-inline">
-                @foreach ($project->programmes as $programme)
-                    <li>{{ $programme->title }}</li>
-                @endforeach
-            </ul>
-        </dd>
+        @if ($project->programmes()->count() > 0)
+            <dt>Programmes</dt>
+            <dd>
+                <ul class="list-inline">
+                    @foreach ($project->programmes as $programme)
+                        <li>{{ $programme->title }}</li>
+                    @endforeach
+                </ul>
+            </dd>
+        @endif
         <dt>Courses</dt>
         <dd>
             <ul class="list-inline">

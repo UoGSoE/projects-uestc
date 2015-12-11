@@ -19,16 +19,6 @@
             </label>
         </div>
         <div class="form-group">
-            <label for="inputProgrammes">Programmes</label>
-            <select id="inputProgrammes" name="programmes[]" class="form-control select2" multiple required>
-                @foreach ($programmes as $programme)
-                    <option value="{{ $programme->id }}" @if ($project->hasProgramme($programme->id)) selected @endif>
-                        {{ $programme->title }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div class="form-group">
             <label for="inputCourses">Courses</label>
             <select id="inputCourses" name="courses[]" class="form-control select2" multiple required>
                 @foreach ($courses as $course)

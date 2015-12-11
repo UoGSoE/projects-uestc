@@ -146,4 +146,18 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->projects()->wherePivot('accepted', '=', true)->count() == 0;
     }
+
+    public static function generateUsername($initialName)
+    {
+        $newName = preg_replace('/\s+/', '', $initialName);
+        $suffix = 1;
+        while (static::where('username', '=', $newName)->first()) {
+            $newName = $newName . $suffix;
+            $suffix = $suffix + 1;
+            if ($suffix > 100) {    // give up after 100 tries - something is clearly up!
+                abort(500);
+            }
+        }
+        return $newName;
+    }
 }

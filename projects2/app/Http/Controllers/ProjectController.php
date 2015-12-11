@@ -14,6 +14,9 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class ProjectController extends Controller
 {
     /**
@@ -57,7 +60,9 @@ class ProjectController extends Controller
         $project->fill($request->input());
         $project->save();
         $project->courses()->sync($request->courses);
-        $project->programmes()->sync($request->programmes);
+        if ($request->has('programmes')) {
+            $project->programmes()->sync($request->programmes);
+        }
         EventLog::log(Auth::user()->id, "Created project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id);
     }
@@ -188,5 +193,4 @@ class ProjectController extends Controller
         }
         return redirect()->action('ReportController@bulkAllocate')->with('success_message', 'Allocations saved');
     }
-
 }

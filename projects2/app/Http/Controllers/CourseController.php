@@ -135,7 +135,6 @@ class CourseController extends Controller
         $matric = sprintf('%07d', $row[0]);
         $surname = $row[1];
         $forenames = $row[2];
-        $email = $row[3];
         if (!$this->validName($surname)) {
             return null;
         }
@@ -150,13 +149,7 @@ class CourseController extends Controller
             $student->username = $username;
             $student->surname = $surname;
             $student->forenames = $forenames;
-            $student->email = $email;
             $student->save();
-            $token = PasswordReset::create([
-                'user_id' => $student->id,
-                'token' => strtolower(str_random(64)),
-            ]);
-            $token->save();
         }
         // remove any existing course associations - a student should (ha) only ever be enrolled on one
         // project course at a time.

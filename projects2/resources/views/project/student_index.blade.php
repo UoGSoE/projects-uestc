@@ -8,17 +8,6 @@
 <p>
     Please choose five projects in order of preference.
 </p>
-<p>
-    <div class="form-group">
-        <label for="inputProgramme">Filter by Degree Programme</label>
-        <select id="inputProgramme" name="programme" class="form-control">
-            <option value="anyprogramme">Any</option>
-            @foreach ($programmes as $programme)
-                <option value="{{ md5($programme->title) }}">{{ $programme->title }}</option>
-            @endforeach
-        </select>
-    </div>
-</p>
 <form method="POST" action="{!! action('UserController@chooseProjects') !!}" id="vueform">
 {{ csrf_field() }}
 @foreach (Auth::user()->availableProjects() as $project)
