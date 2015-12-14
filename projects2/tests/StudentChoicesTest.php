@@ -52,8 +52,12 @@ class StudentChoicesTest extends TestCase
         $this->buildWorld();
         $this->actingAs($this->student)
             ->visit('/')
-            ->select($this->project1->id, "#project{$this->project1->id}_1")
-            ->press('submit')
+            ->submitForm([
+                "choice" => [
+                    "1" => $this->project1->id,
+                    "2" => $this->project4->id
+                ]
+            ])
             ->see('Your choices have been submitted');
     }
 
