@@ -2,15 +2,15 @@
         <input type="hidden" name="id" value="{{ $project->id }}">
         <div class="form-group">
             <label for="inputTitle">Title</label>
-            <input type="text" id="inputTitle" name="title" value="{{ old('title') or $project->title }}" class="form-control" required>
+            <input type="text" id="inputTitle" name="title" value="{{ old('title', $project->title) }}" class="form-control" required>
         </div>
         <div class="form-group">
             <label for="inputDescription">Description</label>
-            <textarea id="inputDescription" name="description" class="form-control" rows="7" required>{{ old('description') or $project->description }}</textarea>
+            <textarea id="inputDescription" name="description" class="form-control" rows="7" required>{{ old('description',$project->description) }}</textarea>
         </div>
         <div class="form-group">
             <label for="inputPrereq">Prerequisite Skills</label>
-            <textarea id="inputPrereq" name="prereq" class="form-control" rows="7">{{ old('prereq') or $project->prereq }}</textarea>
+            <textarea id="inputPrereq" name="prereq" class="form-control" rows="7">{{ old('prereq', $project->prereq) }}</textarea>
         </div>
         <div class="checkbox">
             <label>
@@ -40,7 +40,7 @@
         </div>
         <div class="form-group">
             <label for="inputMaximumStudents">Maximum Students</label>
-            <input type="number" id="inputMaximumStudents" name="maximum_students" value="{{ old('maximum_students') or $project->maximum_students }}" class="form-control" required min="1">
+            <input type="number" id="inputMaximumStudents" name="maximum_students" value="{{ old('maximum_students', $project->maximum_students) }}" class="form-control" required min="1">
         </div>
         @can('edit_projects')
             <div class="form-group">

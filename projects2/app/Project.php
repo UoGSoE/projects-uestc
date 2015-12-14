@@ -48,6 +48,14 @@ class Project extends Model
         return $this->belongsToMany(Course::class);
     }
 
+    public function setPrereqAttribute($prereq)
+    {
+        if (!$prereq) {
+            $prereq = null;
+        }
+        $this->attributes['prereq'] = $prereq;
+    }
+
     public function hasProgramme($id)
     {
         return $this->programmes->contains($id);
