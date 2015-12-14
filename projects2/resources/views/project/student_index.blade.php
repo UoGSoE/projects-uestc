@@ -45,7 +45,7 @@
     </div>
     @endif
 @endforeach
-<button type="submit" class="btn btn-primary" :disabled="!choicesAreOk">
+<button type="submit" id="submit" class="btn btn-primary" :disabled="!choicesAreOk">
     <span v-if="choicesAreOk">Submit Choices</span>
     <span v-else>Choose 5 Different Choices</span>
 </button>
