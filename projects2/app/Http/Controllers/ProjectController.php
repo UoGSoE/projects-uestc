@@ -56,6 +56,14 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'courses' => 'required|array',
+            'type_id' => 'required|integer',
+            'maximum_students' => 'required|integer|min:1',
+            'user_id' => 'required|integer|min:1'
+        ]);
         $project = new Project;
         $project->fill($request->input());
         $project->save();
@@ -110,6 +118,14 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'courses' => 'required|array',
+            'type_id' => 'required|integer',
+            'maximum_students' => 'required|integer|min:1',
+            'user_id' => 'required|integer|min:1'
+        ]);
         $project = Project::findOrFail($id);
         if (Gate::denies('edit_this_project', $project)) {
             abort(403);

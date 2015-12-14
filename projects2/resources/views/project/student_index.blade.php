@@ -27,27 +27,30 @@
         <div class="panel-footer" style="display: none">
             Preference :
             <label class="radio-inline">
-                <input type="radio" name="choice[1]" value="{{ $project->id }}"> 1
+                <input type="radio" name="choice[1]" v-model="first" value="{{ $project->id }}"> 1
             </label>
             <label class="radio-inline">
-                <input type="radio" name="choice[2]" value="{{ $project->id }}"> 2
+                <input type="radio" name="choice[2]" v-model="second" value="{{ $project->id }}"> 2
             </label>
             <label class="radio-inline">
-                <input type="radio" name="choice[3]" value="{{ $project->id }}"> 3
+                <input type="radio" name="choice[3]" v-model="third" value="{{ $project->id }}"> 3
             </label>
             <label class="radio-inline">
-                <input type="radio" name="choice[4]" value="{{ $project->id }}"> 4
+                <input type="radio" name="choice[4]" v-model="fourth" value="{{ $project->id }}"> 4
             </label>
             <label class="radio-inline">
-                <input type="radio" name="choice[5]" value="{{ $project->id }}"> 5
+                <input type="radio" name="choice[5]" v-model="fifth" value="{{ $project->id }}"> 5
             </label>
         </div>
     </div>
     @endif
 @endforeach
-<button type="submit" class="btn btn-primary">Submit Choices</button>
+<button type="submit" class="btn btn-primary" :disabled="!choicesAreOk">
+    <span v-if="choicesAreOk">Submit Choices</span>
+    <span v-else>Require 5 Different Choices</span>
+</button>
+</form>
 <script src="vendor/vue.min.js"></script>
-
 <script>
     $(document).ready(function() {
         $('.panel-title').click(function() {
@@ -61,7 +64,7 @@
         });
     });
     new Vue({
-        el: 'vueform',
+        el: '#vueform',
         data: {
             first: null,
             second: null,
@@ -72,6 +75,12 @@
         computed: {
             chosenFive: function() {
                 return this.first && this.second;
+            },
+            allDifferent: function() {
+                return this.first != this.second;
+            },
+            choicesAreOk: function() {
+                return this.chosenFive && this.allDifferent;
             }
         }
     });

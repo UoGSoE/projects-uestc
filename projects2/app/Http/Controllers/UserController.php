@@ -114,25 +114,31 @@ class UserController extends Controller
     {
         $student = Auth::user();
         $picked = $request->choice;
-        $first = $request->first;
-        $second = $request->second;
-        // $third = $request->third;
-        // $fourth = $request->fourth;
-        // $fifth = $request->fifth;
-        $choices = [
-            $picked[1] => ['choice' => 1],
-            $picked[2] => ['choice' => 2],
-            // $third => ['choice' => 3],
-            // $fourth => ['choice' => 4],
-            // $fifth => ['choice' => 5],
-        ];
+        $requiredChoices = config('projects.requiredProjectChoices', 5);
+        if (count($picked) != $requiredChoices) {
+            return redirect()->back()->withErrors(['choices' => "You must pick {$requiredChoices} choices"]);
+        }
+        $choices = [];
+        for ($i = 1; $i++; $i <= $requiredChoices) {
+            $choices[$picked[$i]] = ['choice' => $i];
+        }
+        // $choices = [
+        //     $picked[1] => ['choice' => 1],
+        //     $picked[2] => ['choice' => 2],
+        //     // $third => ['choice' => 3],
+        //     // $fourth => ['choice' => 4],
+        //     // $fifth => ['choice' => 5],
+        // ];
         if (!$this->choicesAreAllDifferent($picked)) {
             return redirect()->to('/')->withErrors(['choices' => 'You must pick five *different* projects']);
         }
         $this->allocateStudentToProjects($student, $choices);
         $projects = Project::whereIn('id', array_keys($choices))->lists('title')->toArray();
         EventLog::log(Auth::user()->id, "Chose projects " . implode(', ', $projects));
-        return redirect()->to('/')->with('success_message', 'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.');
+        return redirect()->to('/')->with(
+            'success_message',
+            'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.'
+        );
     }
 
     private function choicesAreAllDifferent($choices)
