@@ -27,19 +27,19 @@
         <div class="panel-footer" style="display: none">
             Preference :
             <label class="radio-inline">
-                <input type="radio" name="choice[1]" v-model="first" value="{{ $project->id }}"> 1
+                <input type="radio" id="project{{ $project->id }}_1" name="choice[1]" v-model="first" value="{{ $project->id }}"> 1
             </label>
             <label class="radio-inline">
-                <input type="radio" name="choice[2]" v-model="second" value="{{ $project->id }}"> 2
+                <input type="radio" id="project{{ $project->id }}_2" name="choice[2]" v-model="second" value="{{ $project->id }}"> 2
             </label>
             <label class="radio-inline">
-                <input type="radio" name="choice[3]" v-model="third" value="{{ $project->id }}"> 3
+                <input type="radio" id="project{{ $project->id }}_3" name="choice[3]" v-model="third" value="{{ $project->id }}"> 3
             </label>
             <label class="radio-inline">
-                <input type="radio" name="choice[4]" v-model="fourth" value="{{ $project->id }}"> 4
+                <input type="radio" id="project{{ $project->id }}_4" name="choice[4]" v-model="fourth" value="{{ $project->id }}"> 4
             </label>
             <label class="radio-inline">
-                <input type="radio" name="choice[5]" v-model="fifth" value="{{ $project->id }}"> 5
+                <input type="radio" id="project{{ $project->id }}_5" name="choice[5]" v-model="fifth" value="{{ $project->id }}"> 5
             </label>
         </div>
     </div>
