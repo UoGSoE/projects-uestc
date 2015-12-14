@@ -2,19 +2,19 @@
             {{ csrf_field() }}
             <div class="form-group">
                 <label for="inputUsername">Username</label>
-                <input type="text" id="inputUsername" name="username" value="{{ $user->username }}" class="form-control" required>
+                <input type="text" id="inputUsername" name="username" value="{{ old('username', $user->username) }}" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="inputSurname">Surname</label>
-                <input type="text" id="inputSurname" name="surname" value="{{ $user->surname }}" class="form-control" required>
+                <input type="text" id="inputSurname" name="surname" value="{{ old('surname', $user->surname) }}" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="inputForenames">Forenames</label>
-                <input type="text" id="inputForenames" name="forenames" value="{{ $user->forenames }}" class="form-control" required>
+                <input type="text" id="inputForenames" name="forenames" value="{{ old('forenames', $user->forenames) }}" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="inputEmail">Email</label>
-                <input type="email" id="inputEmail" name="email" value="{{ $user->email }}" class="form-control" required>
+                <input type="email" id="inputEmail" name="email" value="{{ old('email', $user->email) }}" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="inputPassword">Password</label>

@@ -106,7 +106,7 @@ class User extends Model implements AuthenticatableContract,
         if (!$course) {
             return [];
         }
-        return Project::active()->orderBy('title')->get();
+        return $course->projects()->active()->orderBy('title')->get();
     }
 
     public function assignRole(Role $role)

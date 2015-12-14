@@ -19,30 +19,35 @@ class UserController extends Controller
 {
     public function index()
     {
+        $this->authorize('edit_users');
         $users = User::orderBy('surname')->get();
         return view('user.index', compact('users'));
     }
 
     public function indexStaff()
     {
+        $this->authorize('edit_users');
         $users = User::staff()->orderBy('surname')->get();
         return view('user.index_staff', compact('users'));
     }
 
     public function indexStudents()
     {
+        $this->authorize('edit_users');
         $users = User::students()->orderBy('surname')->get();
         return view('user.index_students', compact('users'));
     }
 
     public function show($userId)
     {
+        $this->authorize('view_users');
         $user = User::findOrFail($userId);
         return view('user.show', compact('user'));
     }
 
     public function create()
     {
+        $this->authorize('edit_users');
         $user = new User;
         $roles = Role::orderBy('label')->get();
         return view('user.create', compact('user', 'roles'));
@@ -50,6 +55,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('edit_users');
         $this->validate($request, [
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
@@ -72,6 +78,7 @@ class UserController extends Controller
 
     public function edit($userId)
     {
+        $this->authorize('edit_users');
         $user = User::findOrFail($userId);
         $roles = Role::orderBy('label')->get();
         $projects = Project::active()->orderBy('title')->get();
@@ -80,6 +87,13 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
+        $this->authorize('edit_users');
+        $this->validate($request, [
+            'username' => 'required|unique:users,username,' . $request->id,
+            'email' => 'required|email|unique:users,email,' . $request->id,
+            'surname' => 'required',
+            'forenames' => 'required'
+        ]);
         $user = User::findOrFail($request->id);
         $user->fill($request->input());
         if ($request->password) {
@@ -103,6 +117,7 @@ class UserController extends Controller
 
     public function destroy($userId)
     {
+        $this->authorize('edit_users');
         $user = User::findOrFail($userId);
         EventLog::log(Auth::user()->id, "Deleted user {$user->username}");
         $user->delete();
@@ -179,11 +194,13 @@ class UserController extends Controller
 
     public function import()
     {
+        $this->authorize('edit_users');
         return view('user.import');
     }
 
     public function updateStaff(Request $request)
     {
+        $this->authorize('edit_users');
         $sheet = Excel::load($request->file('file'))->get();
         $rows = $sheet->all();
         foreach ($rows[0] as $row) {

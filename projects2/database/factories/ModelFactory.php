@@ -18,7 +18,6 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'forenames' => $faker->firstName(),
         'email' => $faker->email,
         'is_student' => $faker->boolean(95),
-        'location_id' => 1,
         'last_login' => $faker->dateTimeThisYear(),
         'remember_token' => str_random(10),
     ];
@@ -37,11 +36,10 @@ $factory->define(App\Permission::class, function (Faker\Generator $faker) {
 });
 $factory->define(App\Project::class, function (Faker\Generator $faker) {
     return [
-        'title' => $faker->sentence(3),
+        'title' => implode(' ', $faker->words(3)),
         'description' => $faker->paragraph(3),
         'maximum_students' => $faker->numberBetween(1, 5),
         'is_active' => $faker->boolean(90),
-        'location_id' => $faker->numberBetween(1, 3),
         'type_id' => $faker->numberBetween(1, 2),
         'user_id' => $faker->numberBetween(1, 3),
     ];
@@ -50,6 +48,10 @@ $factory->define(App\Course::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->sentence(3),
         'code' => 'ENG' . $faker->numberBetween(1000, 9999),
-        'location_id' => 1,
+    ];
+});
+$factory->define(App\ProjectType::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->word,
     ];
 });

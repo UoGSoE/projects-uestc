@@ -45,15 +45,15 @@
         <dd>
             <ul class="list-inline">
                 @foreach ($project->courses as $course)
-                    @can('edit_courses')
-                        <li>
+                    <li>
+                        @can('edit_courses')
                             <a href="{!! action('CourseController@show', $course->id) !!}">
-                                {{ $course->code }} {{ $course->title }}</li>
+                                {{ $course->code }} {{ $course->title }}
                             </a>
-                        </li>
-                    @else
-                        <li>{{ $course->code }} {{ $course->title }}</li>
-                    @endcan
+                        @else
+                            {{ $course->code }} {{ $course->title }}
+                        @endcan
+                    </li>
                 @endforeach
             </ul>
         </dd>
