@@ -50,17 +50,21 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'username' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'surname' => 'required',
+            'forenames' => 'required'
+        ]);
         $user = new User;
         $user->fill($request->input());
         if ($request->password) {
-            error_log('Setting password');
             $user->password = bcrypt($request->password);
         }
         $user->save();
+        $user->roles()->detach();
         if ($request->roles) {
             $user->roles()->sync(array_filter($request->roles));
-        } else {
-            $user->roles()->detach();
         }
         EventLog::log(Auth::user()->id, "Created new user $user->username");
         return redirect()->action('UserController@show', $user->id);
@@ -119,7 +123,7 @@ class UserController extends Controller
             return redirect()->back()->withErrors(['choices' => "You must pick {$requiredChoices} choices"]);
         }
         $choices = [];
-        for ($i = 1; $i++; $i <= $requiredChoices) {
+        for ($i = 1; $i <= $requiredChoices; $i++) {
             $choices[$picked[$i]] = ['choice' => $i];
         }
         // $choices = [

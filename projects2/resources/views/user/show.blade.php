@@ -36,7 +36,7 @@
                 <dt>Enrolled On</dt>
                 <dd>
                     <a href="{!! action('CourseController@show', $user->courses->first()->id) !!}">
-                        {{ $user->courses->first()->title }}
+                        {{ $user->courses->first()->title }} {{ $user->courses->first()->code }}
                     </a>
                 </dd>
             @endif

@@ -23,20 +23,20 @@
             @foreach ($students as $student)
                 @if ($student->unallocated())
                     <tr>
-                        <td>{{ $student->fullName() }} ({{ $student->matric() }})</td>
+                        <td>{{ $student->fullName() }} ({{ $student->matric() }} {{ $student->course() ? $student->course()->code : 'N/A' }})</td>
                         @for ($i = 1; $i <= 5; $i++)
                             <td>
                                 @if ($student->projectChoice($i))
-                                    <a href="{!! action('ProjectController@show', $student->projectChoice($i)->id) !!}"
-                                        title="{{ $student->projectChoice($i)->owner->fullName() }} - {{ $student->projectChoice($i)->maximum_students }} max"
-                                    >
-                                        {{ $student->projectChoice($i)->title }}
-                                    </a>
                                     @if ($student->projectChoice($i)->isAvailable())
                                         <input type="radio" name="student[{{$student->id}}]" value="{{ $student->projectChoice($i)->id }}">
                                     @else
                                         (Full)
                                     @endif
+                                    <a href="{!! action('ProjectController@show', $student->projectChoice($i)->id) !!}"
+                                        title="{{ $student->projectChoice($i)->owner->fullName() }} - {{ $student->projectChoice($i)->maximum_students }} max"
+                                    >
+                                        {{ $student->projectChoice($i)->title }}
+                                    </a>
                                 @endif
                             </td>
                         @endfor

@@ -44,6 +44,10 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'code' => 'required|unique:courses',
+            'title' => 'required'
+        ]);
         $course = new Course;
         $course->fill($request->input());
         $course->save();

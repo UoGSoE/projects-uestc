@@ -47,7 +47,7 @@
 @endforeach
 <button type="submit" class="btn btn-primary" :disabled="!choicesAreOk">
     <span v-if="choicesAreOk">Submit Choices</span>
-    <span v-else>Require 5 Different Choices</span>
+    <span v-else>Choose 5 Different Choices</span>
 </button>
 </form>
 <script src="vendor/vue.min.js"></script>

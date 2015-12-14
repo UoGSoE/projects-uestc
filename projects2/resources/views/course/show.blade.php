@@ -25,7 +25,7 @@
         <h3>
             Students
             <a href="{!! action('CourseController@editStudents', $course->id) !!}" class="btn btn-default">Import</a>
-            <a action-href="{!! action('CourseController@removeStudents', $course->id) !!}" data-confirm="Really remove all students?" class="btn btn-danger pull-right data-confirm">
+            <a action-href="{!! action('CourseController@removeStudents', $course->id) !!}" data-confirm="Really remove all students? This will delete them from the system along with all their choices etc" class="btn btn-danger pull-right data-confirm">
                 Remove All Students
             </a>
         </h3>

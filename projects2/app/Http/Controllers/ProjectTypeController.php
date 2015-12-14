@@ -39,6 +39,9 @@ class ProjectTypeController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'title' => 'required|unique:project_types'
+        ]);
         $type = new ProjectType;
         $type->title = $request->title;
         $type->save();

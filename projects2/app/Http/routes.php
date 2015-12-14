@@ -19,70 +19,73 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return view('home');
     });
-
-    // User routes
-    Route::get('/user/import', 'UserController@import');
-    Route::post('/user/import', 'UserController@updateStaff');
-    Route::get('/user/{id}/loginas', 'UserController@logInAs');
     Route::post('/user/chooseprojects', 'UserController@chooseProjects');
-    Route::get('/user', 'UserController@index');
-    Route::get('/user/students', 'UserController@indexStudents');
-    Route::get('/user/staff', 'UserController@indexStaff');
-    Route::get('/user/create', 'UserController@create');
-    Route::post('/user/create', 'UserController@store');
-    Route::get('/user/{id}', 'UserController@show');
-    Route::get('/user/{id}/edit', 'UserController@edit');
-    Route::post('/user/{id}/edit', 'UserController@update');
-    Route::delete('/user/{id}', 'UserController@destroy');
-    Route::get('/user/{id}/delete', 'UserController@destroy');
 
-    // Course routes
-    Route::get('/course', 'CourseController@index');
-    Route::get('/course/create', 'CourseController@create');
-    Route::post('/course/create', 'CourseController@store');
-    Route::get('/course/{id}', 'CourseController@show');
-    Route::get('/course/{id}/edit', 'CourseController@edit');
-    Route::post('/course/{id}/edit', 'CourseController@update');
-    Route::delete('/course/{id}', 'CourseController@destroy');
-    Route::get('course/{id}/delete', 'CourseController@destroy');
-    Route::get('/course/{id}/editstudents', 'CourseController@editStudents');
-    Route::patch('/course/{id}/editstudents', 'CourseController@updateStudents');
-    Route::get('/course/{id}/removestudents', 'CourseController@removeStudents');
+    Route::group(['middleware' => ['staff']], function () {
 
-    // Project routes
-    Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents');
-    Route::get('project/{id}/copy', 'ProjectController@duplicate');
-    Route::post('project/bulkallocate', 'ProjectController@bulkAllocate');
-    Route::resource('project', 'ProjectController');
-    Route::get('project/{id}/delete', 'ProjectController@destroy');
-    // Permission routes
-    Route::resource('permission', 'PermissionController');
+        // User routes
+        Route::get('/user/import', 'UserController@import');
+        Route::post('/user/import', 'UserController@updateStaff');
+        Route::get('/user/{id}/loginas', 'UserController@logInAs');
+        Route::get('/user', 'UserController@index');
+        Route::get('/user/students', 'UserController@indexStudents');
+        Route::get('/user/staff', 'UserController@indexStaff');
+        Route::get('/user/create', 'UserController@create');
+        Route::post('/user/create', 'UserController@store');
+        Route::get('/user/{id}', 'UserController@show');
+        Route::get('/user/{id}/edit', 'UserController@edit');
+        Route::post('/user/{id}/edit', 'UserController@update');
+        Route::delete('/user/{id}', 'UserController@destroy');
+        Route::get('/user/{id}/delete', 'UserController@destroy');
 
-    // Role routes
-    Route::resource('role', 'RoleController');
+        // Course routes
+        Route::get('/course', 'CourseController@index');
+        Route::get('/course/create', 'CourseController@create');
+        Route::post('/course/create', 'CourseController@store');
+        Route::get('/course/{id}', 'CourseController@show');
+        Route::get('/course/{id}/edit', 'CourseController@edit');
+        Route::post('/course/{id}/edit', 'CourseController@update');
+        Route::delete('/course/{id}', 'CourseController@destroy');
+        Route::get('course/{id}/delete', 'CourseController@destroy');
+        Route::get('/course/{id}/editstudents', 'CourseController@editStudents');
+        Route::patch('/course/{id}/editstudents', 'CourseController@updateStudents');
+        Route::get('/course/{id}/removestudents', 'CourseController@removeStudents');
 
-    // Project Type routes
-    Route::resource('projecttype', 'ProjectTypeController');
-    Route::get('projecttype/{id}/delete', 'ProjectTypeController@destroy');
+        // Project routes
+        Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents');
+        Route::get('project/{id}/copy', 'ProjectController@duplicate');
+        Route::post('project/bulkallocate', 'ProjectController@bulkAllocate');
+        Route::resource('project', 'ProjectController');
+        Route::get('project/{id}/delete', 'ProjectController@destroy');
+        // Permission routes
+        Route::resource('permission', 'PermissionController');
 
-    // Location routes
-    Route::resource('location', 'LocationController');
-    Route::get('location/{id}/delete', 'LocationController@destroy');
+        // Role routes
+        Route::resource('role', 'RoleController');
 
-    // Programme routes
-    Route::resource('programme', 'ProgrammeController');
-    Route::get('programme/{id}/delete', 'ProgrammeController@destroy');
+        // Project Type routes
+        Route::resource('projecttype', 'ProjectTypeController');
+        Route::get('projecttype/{id}/delete', 'ProjectTypeController@destroy');
 
-    // Report routes
-    Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfType');
-    Route::get('/report/projects/bylocation/{id}', 'ReportController@allProjectsAtLocation');
-    Route::get('/report/projects', 'ReportController@allProjects');
-    Route::get('/report/students', 'ReportController@allStudents');
-    Route::get('/report/staff', 'ReportController@allStaff');
-    Route::get('/report/bulkallocate', 'ReportController@bulkAllocate');
+        // Location routes
+        Route::resource('location', 'LocationController');
+        Route::get('location/{id}/delete', 'LocationController@destroy');
 
-    // Event routes
-    Route::get('events', 'EventLogController@index');
+        // Programme routes
+        Route::resource('programme', 'ProgrammeController');
+        Route::get('programme/{id}/delete', 'ProgrammeController@destroy');
+
+        // Report routes
+        Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfType');
+        Route::get('/report/projects/bylocation/{id}', 'ReportController@allProjectsAtLocation');
+        Route::get('/report/projects', 'ReportController@allProjects');
+        Route::get('/report/students', 'ReportController@allStudents');
+        Route::get('/report/staff', 'ReportController@allStaff');
+        Route::get('/report/bulkallocate', 'ReportController@bulkAllocate');
+
+        // Event routes
+        Route::get('events', 'EventLogController@index');
+    });
 });
 
 // Define our authentication middleware controller
