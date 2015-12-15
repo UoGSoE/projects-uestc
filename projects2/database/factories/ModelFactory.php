@@ -25,13 +25,13 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Role::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->name,
-        'description' => $faker->sentence(3),
+        'label' => $faker->sentence(3),
     ];
 });
 $factory->define(App\Permission::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->name,
-        'description' => $faker->sentence(3),
+        'label' => $faker->sentence(3),
     ];
 });
 $factory->define(App\Project::class, function (Faker\Generator $faker) {

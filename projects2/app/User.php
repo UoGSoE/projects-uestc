@@ -122,7 +122,13 @@ class User extends Model implements AuthenticatableContract,
         if (is_string($roles)) {
             return $this->roles->contains('title', $roles);
         }
-        return !! $roles->intersect($this->roles)->count();
+        foreach ($roles as $role) {
+            if ($this->hasRole($role->title)) {
+                return true;
+            }
+        }
+        return false;
+        return !! $this->roles->intersect($roles)->count();
     }
 
     public function fullName()

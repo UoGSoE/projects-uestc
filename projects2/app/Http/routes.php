@@ -68,8 +68,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('projecttype/{id}/delete', 'ProjectTypeController@destroy');
 
         // Location routes
-        Route::resource('location', 'LocationController');
-        Route::get('location/{id}/delete', 'LocationController@destroy');
+        //Route::resource('location', 'LocationController');
+        //Route::get('location/{id}/delete', 'LocationController@destroy');
 
         // Programme routes
         Route::resource('programme', 'ProgrammeController');

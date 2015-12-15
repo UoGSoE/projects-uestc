@@ -59,12 +59,20 @@ class StudentChoicesTest extends TestCase
                 ]
             ])
             ->see('Your choices have been submitted');
+        $this->seeInDatabase('project_student', [
+            'user_id' => $this->student->id,
+            'project_id' => $this->project1->id,
+            'accepted' => false,
+            'choice' => 1
+        ]);
+        $this->seeInDatabase('project_student', [
+            'user_id' => $this->student->id,
+            'project_id' => $this->project4->id,
+            'accepted' => false,
+            'choice' => 2
+        ]);
     }
 
-    public function testStudent($value='')
-    {
-        # code...
-    }
     private function buildWorld()
     {
         $this->staff = factory(App\User::class)->create(['is_student' => false]);
