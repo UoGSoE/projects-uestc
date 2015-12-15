@@ -52,6 +52,6 @@ $factory->define(App\Course::class, function (Faker\Generator $faker) {
 });
 $factory->define(App\ProjectType::class, function (Faker\Generator $faker) {
     return [
-        'title' => $faker->word,
+        'title' => $faker->word . $faker->word . $faker->word,
     ];
 });

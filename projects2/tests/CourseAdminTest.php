@@ -60,6 +60,32 @@ class CourseAdminTest extends TestCase
             ->see('The code has already been taken');
     }
 
+    public function testUploadStudentSpreadsheet()
+    {
+        $this->buildWorld();
+        $spreadsheet = 'tests/student_test.xlsx';
+        $this->actingAs($this->staff)
+            ->visit("/course/{$this->course->id}")
+            ->click('Import')
+            ->see("Import students on")
+            ->attach($spreadsheet, 'file')
+            ->press('Import')
+            ->see("Course {$this->course->code}")
+            ->see('Theres Been Taggart');   // a name from the test spreadsheet
+        // now test uploading the same students to another course removes them from the first
+        $course2 = factory(App\Course::class)->create();
+        $this->actingAs($this->staff)
+            ->visit("/course/{$course2->id}")
+            ->click('Import')
+            ->see("Import students on")
+            ->attach($spreadsheet, 'file')
+            ->press('Import')
+            ->see("Course {$course2->code}")
+            ->see('Theres Been Taggart')
+            ->visit("/course/{$this->course->id}")
+            ->dontSee('Theres Been Taggart');
+    }
+
     private function buildWorld()
     {
         $this->staff = factory(App\User::class)->create(['is_student' => false]);
