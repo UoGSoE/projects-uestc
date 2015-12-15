@@ -16,6 +16,9 @@ class Role extends Model
 
     public function givePermissionTo($permission)
     {
+        if ($this->hasPermission($permission->id)) {
+            return false;
+        }
         $this->permissions()->save($permission);
     }
 

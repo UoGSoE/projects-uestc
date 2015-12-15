@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Course;
+use Validator;
 use App\PasswordReset;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -90,16 +91,30 @@ class User extends Model implements AuthenticatableContract,
         return $total;
     }
 
+    /**
+     * Mutator on the email field - always strip whitespace and make lower case as it's
+     * used as a username for external staff
+     * @param string $email
+     */
     public function setEmailAttribute($email)
     {
         $this->attributes['email'] = strtolower(trim($email));
     }
 
+    /**
+     * Used to get the first course a student belongs to.  In reality a student should only ever be on
+     * one course - need confirmation from Scott/Kathleen before changing the relationship though
+     * @return App\Course
+     */
     public function course()
     {
         return $this->courses->first();
     }
 
+    /**
+     * All available projects associated with the course this student is on
+     * @return Collection
+     */
     public function availableProjects()
     {
         $course = $this->course();
@@ -109,6 +124,10 @@ class User extends Model implements AuthenticatableContract,
         return $course->projects()->active()->orderBy('title')->get();
     }
 
+    /**
+     * Assign a role to this user
+     * @param  Role   $role
+     */
     public function assignRole(Role $role)
     {
         if ($this->hasRole($role->title)) {
@@ -117,6 +136,11 @@ class User extends Model implements AuthenticatableContract,
         $this->roles()->save($role);
     }
 
+    /**
+     * Check if this user has a given role(s).
+     * @param  Mixed  $roles Either a string role name, or a Role:: collection
+     * @return boolean
+     */
     public function hasRole($roles)
     {
         if (is_string($roles)) {
@@ -128,6 +152,8 @@ class User extends Model implements AuthenticatableContract,
             }
         }
         return false;
+        // the line below is from the laracasts tutorial on authorisation but doesn't seem to be working, hence
+        // the nasty foreach loop above
         return !! $this->roles->intersect($roles)->count();
     }
 
@@ -149,6 +175,11 @@ class User extends Model implements AuthenticatableContract,
         return ! $this->is_student;
     }
 
+    /**
+     * Get the project where it is the students $choice option
+     * @param  integer $choice Which choice to find (ie, 1, 2, 3 etc)
+     * @return App\Project
+     */
     public function projectChoice($choice = 1)
     {
         return $this->projects()->wherePivot('choice', '=', $choice)->first();
@@ -159,6 +190,13 @@ class User extends Model implements AuthenticatableContract,
         return $this->projects()->wherePivot('accepted', '=', true)->count() == 0;
     }
 
+    /**
+     * Nasty brute-force of a unique username - used when importing a spreadsheet of staff
+     * as they login with their email address rather than a username - but we still need a username
+     * for db/null reasons (as per original (doomed) spec)
+     * @param  string $initialName The initial name to try and munge into a username
+     * @return string              A unique username
+     */
     public static function generateUsername($initialName)
     {
         $newName = preg_replace('/\s+/', '', $initialName);
@@ -171,5 +209,36 @@ class User extends Model implements AuthenticatableContract,
             }
         }
         return $newName;
+    }
+
+    /**
+     * Create or update an existing user based on data from a spreadsheet row (see UserController->updateStaff())
+     * @param  array $row A row of data from the spreadsheet
+     * @return Mixed      False if the data is invalid, otherwise an instance of App\User
+     */
+    public static function fromSpreadsheetData($row)
+    {
+        $email = strtolower(trim($row[0]));
+        $surname = trim($row[1]);
+        $forenames = trim($row[2]);
+        $rules = [
+            'email' => 'required|email',
+            'surname' => 'required',
+            'forenames' => 'required'
+        ];
+        if (Validator::make(['email' => $email, 'surname' => $surname, 'forenames' => $forenames], $rules)->fails()) {
+            return false;
+        }
+        $user = static::where('email', '=', $email)->first();
+        if (!$user) {
+            $user = new static;
+            $user->email = $email;
+            $user->username = static::generateUsername($surname . $forenames);
+            $user->password = bcrypt(str_random(40));
+        }
+        $user->surname = $surname;
+        $user->forenames = $forenames;
+        $user->save();
+        return $user;
     }
 }

@@ -6,6 +6,7 @@ use Auth;
 use Excel;
 use App\Role;
 use App\User;
+use Validator;
 use App\Project;
 use App\EventLog;
 use App\Http\Requests;
@@ -141,13 +142,6 @@ class UserController extends Controller
         for ($i = 1; $i <= $requiredChoices; $i++) {
             $choices[$picked[$i]] = ['choice' => $i];
         }
-        // $choices = [
-        //     $picked[1] => ['choice' => 1],
-        //     $picked[2] => ['choice' => 2],
-        //     // $third => ['choice' => 3],
-        //     // $fourth => ['choice' => 4],
-        //     // $fifth => ['choice' => 5],
-        // ];
         if (!$this->choicesAreAllDifferent($picked)) {
             return redirect()->to('/')->withErrors(['choices' => 'You must pick five *different* projects']);
         }
@@ -160,6 +154,11 @@ class UserController extends Controller
         );
     }
 
+    /**
+     * Make sure all the choices are different
+     * @param  array $choices
+     * @return boolean
+     */
     private function choicesAreAllDifferent($choices)
     {
         return count($choices) == count(array_unique($choices));
@@ -204,40 +203,12 @@ class UserController extends Controller
         $sheet = Excel::load($request->file('file'))->get();
         $rows = $sheet->all();
         foreach ($rows[0] as $row) {
-            $email = strtolower(trim($row[0]));
-            $surname = $row[1];
-            $forenames = $row[2];
-            if (!$this->validEmail($email)) {
-                abort(401);
-            }
-            if (!$this->validName($surname)) {
-                abort(401);
-            }
-            if (!$this->validName($forenames)) {
-                abort(401);
-            }
-            $user = User::where('email', '=', $email)->first();
+            $user = User::fromSpreadsheetData($row);
             if (!$user) {
-                $user = new User;
-                $user->email = $email;
-                $user->username = User::generateUsername($surname . $forenames);
-                $user->password = bcrypt(str_random(40));
+                abort(401);
             }
-            $user->surname = $surname;
-            $user->forenames = $forenames;
-            $user->save();
         }
         EventLog::log(Auth::user()->id, "Updated staff list");
         return redirect()->action('UserController@indexStaff')->with('success_message', 'Updated staff list');
-    }
-
-    private function validName($name)
-    {
-        return preg_match('/[a-zA-Z]/', $name);
-    }
-
-    private function validEmail($email)
-    {
-        return preg_match('/[a-zA-Z0-9]+\@[a-zA-Z0-9\.]+/', $email);
     }
 }
