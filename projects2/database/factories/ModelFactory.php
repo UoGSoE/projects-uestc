@@ -46,7 +46,7 @@ $factory->define(App\Project::class, function (Faker\Generator $faker) {
 });
 $factory->define(App\Course::class, function (Faker\Generator $faker) {
     return [
-        'title' => $faker->sentence(3),
+        'title' => implode(" ", $faker->words(3)),
         'code' => 'ENG' . $faker->numberBetween(1000, 9999),
     ];
 });
