@@ -1,78 +1,76 @@
-<?php namespace App\Http\Controllers\Auth;
+<?php
+
+namespace App\Http\Controllers\Auth;
+
 use Log;
 
-class Ldap {
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
+class Ldap
+{
 
     public static function authenticate($username, $password)
     {
-        if(empty($username) or empty($password))
-        {
+
+        $username = trim(strtolower($username));
+        if (empty($username) or empty($password)) {
             Log::error('Error binding to LDAP: username or password empty');
             return false;
         }
+        $ldapconn = static::connectToServer(getenv('LDAP_SERVER'));
+        if (!$ldapconn) {
+            return false;
+        }
+        $ldapOrg = "O=" . getenv("LDAP_OU");
+        $user = static::findUser($username, $password, $ldapOrg, $ldapconn);
+        if (!$user) {
+            return false;
+        }
+        return $user;
+    }
 
-        $username = trim(strtolower($username));
-        $password = trim($password);
-        
-        //$ldapRdn = static::getLdapRdn($username);
-
-        $ldapconn = ldap_connect( $_ENV['LDAP_SERVER'] ) or die("Could not connect to LDAP server.");
-
-		if (! ldap_start_tls($ldapconn)) {
-        	Log::error("Couldnt start tls on ldap binding");
-        	return false;
-    	}
-
-        $result = false;
-
-        if ($ldapconn) 
-        {
-            $ldapbind = @ldap_bind($ldapconn);
-//            $search = @ldap_search($ldapconn,Config::get('auth.ldap_tree'),"uid=$username");
-            $search = ldap_search($ldapconn,"O=Gla","uid=$username");
-            if( ldap_count_entries($ldapconn,$search) != 1 ) {
-                Log::error("Could not find $username in LDAP");
-                return false;
-            }
-            $info = ldap_get_entries($ldapconn, $search);
-            if ($password === 'supersecretpassword!') {
-                $result = array(
-                    'username' => $username,
-                    'surname' => $info[0]['sn'][0],
-                    'forenames' => $info[0]['givenname'][0],
-                    'email' => $info[0]['mail'][0],
-                );
-                return $result;                
-            }
-            $ldapbind = @ldap_bind($ldapconn, $info[0]['dn'], $password);
-
-            if ($ldapbind) 
-            {
-                $search = ldap_search($ldapconn,"O=Gla","uid=$username");
-                $info = ldap_get_entries($ldapconn, $search);
-                $result = array(
-                    'username' => $username,
-                    'surname' => $info[0]['sn'][0],
-                    'forenames' => $info[0]['givenname'][0],
-                    'email' => $info[0]['mail'][0],
-                );
-            } else {
-                Log::error('Error binding to LDAP server.');
-            }
-
-            ldap_unbind($ldapconn);
-
-        } else {
-            Log::error('Error connecting to LDAP.');
+    private static function connectToServer($ldapServer)
+    {
+        $ldapconn = ldap_connect($ldapServer);
+        if (!$ldapconn) {
+            Log::error('Could not connect to LDAP server');
+            return false;
         }
 
-        return $result;
+        if (! ldap_start_tls($ldapconn)) {
+            Log::error("Could not start TLS on ldap binding");
+            return false;
+        }
 
+        return $ldapconn;
     }
 
-    public static function getLdapRdn($username)
+    private static function findUser($username, $password, $ldapOrg, $ldapconn)
     {
-        return str_replace('[username]', $username, 'CN=[username],' . Config::get('auth.ldap_tree'));
+        $ldapbind = @ldap_bind($ldapconn);
+        $search = ldap_search($ldapconn, $ldapOrg, "uid={$username}");
+        if (ldap_count_entries($ldapconn, $search) != 1) {
+            ldap_unbind($ldapconn);
+            Log::error("Could not find {$username} in LDAP");
+            return false;
+        }
+        $info = ldap_get_entries($ldapconn, $search);
+        $ldapbind = @ldap_bind($ldapconn, $info[0]['dn'], $password);
+        if (!$ldapbind) {
+            ldap_unbind($ldapconn);
+            Log::error("Could not bind to LDAP as {$username} with supplied password");
+            return false;
+        }
+        $search = ldap_search($ldapconn, $ldapOrg, "uid={$username}");
+        $info = ldap_get_entries($ldapconn, $search);
+        $result = array(
+            'username' => $username,
+            'surname' => $info[0]['sn'][0],
+            'forenames' => $info[0]['givenname'][0],
+            'email' => $info[0]['mail'][0],
+        );
+        ldap_unbind($ldapconn);
+        return $result;
     }
-
 }
