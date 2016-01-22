@@ -12,6 +12,9 @@ use App\PasswordReset;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class CourseController extends Controller
 {
     /**
@@ -127,6 +130,12 @@ class CourseController extends Controller
         return view('course.edit_students', compact('course'));
     }
 
+    /**
+     * Update the list of students on this course via an Excel upload
+     * @param  Request $request
+     * @param  integer  $id      The course->id
+     * @return redirect
+     */
     public function updateStudents(Request $request, $id)
     {
         $this->authorize('edit_courses');
@@ -146,10 +155,9 @@ class CourseController extends Controller
 
     private function parseExcelRow($row, $students)
     {
-        if (!is_numeric($row[0])) {
+        if (! $matric = $this->validMatric($row[0])) {
             return null;
         }
-        $matric = sprintf('%07d', $row[0]);
         $surname = $row[1];
         $forenames = $row[2];
         if (!$this->validName($surname)) {
@@ -174,16 +182,40 @@ class CourseController extends Controller
         return $student->id;
     }
 
+    public function validMatric($matric)
+    {
+        if (!is_numeric($matric)) {
+            return false;
+        }
+        $matric = sprintf('%07d', $matric);
+        if (! preg_match('/[1-9]/', $matric)) {
+            // traps sprintf giving us '0000000'
+            return false;
+        }
+        return $matric;
+    }
+
     private function validName($name)
     {
         return preg_match('/[a-zA-Z]/', $name);
     }
 
+    /**
+     * Makes a student-esque username from their matric + surname (eg 1234567a for '1234567', 'Anderson')
+     * @param  string $matric  Numeric string of the matric
+     * @param  string $surname Students surname
+     * @return string          A sane-looking student username
+     */
     private function makeStudentUsername($matric, $surname)
     {
         return $matric . substr(strtolower($surname), 0, 1);
     }
 
+    /**
+     * Remove all the students from this course (deletes them from the DB)
+     * @param  integer $courseId The course ID
+     * @return redirect
+     */
     public function removeStudents($courseId)
     {
         $this->authorize('edit_courses');

@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use Excel;
+use App\Course;
+use App\EventLog;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Project;
 use App\Role;
 use App\User;
-use Validator;
-use App\Project;
-use App\EventLog;
-use App\Http\Requests;
+use Auth;
+use Excel;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Validator;
 
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
@@ -51,29 +54,13 @@ class UserController extends Controller
         $this->authorize('edit_users');
         $user = new User;
         $roles = Role::orderBy('label')->get();
-        return view('user.create', compact('user', 'roles'));
+        $courses = Course::orderBy('title')->get();
+        return view('user.create', compact('user', 'roles', 'courses'));
     }
 
-    public function store(Request $request)
+    public function store(CreateUserRequest $request)
     {
-        $this->authorize('edit_users');
-        $this->validate($request, [
-            'username' => 'required|unique:users',
-            'email' => 'required|email|unique:users',
-            'surname' => 'required',
-            'forenames' => 'required'
-        ]);
-        $user = new User;
-        $user->fill($request->input());
-        if ($request->password) {
-            $user->password = bcrypt($request->password);
-        }
-        $user->save();
-        $user->roles()->detach();
-        if ($request->roles) {
-            $user->roles()->sync(array_filter($request->roles));
-        }
-        EventLog::log(Auth::user()->id, "Created new user $user->username");
+        $user = User::createFromForm($request);
         return redirect()->action('UserController@show', $user->id);
     }
 
@@ -83,36 +70,13 @@ class UserController extends Controller
         $user = User::findOrFail($userId);
         $roles = Role::orderBy('label')->get();
         $projects = Project::active()->orderBy('title')->get();
-        return view('user.edit', compact('user', 'roles', 'projects'));
+        $courses = Course::orderBy('title')->get();
+        return view('user.edit', compact('user', 'roles', 'projects', 'courses'));
     }
 
-    public function update(Request $request)
+    public function update(UpdateUserRequest $request)
     {
-        $this->authorize('edit_users');
-        $this->validate($request, [
-            'username' => 'required|unique:users,username,' . $request->id,
-            'email' => 'required|email|unique:users,email,' . $request->id,
-            'surname' => 'required',
-            'forenames' => 'required'
-        ]);
-        $user = User::findOrFail($request->id);
-        $user->fill($request->input());
-        if ($request->password) {
-            $user->password = bcrypt($request->password);
-        }
-        if ($request->project_id) {
-            $project = Project::findOrFail($request->project_id);
-            $choices = [ $request->project_id => ["choice" => 1, "accepted" => true] ];
-            EventLog::log(Auth::user()->id, "Allocated student {$user->username} to project {$project->title}");
-            $this->allocateStudentToProjects($user, $choices);
-        }
-        $user->save();
-        if ($request->roles) {
-            $user->roles()->sync(array_filter($request->roles));
-        } else {
-            $user->roles()->detach();
-        }
-        EventLog::log(Auth::user()->id, "Updated user $user->username");
+        $user = User::updateFromForm($request);
         return redirect()->action('UserController@show', $user->id);
     }
 
@@ -120,8 +84,8 @@ class UserController extends Controller
     {
         $this->authorize('edit_users');
         $user = User::findOrFail($userId);
-        EventLog::log(Auth::user()->id, "Deleted user {$user->username}");
         $user->delete();
+        EventLog::log(Auth::user()->id, "Deleted user {$user->username}");
         return redirect()->action('UserController@index');
     }
 
@@ -145,7 +109,7 @@ class UserController extends Controller
         if (!$this->choicesAreAllDifferent($picked)) {
             return redirect()->to('/')->withErrors(['choices' => 'You must pick five *different* projects']);
         }
-        $this->allocateStudentToProjects($student, $choices);
+        $student->allocateToProjects($choices);
         $projects = Project::whereIn('id', array_keys($choices))->lists('title')->toArray();
         EventLog::log(Auth::user()->id, "Chose projects " . implode(', ', $projects));
         return redirect()->to('/')->with(
@@ -164,18 +128,6 @@ class UserController extends Controller
         return count($choices) == count(array_unique($choices));
     }
 
-    /**
-     * Syncs the students project choices
-     * @param  User $student
-     * @param  array $choices Array of choices (see chooseProjects for instance)
-     * @return true
-     */
-    private function allocateStudentToProjects($student, $choices)
-    {
-        $student->projects()->detach();
-        $student->projects()->sync($choices);
-        return true;
-    }
 
     /**
      * Log in as a different user (mostly so you can see what they see, do their work etc)

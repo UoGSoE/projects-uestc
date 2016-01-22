@@ -27,8 +27,19 @@
             <div class="checkbox">
                 <label>
                     <input type="hidden" name="is_student" value="0">
-                    <input type="checkbox" name="is_student" value="1" @if ($user->is_student) checked @endif> Is a student?
+                    <input type="checkbox" id="is_student" name="is_student" value="1" @if ($user->is_student) checked @endif> Is a student?
                 </label>
+            </div>
+            <div class="form-group" id="course_select" @if (!$user->is_student) style="display:none" @endif>
+                <label for="inputCourse">Course</label>
+                <select id="inputCourse" name="course_id" class="form-control">
+                    <option value="">None</option>
+                    @foreach ($courses as $course)
+                        <option value="{{ $course->id }}" @if ($user->course() and $user->course()->id == $course->id) selected @endif>
+                            {{ $course->code }} - {{ $course->title }} 
+                        </option>
+                    @endforeach
+                </select>
             </div>
             @can('edit_user_roles')
                 <div class="form-group">
@@ -63,5 +74,12 @@
         <script>
             $(document).ready(function() {
                 $('.select2').select2();
+                $('#is_student').change(function() {
+                    if($(this).is(":checked")) {
+                        $("#course_select").fadeIn('fast');
+                    } else {
+                        $("#course_select").fadeOut('fast');
+                    }
+                });
             });
         </script>

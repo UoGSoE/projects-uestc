@@ -20,7 +20,7 @@ class UserAdminTest extends TestCase
             ->type('ZZZZZZZZZ', 'forenames')
             ->type('AAAAA@bbbbb.com', 'email')
             ->press('Create')
-            ->see("Details for ZZZZZZZZZ MMMMMMMMM")
+            ->see("Details for  staff  ZZZZZZZZZ MMMMMMMMM")
             ->see('aaaaa@bbbbb.com')   // double-check emails are forced to lower case
             ->see('Internal Staff');
         $this->actingAs($this->staff)
@@ -33,9 +33,12 @@ class UserAdminTest extends TestCase
             ->type('ZZZZZ@bbbbb.com', 'email')
             ->check('is_student')
             ->type('abcd1234abcd1234', 'password')
+            ->select($this->course->id, 'course_id')
             ->press('Create')
-            ->see("Details for QQQQQQQQQ MMMMMMMMM")
+            ->see("Details for  student  QQQQQQQQQ MMMMMMMMM")
             ->see('zzzzz@bbbbb.com')
+            ->see($this->course->code)
+            ->see($this->course->title)
             ->see('External Student');
     }
 

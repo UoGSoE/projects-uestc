@@ -3,15 +3,16 @@
 namespace App;
 
 use App\Course;
-use Validator;
+use App\EventLog;
 use App\PasswordReset;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Validator;
 
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
@@ -109,6 +110,14 @@ class User extends Model implements AuthenticatableContract,
     public function course()
     {
         return $this->courses->first();
+    }
+
+    public function updateCourse($request)
+    {
+        $this->courses()->detach();
+        if ($request->has('course_id') and $request->course_id) {
+            $this->courses()->sync([$request->course_id]);
+        }
     }
 
     /**
@@ -240,5 +249,62 @@ class User extends Model implements AuthenticatableContract,
         $user->forenames = $forenames;
         $user->save();
         return $user;
+    }
+
+    public static function createFromForm($request)
+    {
+        $user = new static;
+        $user->fill($request->input());
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+        $user->roles()->detach();
+        if ($request->roles) {
+            $user->roles()->sync(array_filter($request->roles));
+        }
+        if ($user->is_student) {
+            $user->updateCourse($request);
+        }
+        EventLog::log($request->user()->id, "Created new user $user->username");
+        return $user;
+    }
+
+    public static function updateFromForm($request)
+    {
+        $user = static::findOrFail($request->id);
+        $user->fill($request->input());
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
+        }
+        if ($request->project_id) {
+            $project = Project::findOrFail($request->project_id);
+            $choices = [ $request->project_id => ["choice" => 1, "accepted" => true] ];
+            EventLog::log($request->user()->id, "Allocated student {$user->username} to project {$project->title}");
+            $user->allocateToProjects($choices);
+        }
+        $user->save();
+        if ($request->roles) {
+            $user->roles()->sync(array_filter($request->roles));
+        } else {
+            $user->roles()->detach();
+        }
+        if ($user->is_student) {
+            $user->updateCourse($request);
+        }
+        EventLog::log($request->user()->id, "Updated user $user->username");
+        return $user;
+    }
+
+    /**
+     * Syncs the students project choices
+     * @param  array $choices Array of choices (see chooseProjects for instance)
+     * @return true
+     */
+    public function allocateToProjects($choices)
+    {
+        $this->projects()->detach();
+        $this->projects()->sync($choices);
+        return true;
     }
 }

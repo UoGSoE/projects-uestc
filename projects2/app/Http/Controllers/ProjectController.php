@@ -166,7 +166,7 @@ class ProjectController extends Controller
         $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
-        EventLog::log(Auth::user()->id, "Made a copy of project {$project->title}");
+        EventLog::log(Auth::user()->id, "Copied project {$project->title}");
         return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff'));
     }
 
@@ -182,19 +182,69 @@ class ProjectController extends Controller
         if (!$request->has('accepted')) {
             return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'No changes');
         }
-        $data = [];
-        foreach ($request->accepted as $student_id => $accepted) {
-            $data[$student_id] = [ 'accepted' => $accepted ];
-            if ($accepted) {
-                $student = User::findOrFail($student_id);
-                $student->projects()->sync([$id]);
-            }
-        }
-        $project->students()->sync($data);
+        $studentList = $this->buildListOfStudents($request, $id);
+        $this->setThisAsOnlyChoiceForAcceptedStudents($studentList, $id);
+        $project->students()->sync($studentList);
         EventLog::log(Auth::user()->id, "Accepted students onto project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'Allocations Saved');
     }
 
+    /**
+     * Builds an array suitable for ->sync() on projects based on the 'accepted[]' request input
+     * @param  Request $request   The form $request object
+     * @param  integer $projectId The project->id
+     * @return array            Array of data as $data[student_id] => ['accepted' => boolean]
+     */
+    private function buildListOfStudents($request, $projectId)
+    {
+        $data = [];
+        foreach ($request->accepted as $studentId => $accepted) {
+            $data[$studentId] = $this->acceptedPivotFlag($accepted);
+        }
+        return $data;
+    }
+
+    /**
+     * Readable helper to build the sync() suitable pivot data
+     * @param  boolean $accepted Whether or not a student was accepted
+     * @return array
+     */
+    private function acceptedPivotFlag($accepted)
+    {
+        return [ 'accepted' => $accepted ];
+    }
+
+    /**
+     * Loops over all the students passed and removes any other projects if they've been accepted onto this one
+     * @param array $studentList Array of students from buildListOfStudents()
+     * @param integer $projectId   ID of the project we're working with
+     */
+    private function setThisAsOnlyChoiceForAcceptedStudents($studentList, $projectId)
+    {
+        foreach ($studentList as $studentId => $accepted) {
+            $this->updateStudentProjectsWhereAccepted($studentId, $projectId, $accepted['accepted']);
+        }
+    }
+
+    /**
+     * If the student was accepted onto the project - remove all other choices they've made via sync()
+     * @param  integer $studentId
+     * @param  integer $projectId
+     * @param  boolean $accepted
+     */
+    private function updateStudentProjectsWhereAccepted($studentId, $projectId, $accepted)
+    {
+        if ($accepted) {
+            $student = User::findOrFail($studentId);
+            $student->projects()->sync([$projectId]);
+        }
+    }
+
+    /**
+     * Bulk allocate students to projects
+     * @param  Request $request
+     * @return redirect
+     */
     public function bulkAllocate(Request $request)
     {
         if (!$request->has('student')) {
@@ -202,20 +252,27 @@ class ProjectController extends Controller
         }
         foreach ($request->student as $student_id => $project_id) {
             $student = User::findOrFail($student_id);
-            $data[$project_id] = [
-                'accepted' => true
-            ];
+            $data[$project_id] = [ 'accepted' => true ];
             $student->projects()->sync($data);
         }
         return redirect()->action('ReportController@bulkAllocate')->with('success_message', 'Allocations saved');
     }
 
+    /**
+     * Show the form to let admins bulk-edit whether projects are active or not
+     * @return view
+     */
     public function bulkEditActive()
     {
         $projects = Project::orderBy('title')->get();
         return view('project.bulk_active', compact('projects'));
     }
 
+    /**
+     * Bulk save whether projects are active or not
+     * @param  Request $request
+     * @return redirect
+     */
     public function bulkSaveActive(Request $request)
     {
         if (! $request->has('statuses')) {
