@@ -52,6 +52,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/course/{id}/removestudents', 'CourseController@removeStudents');
 
         // Project routes
+        Route::get('project/bulkactive', 'ProjectController@bulkEditActive');
+        Route::post('project/bulkactive', 'ProjectController@bulkSaveActive');
         Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents');
         Route::get('project/{id}/copy', 'ProjectController@duplicate');
         Route::post('project/bulkallocate', 'ProjectController@bulkAllocate');
@@ -66,7 +68,6 @@ Route::group(['middleware' => ['auth']], function () {
         // Project Type routes
         Route::resource('projecttype', 'ProjectTypeController');
         Route::get('projecttype/{id}/delete', 'ProjectTypeController@destroy');
-
         // Location routes
         //Route::resource('location', 'LocationController');
         //Route::get('location/{id}/delete', 'LocationController@destroy');

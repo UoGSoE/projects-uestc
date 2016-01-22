@@ -209,4 +209,21 @@ class ProjectController extends Controller
         }
         return redirect()->action('ReportController@bulkAllocate')->with('success_message', 'Allocations saved');
     }
+
+    public function bulkEditActive()
+    {
+        $projects = Project::orderBy('title')->get();
+        return view('project.bulk_active', compact('projects'));
+    }
+
+    public function bulkSaveActive(Request $request)
+    {
+        if (! $request->has('statuses')) {
+            return redirect()->action('ProjectController@bulkEditActive')->with('success_message', 'No changes made');
+        }
+        foreach ($request->statuses as $projectId => $status) {
+            Project::findOrFail($projectId)->update(['is_active' => $status]);
+        }
+        return redirect()->action('ProjectController@bulkEditActive')->with('success_message', 'Changes saved');
+    }
 }

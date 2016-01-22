@@ -99,6 +99,29 @@ class ProjectAdminTest extends TestCase
             // ->dontSeeIsChecked("accepted[{$this->student->id}]");
     }
 
+    public function testBulkActive()
+    {
+        $this->buildWorld();
+        $this->project1->is_active = false;
+        $this->project2->is_active = true;
+        $this->project1->save();
+        $this->project2->save();
+
+        $this->actingAs($this->staff)
+            ->visit("/project/bulkactive")
+            ->see($this->project1->title)
+            ->see($this->project2->title)
+            ->seeIsSelected("statuses[{$this->project1->id}]", 0)
+            ->seeIsSelected("statuses[{$this->project2->id}]", 1)
+            ->select(1, "statuses[{$this->project1->id}]")
+            ->select(0, "statuses[{$this->project2->id}]")
+            ->press('Update')
+            ->see($this->project1->title)
+            ->see($this->project2->title)
+            ->seeIsSelected("statuses[{$this->project1->id}]", 1)
+            ->seeIsSelected("statuses[{$this->project2->id}]", 0);
+    }
+
     private function buildWorld()
     {
         $this->staff = factory(App\User::class)->create(['is_student' => false]);

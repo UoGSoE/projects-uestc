@@ -21,6 +21,7 @@
 			              		<li><a href="{!! action('ReportController@allStudents') !!}">View All Students</a></li>
 			              		<li><a href="{!! action('ReportController@allStaff') !!}">View All Staff</a></li>
 			              		<li><a href="{!! action('ReportController@bulkAllocate') !!}">Bulk Allocations</a></li>
+			              		<li><a href="{!! action('ProjectController@bulkEditActive') !!}">Bulk Active/Inactive</a></li>
 				              </ul>
 				            </li>
 			            @endcan
