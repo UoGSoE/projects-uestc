@@ -62,7 +62,6 @@ class ProjectController extends Controller
             'courses' => 'required|array',
             'type_id' => 'required|integer',
             'maximum_students' => 'required|integer|min:1',
-            'is_active' => false,
             'user_id' => 'required|integer|min:1'
         ]);
         $project = new Project;

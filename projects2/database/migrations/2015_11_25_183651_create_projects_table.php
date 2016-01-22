@@ -18,7 +18,7 @@ class CreateProjectsTable extends Migration
             $table->text('description');
             $table->text('prereq')->nullable();
             $table->integer('maximum_students')->default(1);
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->integer('type_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->foreign('type_id')->references('id')->on('project_types')->onDelete('cascade');
