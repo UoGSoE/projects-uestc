@@ -30,6 +30,8 @@
                 <th>Owner</th>
                 <th>Type</th>
                 <th title="Max, Applied, Accepted">Students</th>
+                <th>Created</th>
+                <th>Updated</th>
             </tr>
         </thead>
         <tbody>
@@ -57,6 +59,8 @@
                         {{ $project->students->count() }},
                         {{ $project->acceptedStudents->count() }}
                     </td>
+                    <td>{{ $project->created_at->format('d/m/Y') }}</td>
+                    <td>{{ $project->updated_at->format('d/m/Y') }}</td>
                 </tr>
             @endforeach
         </tbody>

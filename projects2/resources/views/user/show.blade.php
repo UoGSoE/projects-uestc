@@ -50,6 +50,7 @@
                     <a href="{!! action('ProjectController@show', $project->id) !!}">
                         {{ $project->title }}
                     </a> ({{ $project->students->count() }} Students)
+                    (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})
             @endforeach
         @endif
     </div>
