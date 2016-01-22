@@ -37,7 +37,7 @@ class AuthController extends Controller
                 EventLog::log(Auth::user()->id, 'Logged in');
                 return redirect()->intended('/');
             }
-            return redirect()->refresh()->with('errors', 'Username and/or password are incorrect.');
+            return redirect()->refresh()->withErrors(['errors' => 'Username and/or password are incorrect.']);
         }
 
         // if the username is an email address, try and find them
@@ -48,7 +48,7 @@ class AuthController extends Controller
                 EventLog::log(Auth::user()->id, 'Logged in');
                 return redirect()->intended('/');
             }
-            return redirect()->refresh()->with('errors', 'Username and/or password are incorrect.');
+            return redirect()->refresh()->withErrors(['errors' => 'Username and/or password are incorrect.']);
         }
 
         // try and LDAP auth
@@ -82,7 +82,7 @@ class AuthController extends Controller
             return redirect()->intended('/');
         }
 
-        return redirect()->refresh()->with('errors', 'Username and/or password are incorrect.');
+        return redirect()->refresh()->withErros(['errors' => 'Username and/or password are incorrect.']);
     }
 
     public function logout()
@@ -121,20 +121,20 @@ class AuthController extends Controller
     {
         $resetToken = PasswordReset::where('token', '=', $token)->first();
         if (!$resetToken) {
-            return redirect()->back()->with('errors', 'Invalid token');
+            return redirect()->back()->withErrors(['errors' => 'Invalid token']);
         }
         if ($resetToken->hasExpired()) {
-            return redirect()->back()->with('errors', 'Token has expired');
+            return redirect()->back()->withErrors(['errors' => 'Token has expired']);
         }
         if ($request->password1 != $request->password2) {
-            return redirect()->back()->with('errors', 'Passwords did not match');
+            return redirect()->back()->withErrors(['errors' => 'Passwords did not match']);
         }
         if (strlen($request->password1) < 12) {
-            return redirect()->back()->with('errors', 'Password was too short');
+            return redirect()->back()->withErrors(['errors' => 'Password was too short']);
         }
         $user = $resetToken->user;
         if (!$user) {
-            return redirect()->back()->with('errors', 'Invalid user');
+            return redirect()->back()->withErrors(['errors' => 'Invalid user']);
         }
         $user->password = bcrypt($request->password1);
         $user->save();
