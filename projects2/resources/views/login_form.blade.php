@@ -7,11 +7,6 @@
         </h1>
     </div>
     <div class="container text-center">
-    	@if(count($errors) > 0)
-        	<div class="alert alert-danger">
-        		{{ $errors }}
-        	</div>
-    	@endif
         <p>
             Students can log in using your University of Glasgow username &amp; password. Staff should use your
             email address.

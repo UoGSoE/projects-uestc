@@ -82,7 +82,7 @@ class AuthController extends Controller
             return redirect()->intended('/');
         }
 
-        return redirect()->refresh()->withErros(['errors' => 'Username and/or password are incorrect.']);
+        return redirect()->refresh()->withErrors(['errors' => 'Username and/or password are incorrect.']);
     }
 
     public function logout()
