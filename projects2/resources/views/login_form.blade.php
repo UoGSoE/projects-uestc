@@ -24,7 +24,7 @@
 		  <button type="submit" class="btn btn-primary">Sign in</button>
             <br /><p />
             <p id="resetbox">
-                <b>For Staff:</b> If you don't have a password yet or have forgotten it, then <a href="#" id="resetlink">click here to generate a new one</a>.
+                <b>For External Staff:</b> If you don't have a password yet or have forgotten it, then <a href="#" id="resetlink">click here to generate a new one</a>.
             </p>
 		</form>
         <div id="resetform" style="display: none">

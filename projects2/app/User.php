@@ -242,7 +242,8 @@ class User extends Model implements AuthenticatableContract,
         if (!$user) {
             $user = new static;
             $user->email = $email;
-            $user->username = static::generateUsername($surname . $forenames);
+            // $user->username = static::generateUsername($surname . $forenames);
+            $user->username = $email;
             $user->password = bcrypt(str_random(40));
         }
         $user->surname = $surname;
