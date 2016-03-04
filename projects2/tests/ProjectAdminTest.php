@@ -47,7 +47,9 @@ class ProjectAdminTest extends TestCase
             ->attach($spreadsheet, 'file')
             ->press('Import')
             ->see('Updated staff list')
-            ->see('ZippyBungle');   // a name from the test spreadsheet
+            ->see('Zippy')
+            ->see('Bungle')
+            ->see('xyz@gmail.com');   // a name from the test spreadsheet
     }
 
     public function testBulkAllocate()
