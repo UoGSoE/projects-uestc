@@ -2,6 +2,7 @@
 
 use DB;
 use Auth;
+use Mail;
 use App\User;
 use App\EventLog;
 use App\Location;
@@ -103,13 +104,17 @@ class AuthController extends Controller
         $email = strtolower(trim($request->email));
         $user = User::where('email', '=', $email)->first();
         if (!$user) {
-            return redirect()->refresh()->with('errors', 'Could not find that email address');
+            return redirect()->refresh()->withErrors(['errors' => 'Could not find that email address']);
         }
         $token = PasswordReset::create([
             'user_id' => $user->id,
             'token' => strtolower(str_random(32)),
         ]);
-        return 'Would have emailed a link to ' . action('Auth\AuthController@password', ['token' => $token->token]);
+        Mail::send('emails.reset_password', ['token' => $token], function ($m) use ($user) {
+            $m->from('donotreply@eng.gla.ac.uk', '[UoG] Student Projects');
+            $m->to($user->email)->subject('[UoG] Student Projects - Password Reset');
+        });
+        return view('auth.password_reset_message', compact('token', 'user'));
     }
 
     public function password($token)
