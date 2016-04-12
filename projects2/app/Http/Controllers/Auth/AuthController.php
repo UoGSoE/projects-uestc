@@ -120,6 +120,13 @@ class AuthController extends Controller
 
     public function password($token)
     {
+        $resetToken = PasswordReset::where('token', '=', $token)->first();
+        if (!$resetToken) {
+            return redirect('/auth/login')->withErrors(['errors' => 'Invalid token']);
+        }
+        if ($resetToken->hasExpired()) {
+            return redirect('/auth/login')->withErrors(['errors' => 'Token has expired']);
+        }
         return view('auth.password', compact('token'));
     }
 
