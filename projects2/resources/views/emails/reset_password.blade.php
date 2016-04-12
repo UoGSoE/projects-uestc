@@ -7,3 +7,4 @@ If you follow this link you will be able to pick a new password for the system.
 {!! action('Auth\AuthController@password', ['token' => $token->token]) !!}
 </a>
 
+The link is valid for seven days.

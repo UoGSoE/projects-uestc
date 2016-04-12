@@ -114,6 +114,7 @@ class AuthController extends Controller
             $m->from('donotreply@eng.gla.ac.uk', '[UoG] Student Projects');
             $m->to($user->email)->subject('[UoG] Student Projects - Password Reset');
         });
+        EventLog::log(Auth::user()->id, 'Generated a password reset email');
         return view('auth.password_reset_message', compact('token', 'user'));
     }
 
@@ -145,6 +146,7 @@ class AuthController extends Controller
         $user->save();
         Auth::login($user);
         $resetToken->delete();
+        EventLog::log(Auth::user()->id, 'Reset their password');
         return redirect('/');
     }
 }
