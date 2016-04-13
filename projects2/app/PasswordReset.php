@@ -18,6 +18,6 @@ class PasswordReset extends Model
 
     public function hasExpired()
     {
-        return $this->created_at->lt(Carbon::now()->subDays(7));
+        return $this->created_at->lt(Carbon::now()->subDays(config('projects.resetTokenExpires')));
     }
 }
