@@ -55,3 +55,9 @@ $factory->define(App\ProjectType::class, function (Faker\Generator $faker) {
         'title' => $faker->word . $faker->word . $faker->word,
     ];
 });
+$factory->define(App\PasswordReset::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => $faker->randomNumber(),
+        'token' => strtolower(str_random(32)),
+    ];
+});
