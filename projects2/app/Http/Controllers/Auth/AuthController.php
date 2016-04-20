@@ -115,7 +115,7 @@ class AuthController extends Controller
             $m->to($user->email)->subject('[UoG] Student Projects - Password Reset');
         });
         EventLog::log($user->id, 'Generated a password reset email');
-        return redirect()->to('/')->with('success_message', 'Password reset link has been sent.  Please check your email shortly.');
+        return redirect()->to('/auth/login')->with('success_message', 'Password reset link has been sent.  Please check your email shortly.');
         //return view('auth.password_reset_message', compact('token', 'user'));
     }
 
