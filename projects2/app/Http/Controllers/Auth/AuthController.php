@@ -66,7 +66,7 @@ class AuthController extends Controller
                 $user->surname = $result['surname'];
                 $user->forenames = $result['forenames'];
                 $user->email = strtolower($result['email']);
-                if (preg_match('/^[0-9]{6}[a-z]$/i', $username)) {
+                if (preg_match('/^[0-9]{7}[a-z]$/i', $username)) {
                     $user->is_student = true;
                 }
                 $user->save();
