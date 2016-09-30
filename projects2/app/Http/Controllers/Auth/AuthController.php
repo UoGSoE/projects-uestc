@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Auth;
 
+use Log;
 use DB;
 use Auth;
 use Mail;
@@ -30,6 +31,11 @@ class AuthController extends Controller
         $username = trim(strtolower($request->input('username')));
         $password = $request->input('password');
 
+        if ($this->isAStudent($username) and config("projects.studentsDisabled") == true) {
+            return redirect()->refresh()->withErrors(['errors' => 'Student logins are currently disabled']);
+        }
+
+        Log::info($this->isAStudent($username));
         // handle local users first
         if (User::where('username', '=', $username)->whereNotNull('password')->count() == 1) {
             if (Auth::attempt(['username' => $username, 'password' => $password])) {
@@ -156,5 +162,13 @@ class AuthController extends Controller
         $resetToken->delete();
         EventLog::log($user->id, 'Reset their password');
         return redirect('/');
+    }
+
+    public function isAStudent($username)
+    {
+        if (preg_match("/^[0-9]{7}[a-zA-Z]/", $username)) {
+            return true;
+        }
+        return false;
     }
 }
