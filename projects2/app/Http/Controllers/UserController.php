@@ -110,7 +110,7 @@ class UserController extends Controller
             return redirect()->to('/')->withErrors(['choices' => 'You must pick five *different* projects']);
         }
         $student->allocateToProjects($choices);
-        $projects = Project::whereIn('id', array_keys($choices))->lists('title')->toArray();
+        $projects = Project::whereIn('id', array_keys($choices))->pluck('title')->toArray();
         EventLog::log(Auth::user()->id, "Chose projects " . implode(', ', $projects));
         return redirect()->to('/')->with(
             'success_message',
