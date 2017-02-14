@@ -38,7 +38,7 @@ $factory->define(App\Project::class, function (Faker\Generator $faker) {
     return [
         'title' => implode(' ', $faker->words(3)),
         'description' => $faker->paragraph(3),
-        'maximum_students' => $faker->numberBetween(1, 5),
+        'maximum_students' => $faker->numberBetween(3, 10),
         'is_active' => $faker->boolean(90),
         'type_id' => $faker->numberBetween(1, 2),
         'user_id' => $faker->numberBetween(1, 3),

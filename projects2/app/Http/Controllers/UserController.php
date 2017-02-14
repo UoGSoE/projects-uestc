@@ -153,8 +153,8 @@ class UserController extends Controller
     {
         $this->authorize('edit_users');
         $sheet = Excel::load($request->file('file'))->get();
-        $rows = $sheet->all();
-        foreach ($rows[0] as $row) {
+        $rows = $sheet->first();
+        foreach ($rows as $row) {
             $user = User::fromSpreadsheetData($row);
             if (!$user) {
                 abort(401);

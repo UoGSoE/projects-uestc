@@ -227,9 +227,9 @@ class User extends Model implements AuthenticatableContract,
      */
     public static function fromSpreadsheetData($row)
     {
-        $email = strtolower(trim($row[0]));
-        $surname = trim($row[1]);
-        $forenames = trim($row[2]);
+        $email = strtolower(trim($row[1]));
+        $surname = trim($row[2]);
+        $forenames = trim($row[3]);
         $rules = [
             'email' => 'required|email',
             'surname' => 'required',

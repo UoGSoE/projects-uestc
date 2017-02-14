@@ -142,9 +142,9 @@ class CourseController extends Controller
         $course = Course::findOrFail($id);
         $studentIds = [];
         $sheet = Excel::load($request->file('file'))->get();
-        $rows = $sheet->all();
+        $rows = $sheet->first();
         $students = User::students()->get();
-        foreach ($rows[0] as $row) {
+        foreach ($rows as $row) {
             $studentIds[] = $this->parseExcelRow($row, $students);
         }
         $studentIds = array_filter($studentIds);    // strip out any null-like keys
@@ -155,11 +155,11 @@ class CourseController extends Controller
 
     private function parseExcelRow($row, $students)
     {
-        if (! $matric = $this->validMatric($row[0])) {
+        if (! $matric = $this->validMatric($row[1])) {
             return null;
         }
-        $surname = $row[1];
-        $forenames = $row[2];
+        $surname = $row[2];
+        $forenames = $row[3];
         if (!$this->validName($surname)) {
             return null;
         }

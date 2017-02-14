@@ -6,15 +6,15 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.3.*",
-        "maatwebsite/excel": "~2.0.0"
+        "laravel/framework": "5.4.*",
+        "maatwebsite/excel": "~2.1.0",
+        "laravel/tinker": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
+        "laravel/browser-kit-testing": "^1.0",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
-        "phpspec/phpspec": "~2.1",
-        "symfony/dom-crawler": "^3.2"
+        "phpunit/phpunit": "~5.7"
     },
     "autoload": {
         "classmap": [
@@ -25,12 +25,16 @@
         }
     },
     "autoload-dev": {
-        "classmap": [
-            "tests/TestCase.php"
-        ]
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+	"classmap": [
+    	    "tests/TestCase.php",
+            "tests/BrowserKitTestCase.php"
+    	]
     },
     "scripts": {
-	"post-root-package-install": [
+        "post-root-package-install": [
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
@@ -43,9 +47,10 @@
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "php artisan optimize"
-	]
+        ]
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "sort-packages": true
     }
 }
