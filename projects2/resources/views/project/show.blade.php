@@ -57,6 +57,8 @@
                 @endforeach
             </ul>
         </dd>
+        <dt>Discipline</dt>
+        <dd>{{ $project->disciplineTitle() }}</dd>
     </dl>
     <h3>
         Students who applied for this project

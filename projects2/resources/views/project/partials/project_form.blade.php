@@ -29,6 +29,16 @@
             </select>
         </div>
         <div class="form-group">
+            <label for="inputCourses">Discipline</label>
+            <select id="inputCourses" name="discipline_id" class="form-control select2">
+                @foreach ($disciplines as $discipline)
+                    <option value="{{ $discipline->id }}" @if ($project->discipline_id == $discipline->id) selected @endif>
+                        {{ $discipline->title }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
             <label for="inputType">Type</label>
             <select id="inputType" name="type_id" class="form-control" required>
                 @foreach ($types as $type)

@@ -19,6 +19,7 @@ class StaffProjectStuffTest extends BrowserKitTestCase
     public function testStaffCanCreateProject()
     {
         $this->buildWorld();
+        $discipline = factory(App\Discipline::class)->create();
         $this->actingAs($this->staff)
             ->visit('/')
             ->click('New Project')
@@ -28,12 +29,14 @@ class StaffProjectStuffTest extends BrowserKitTestCase
                 'description' => '12121212121212',
                 'courses' => [$this->course->id],
                 'type_id' => $this->type->id,
-                'maximum_students' => 599
+                'maximum_students' => 599,
+                'discipline_id' => $discipline->id,
             ])
             ->see('Project Details')
             ->see('PSPSPSPSP')
             ->see('12121212121212')
             ->see($this->course->title)
+            ->see($discipline->title)
             ->see(599);
     }
 
@@ -178,6 +181,10 @@ class StaffProjectStuffTest extends BrowserKitTestCase
             ->assertResponseStatus(403);
     }
 
+    public function test_can_add_a_discipline_to_a_project()
+    {
+        # code...
+    }
     private function buildWorld()
     {
         $this->staff = factory(App\User::class)->create(['is_student' => false]);

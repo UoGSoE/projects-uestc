@@ -8,6 +8,7 @@ use App\User;
 use App\Course;
 use App\Project;
 use App\EventLog;
+use App\Discipline;
 use App\Programme;
 use App\ProjectType;
 use App\Http\Requests;
@@ -44,8 +45,9 @@ class ProjectController extends Controller
         $types = ProjectType::orderBy('title')->get();
         $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
+        $disciplines = Discipline::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
-        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff'));
+        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff', 'disciplines'));
     }
 
     /**

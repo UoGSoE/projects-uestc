@@ -61,3 +61,9 @@ $factory->define(App\PasswordReset::class, function (Faker\Generator $faker) {
         'token' => strtolower(str_random(32)),
     ];
 });
+
+$factory->define(App\Discipline::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->word,
+    ];
+});
