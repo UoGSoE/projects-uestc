@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Permission;
-use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -23,17 +23,17 @@ class AuthServiceProvider extends ServiceProvider
      * @param  \Illuminate\Contracts\Auth\Access\Gate  $gate
      * @return void
      */
-    public function boot(GateContract $gate)
+    public function boot()
     {
-        $this->registerPolicies($gate);
+        $this->registerPolicies();
 
         foreach ($this->getPermissions() as $permission) {
-            $gate->define($permission->title, function ($user) use ($permission) {
+            Gate::define($permission->title, function ($user) use ($permission) {
                 return $user->hasRole($permission->roles);
             });
         }
 
-        $gate->define('edit_this_project', function ($user, $project) {
+        Gate::define('edit_this_project', function ($user, $project) {
             if ($user->hasRole('teaching_office')) {
                 return true;
             }
@@ -43,7 +43,7 @@ class AuthServiceProvider extends ServiceProvider
             return $user->id == $project->user_id;
         });
 
-        $gate->define('view_this_project', function ($user, $project) {
+        Gate::define('view_this_project', function ($user, $project) {
             if ($user->hasRole('teaching_office')) {
                 return true;
             }
