@@ -94,8 +94,8 @@ Route::group(['middleware' => ['auth']], function () {
 //});
 
 // Define our authentication middleware controller
-Route::controllers([
-    'auth' => 'Auth\AuthController',
-]);
+// Route::controllers([
+//     'auth' => 'Auth\AuthController',
+// ]);
 
 
