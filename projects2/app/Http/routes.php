@@ -1,5 +1,5 @@
 <?php
-\URL::forceSchema("https");
+//\URL::forceSchema("https");
 
 //Route::group(['prefix' => 'projects2'], function() {
 
