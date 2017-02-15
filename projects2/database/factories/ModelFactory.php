@@ -15,9 +15,9 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'username' => $faker->userName,
         'surname' => $faker->lastName,
-        'forenames' => $faker->firstName(),
+        'forenames' => $faker->firstName,
         'email' => $faker->email,
-        'is_student' => $faker->boolean(95),
+        'is_student' => false,
         'last_login' => $faker->dateTimeThisYear(),
         'remember_token' => str_random(10),
     ];

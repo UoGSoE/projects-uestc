@@ -4,8 +4,8 @@
     <div class="container">
         <h2>
             Current Staff
-            <a href="{!! action('UserController@create') !!}" class="btn btn-default">Add New Staff</a>
-            <a href="{!! action('UserController@import') !!}" class="btn btn-default">Import Staff</a>
+            <a href="{!! route('user.create') !!}" class="btn btn-default">Add New Staff</a>
+            <a href="{!! route('staff.import') !!}" class="btn btn-default">Import Staff</a>
         </h2>
         @include('user.partials.user_list')
     </div>

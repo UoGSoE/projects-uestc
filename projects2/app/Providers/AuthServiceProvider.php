@@ -27,12 +27,16 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        foreach ($this->getPermissions() as $permission) {
-            Gate::define($permission->title, function ($user) use ($permission) {
-                return $user->hasRole($permission->roles);
-            });
-        }
+        // foreach ($this->getPermissions() as $permission) {
+        //     Gate::define($permission->title, function ($user) use ($permission) {
+        //         return $user->hasRole($permission->roles);
+        //     });
+        // }
 
+        Gate::define('edit_users', function ($user) {
+            return $user->isAdmin();
+        });
+        
         Gate::define('edit_this_project', function ($user, $project) {
             if ($user->hasRole('teaching_office')) {
                 return true;

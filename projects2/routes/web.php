@@ -22,39 +22,50 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return view('home');
     });
-    Route::post('/user/chooseprojects', 'UserController@chooseProjects');
 
     Route::group(['middleware' => ['staff']], function () {
+        Route::get('/project/create', 'ProjectController@create')->name('project.create');
+        Route::post('/project', 'ProjectController@store')->name('project.store');
+        Route::get('/project/{id}', 'ProjectController@show')->name('project.show');
+        Route::get('/project/{id}/edit', 'ProjectController@edit')->name('project.edit');
+        Route::get('/project/{id}/copy', 'ProjectController@copy')->name('project.copy');
+        Route::post('/project/{id}', 'ProjectController@update')->name('project.update');
+        Route::delete('/project/{id}', 'ProjectController@destroy')->name('project.destroy');
+    });
 
-        // User routes
-        Route::get('/user/import', 'UserController@import');
-        Route::post('/user/import', 'UserController@updateStaff');
-        Route::get('/user/{id}/loginas', 'UserController@logInAs');
-        Route::get('/user', 'UserController@index');
-        Route::get('/user/students', 'UserController@indexStudents');
-        Route::get('/user/staff', 'UserController@indexStaff');
-        Route::get('/user/create', 'UserController@create');
-        Route::post('/user/create', 'UserController@store');
-        Route::get('/user/{id}', 'UserController@show');
-        Route::get('/user/{id}/edit', 'UserController@edit');
-        Route::post('/user/{id}/edit', 'UserController@update');
-        Route::delete('/user/{id}', 'UserController@destroy');
-        Route::get('/user/{id}/delete', 'UserController@destroy');
+    Route::group(['middleware' => ['student']], function () {
+        Route::post('/choices', 'StudentChoicesController@update');
+        //Route::post('/user/chooseprojects', 'UserController@chooseProjects');
+    });
 
-        // Course routes
+
+    Route::group(['middleware' => ['admin'], 'prefix' => '/admin'], function () {
+        Route::get('/staff', 'StaffController@index')->name('staff.index');
+        Route::get('/staff/import', 'StaffImportController@edit')->name('staff.import');
+        Route::post('/staff/import', 'StaffImportController@update')->name('staff.do_import');
+
+        Route::get('/students', 'StudentController@index')->name('student.index');
+
+        Route::get('/user/create', 'UserController@create')->name('user.create');
+        Route::post('/user', 'UserController@store')->name('user.store');
+        Route::get('/user/{id}', 'UserController@show')->name('user.show');
+        Route::get('/user/{id}/edit', 'UserController@edit')->name('user.edit');
+        Route::post('/user/{id}', 'UserController@update')->name('user.update');
+        Route::delete('/user/{id}', 'UserController@destroy')->name('user.destroy');
+        Route::get('/user/{id}/loginas', 'UserController@logInAs')->name('user.impersonate');
+
         Route::get('/course', 'CourseController@index');
         Route::get('/course/create', 'CourseController@create');
         Route::post('/course/create', 'CourseController@store');
         Route::get('/course/{id}', 'CourseController@show');
         Route::get('/course/{id}/edit', 'CourseController@edit');
-        Route::post('/course/{id}/edit', 'CourseController@update');
+        Route::post('/course/{id}', 'CourseController@update');
         Route::delete('/course/{id}', 'CourseController@destroy');
-        Route::get('course/{id}/delete', 'CourseController@destroy');
-        Route::get('/course/{id}/editstudents', 'CourseController@editStudents');
-        Route::patch('/course/{id}/editstudents', 'CourseController@updateStudents');
-        Route::get('/course/{id}/removestudents', 'CourseController@removeStudents');
 
-        // Project routes
+        Route::get('/course/{id}/students', 'CourseEnrollmentController@edit');
+        Route::post('/course/{id}/students', 'CourseEnrollmentController@update');
+        Route::get('/course/{id}/removestudents', 'CourseEnrollmentController@removeStudents');
+
         Route::get('project/bulkactive', 'ProjectController@bulkEditActive');
         Route::post('project/bulkactive', 'ProjectController@bulkSaveActive');
         Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents');
@@ -62,24 +73,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('project/bulkallocate', 'ProjectController@bulkAllocate');
         Route::resource('project', 'ProjectController');
         Route::get('project/{id}/delete', 'ProjectController@destroy');
-        // Permission routes
-        Route::resource('permission', 'PermissionController');
 
-        // Role routes
-        Route::resource('role', 'RoleController');
-
-        // Project Type routes
         Route::resource('projecttype', 'ProjectTypeController');
         Route::get('projecttype/{id}/delete', 'ProjectTypeController@destroy');
-        // Location routes
-        //Route::resource('location', 'LocationController');
-        //Route::get('location/{id}/delete', 'LocationController@destroy');
 
-        // Programme routes
         Route::resource('programme', 'ProgrammeController');
         Route::get('programme/{id}/delete', 'ProgrammeController@destroy');
 
-        // Report routes
         Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfType');
         Route::get('/report/projects/bylocation/{id}', 'ReportController@allProjectsAtLocation');
         Route::get('/report/projects', 'ReportController@allProjects');
@@ -87,7 +87,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/report/staff', 'ReportController@allStaff');
         Route::get('/report/bulkallocate', 'ReportController@bulkAllocate');
 
-        // Event routes
         Route::get('events', 'EventLogController@index');
     });
 });
@@ -97,5 +96,3 @@ Route::group(['middleware' => ['auth']], function () {
 // Route::controllers([
 //     'auth' => 'Auth\AuthController',
 // ]);
-
-

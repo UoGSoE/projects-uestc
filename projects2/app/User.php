@@ -184,6 +184,11 @@ class User extends Model implements AuthenticatableContract,
         return ! $this->is_student;
     }
 
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
+
     /**
      * Get the project where it is the students $choice option
      * @param  integer $choice Which choice to find (ie, 1, 2, 3 etc)
