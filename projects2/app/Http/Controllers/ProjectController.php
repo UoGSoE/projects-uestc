@@ -107,8 +107,9 @@ class ProjectController extends Controller
         $types = ProjectType::orderBy('title')->get();
         $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
+        $disciplines = Discipline::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
-        return view('project.edit', compact('project', 'types', 'programmes', 'courses', 'staff'));
+        return view('project.edit', compact('project', 'types', 'programmes', 'courses', 'staff', 'disciplines'));
     }
 
     /**
@@ -168,8 +169,9 @@ class ProjectController extends Controller
         $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
+        $disciplines = Discipline::orderBy('title')->get();
         EventLog::log(Auth::user()->id, "Copied project {$project->title}");
-        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff'));
+        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff', 'disciplines'));
     }
 
     /**
