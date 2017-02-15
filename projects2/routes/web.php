@@ -54,25 +54,25 @@ Route::group(['middleware' => ['auth']], function () {
         Route::delete('/user/{id}', 'UserController@destroy')->name('user.destroy');
         Route::get('/user/{id}/loginas', 'UserController@logInAs')->name('user.impersonate');
 
-        Route::get('/course', 'CourseController@index');
-        Route::get('/course/create', 'CourseController@create');
-        Route::post('/course/create', 'CourseController@store');
-        Route::get('/course/{id}', 'CourseController@show');
-        Route::get('/course/{id}/edit', 'CourseController@edit');
-        Route::post('/course/{id}', 'CourseController@update');
-        Route::delete('/course/{id}', 'CourseController@destroy');
+        Route::get('/course', 'CourseController@index')->name('course.index');
+        Route::get('/course/create', 'CourseController@create')->name('course.create');
+        Route::post('/course/create', 'CourseController@store')->name('course.store');
+        Route::get('/course/{id}', 'CourseController@show')->name('course.show');
+        Route::get('/course/{id}/edit', 'CourseController@edit')->name('course.edit');
+        Route::post('/course/{id}', 'CourseController@update')->name('course.update');
+        Route::delete('/course/{id}', 'CourseController@destroy')->name('course.destroy');
 
-        Route::get('/course/{id}/students', 'CourseEnrollmentController@edit');
-        Route::post('/course/{id}/students', 'CourseEnrollmentController@update');
-        Route::get('/course/{id}/removestudents', 'CourseEnrollmentController@removeStudents');
+        Route::get('/course/{id}/students', 'CourseEnrolmentController@edit')->name('enrol.edit');
+        Route::post('/course/{id}/students', 'CourseEnrolmentController@update')->name('enrol.update');
+        Route::get('/course/{id}/removestudents', 'CourseEnrollmentController@destroy')->name('enrol.destroy');
 
-        Route::get('project/bulkactive', 'ProjectController@bulkEditActive');
-        Route::post('project/bulkactive', 'ProjectController@bulkSaveActive');
-        Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents');
-        Route::get('project/{id}/copy', 'ProjectController@duplicate');
-        Route::post('project/bulkallocate', 'ProjectController@bulkAllocate');
+        Route::get('project/bulkactive', 'ProjectController@bulkEditActive')->name('project.bulkedit');
+        Route::post('project/bulkactive', 'ProjectController@bulkSaveActive')->name('project.bulkupdate');
+        Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents')->name('project.enrol');
+        Route::get('project/{id}/copy', 'ProjectController@copy')->name('project.copy');
+        Route::post('project/bulkallocate', 'ProjectController@bulkAllocate')->name('project.bulkallocate');
         Route::resource('project', 'ProjectController');
-        Route::get('project/{id}/delete', 'ProjectController@destroy');
+        Route::get('project/{id}/delete', 'ProjectController@destroy')->name('project.destroy');
 
         Route::resource('projecttype', 'ProjectTypeController');
         Route::get('projecttype/{id}/delete', 'ProjectTypeController@destroy');

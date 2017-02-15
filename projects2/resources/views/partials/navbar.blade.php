@@ -17,11 +17,11 @@
 				            <li class="dropdown">
 				              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
 				              <ul class="dropdown-menu">
-			              		<li><a href="{!! action('ReportController@allProjects') !!}">View All Projects</a></li>
-			              		<li><a href="{!! action('ReportController@allStudents') !!}">View All Students</a></li>
-			              		<li><a href="{!! action('ReportController@allStaff') !!}">View All Staff</a></li>
-			              		<li><a href="{!! action('ReportController@bulkAllocate') !!}">Bulk Allocations</a></li>
-			              		<li><a href="{!! action('ProjectController@bulkEditActive') !!}">Bulk Active/Inactive</a></li>
+			              		<li><a href="{!! route('report.projects') !!}">View All Projects</a></li>
+			              		<li><a href="{!! route('report.students') !!}">View All Students</a></li>
+			              		<li><a href="{!! route('report.staff') !!}">View All Staff</a></li>
+			              		<li><a href="{!! route('bulk.allocate') !!}">Bulk Allocations</a></li>
+			              		<li><a href="{!! route('project.bulkedit') !!}">Bulk Active/Inactive</a></li>
 				              </ul>
 				            </li>
 			            @endif
@@ -30,20 +30,16 @@
 				              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 				              <ul class="dropdown-menu">
 				              	@can('edit_users')
-				              		<li><a href="{!! action('UserController@indexStaff') !!}">Staff</a></li>
-				              		<li><a href="{!! action('UserController@indexStudents') !!}">Students</a></li>
+				              		<li><a href="{!! route('staff.index') !!}">Staff</a></li>
+				              		<li><a href="{!! route('student.index') !!}">Students</a></li>
 				              	@endcan
 				              	@can('edit_courses')
-				              		<li><a href="{!! action('CourseController@index') !!}">Courses</a></li>
-				              		<li><a href="{!! action('ProjectTypeController@index') !!}">Project Types</a></li>
+				              		<li><a href="{!! route('course.index') !!}">Courses</a></li>
+				              		<li><a href="{!! route('projecttype.index') !!}">Project Types</a></li>
 				              	@endcan
 				              	@can('view_eventlog')
-				              		<li><a href="{!! action('EventLogController@index') !!}">Activity Log</a></li>
+				              		<li><a href="{!! route('event.index') !!}">Activity Log</a></li>
 				              	@endcan
-				              	@can('edit_site_permissions')
-				              		<li><a href="{!! action('PermissionController@index') !!}">Edit Site Permissions</a></li>
-				              		<li><a href="{!! action('RoleController@index') !!}">Edit Site Roles</a></li>
-								@endcan
 				              </ul>
 				            </li>
 				        @endif
