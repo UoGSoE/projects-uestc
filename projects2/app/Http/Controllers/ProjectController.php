@@ -62,10 +62,9 @@ class ProjectController extends Controller
             'title' => 'required|max:255',
             'description' => 'required',
             'courses' => 'required|array',
-            'type_id' => 'required|integer',
             'maximum_students' => 'required|integer|min:1',
-            'user_id' => 'required|integer|min:1'
         ]);
+        
         $project = new Project;
         $project->fill($request->input());
         $project->save();

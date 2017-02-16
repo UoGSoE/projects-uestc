@@ -69,10 +69,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('project/bulkactive', 'ProjectController@bulkEditActive')->name('project.bulkedit');
         Route::post('project/bulkactive', 'ProjectController@bulkSaveActive')->name('project.bulkupdate');
         Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents')->name('project.enrol');
-        Route::get('project/{id}/copy', 'ProjectController@copy')->name('project.copy');
         Route::post('project/bulkallocate', 'ProjectController@bulkAllocate')->name('project.bulkallocate');
-        Route::resource('project', 'ProjectController');
-        Route::get('project/{id}/delete', 'ProjectController@destroy')->name('project.destroy');
+//        Route::resource('project', 'ProjectController');
 
         Route::resource('projecttype', 'ProjectTypeController');
         Route::get('projecttype/{id}/delete', 'ProjectTypeController@destroy');
@@ -82,10 +80,10 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfType');
         Route::get('/report/projects/bylocation/{id}', 'ReportController@allProjectsAtLocation');
-        Route::get('/report/projects', 'ReportController@allProjects');
-        Route::get('/report/students', 'ReportController@allStudents');
-        Route::get('/report/staff', 'ReportController@allStaff');
-        Route::get('/report/bulkallocate', 'ReportController@bulkAllocate');
+        Route::get('/report/projects', 'ReportController@allProjects')->name('report.projects');
+        Route::get('/report/students', 'ReportController@allStudents')->name('report.students');
+        Route::get('/report/staff', 'ReportController@allStaff')->name('report.staff');
+        Route::get('/report/bulkallocate', 'ReportController@bulkAllocate')->name('bulk.allocate');
 
         Route::get('events', 'EventLogController@index');
     });

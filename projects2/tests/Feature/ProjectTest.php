@@ -7,19 +7,35 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;
+use App\Course;
+use App\Project;
 
-class UserAdminTest extends TestCase
+class ProjectTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function test_staff_admin_routes_cant_be_accessed_by_regular_users()
+    public function test_staff_can_create_a_new_project()
     {
         $regularUser = factory(User::class)->states('staff')->create();
-
         $response = $this->actingAs($regularUser)
-                        ->get(route('staff.index'));
+                        ->post(route('project.store', $this->defaultProjectData()));
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('projects', ['title' => 'DEFAULTTITLE']);
+        $project = Project::first();
+        $response->assertRedirect(route('project.show', $project->id));
+    }
 
-        $response->assertStatus(403);
+    protected function defaultProjectData($overrides = [])
+    {
+        $course = factory(Course::class)->create();
+        return array_merge([
+            'title' => 'DEFAULTTITLE',
+            'description' => 'DEFAULTDESCRIPTION',
+            'is_active' => true,
+            'user_id' => 1,
+            'maximum_students' => 1,
+            'courses' => [1 => $course->id],
+        ], $overrides);
     }
 
     public function test_admin_can_view_current_staff()

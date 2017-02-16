@@ -69,7 +69,7 @@ class UserController extends Controller
         return view('user.edit', compact('user', 'roles', 'projects', 'courses'));
     }
 
-    public function update(UpdateUserRequest $request)
+    public function update($id, UpdateUserRequest $request)
     {
         $user = User::updateFromForm($request);
         return redirect()->action('UserController@show', $user->id);
@@ -78,9 +78,18 @@ class UserController extends Controller
     public function destroy($userId)
     {
         $user = User::findOrFail($userId);
+        $redirectRoute = $this->getCorrectRedirect($user);
         $user->delete();
         EventLog::log(Auth::user()->id, "Deleted user {$user->username}");
-        return redirect()->action('UserController@index');
+        return redirect()->route($redirectRoute);
+    }
+
+    protected function getCorrectRedirect($user)
+    {
+        if ($user->isStaff()) {
+            return 'staff.index';
+        }
+        return 'student.index';
     }
 
     /**

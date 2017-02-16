@@ -24,10 +24,9 @@ class UpdateUserRequest extends Request
      */
     public function rules()
     {
-        $input = $this->all();
         return [
-            'username' => 'required|unique:users,username,' . $input['id'],
-            'email' => 'required|email|unique:users,email,' . $input['id'],
+            'username' => 'required|unique:users,username,' . $this->id,
+            'email' => 'required|email|unique:users,email,' . $this->id,
             'surname' => 'required',
             'forenames' => 'required'
         ];

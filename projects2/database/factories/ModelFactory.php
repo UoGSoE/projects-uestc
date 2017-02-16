@@ -19,9 +19,26 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->email,
         'is_student' => false,
         'last_login' => $faker->dateTimeThisYear(),
+        'is_admin' => false,
         'remember_token' => str_random(10),
     ];
 });
+$factory->state(App\User::class, 'admin', function ($faker) {
+    return [
+        'is_admin' => true,
+    ];
+});
+$factory->state(App\User::class, 'student', function ($faker) {
+    return [
+        'is_student' => true,
+    ];
+});
+$factory->state(App\User::class, 'staff', function ($faker) {
+    return [
+        'is_student' => false,
+    ];
+});
+
 $factory->define(App\Role::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->name,
