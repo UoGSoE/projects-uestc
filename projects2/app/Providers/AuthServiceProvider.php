@@ -38,10 +38,7 @@ class AuthServiceProvider extends ServiceProvider
         });
         
         Gate::define('edit_this_project', function ($user, $project) {
-            if ($user->hasRole('teaching_office')) {
-                return true;
-            }
-            if ($user->hasRole('site_admin')) {
+            if ($user->isAdmin()) {
                 return true;
             }
             return $user->id == $project->user_id;
