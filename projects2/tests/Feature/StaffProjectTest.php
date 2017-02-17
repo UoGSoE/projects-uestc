@@ -10,7 +10,7 @@ use App\User;
 use App\Course;
 use App\Project;
 
-class ProjectTest extends TestCase
+class StaffProjectTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -105,7 +105,7 @@ class ProjectTest extends TestCase
                         ->get(route('project.copy', $project->id));
 
         $response->assertStatus(200);
-        $response->assertSee('Create a new project');
+        $response->assertSee('Create A New Project');
         $response->assertSee($project->title);
     }
 
@@ -121,66 +121,5 @@ class ProjectTest extends TestCase
             'maximum_students' => 1,
             'courses' => [1 => $course->id],
         ], $overrides);
-    }
-
-    public function test_admin_can_view_current_staff()
-    {
-        $adminUser = factory(User::class)->states('admin')->create();
-        $regularUser = factory(User::class)->states('staff')->create();
-
-        $response = $this->actingAs($adminUser)
-                        ->get(route('staff.index'));
-
-        $response->assertStatus(200);
-        $response->assertSee('Current Staff');
-        $response->assertSee($adminUser->username);
-        $response->assertSee($regularUser->username);
-    }
-
-    public function test_admin_can_create_a_new_user()
-    {
-        $adminUser = factory(User::class)->states('admin')->create();
-
-        $response = $this->actingAs($adminUser)
-                        ->post(route('user.store'), [
-                            'username' => 'HELLOKITTY',
-                            'surname' => 'Kitty',
-                            'forenames' => 'Hello',
-                            'is_student' => false,
-                            'email' => 'hellokitty@example.com'
-                        ]);
-
-        $response->assertStatus(302);
-        $this->assertDatabaseHas('users', ['email' => 'hellokitty@example.com']);
-    }
-
-    public function test_admin_can_edit_an_existing_user()
-    {
-        $adminUser = factory(User::class)->states('admin')->create();
-        $regularUser = factory(User::class)->states('staff')->create();
-
-        $response = $this->actingAs($adminUser)
-                        ->post(route('user.update', $regularUser->id), [
-                            'username' => 'HELLOKITTY',
-                            'surname' => 'Kitty',
-                            'forenames' => 'Hello',
-                            'is_student' => false,
-                            'email' => 'hellokitty@example.com'
-                        ]);
-
-        $response->assertStatus(302);
-        $this->assertDatabaseHas('users', ['email' => 'hellokitty@example.com']);
-        $this->assertDatabaseMissing('users', ['email' => $regularUser->email]);
-    }
-
-    public function test_admin_can_delete_a_user()
-    {
-        $adminUser = factory(User::class)->states('admin')->create();
-        $regularUser = factory(User::class)->states('staff')->create();
-
-        $response = $this->actingAs($adminUser)->delete(route('user.destroy', $regularUser->id));
-
-        $response->assertStatus(302);
-        $this->assertDatabaseMissing('users', ['email' => $regularUser->email]);
     }
 }

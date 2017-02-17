@@ -164,16 +164,16 @@ class ProjectController extends Controller
      * @param  integer $id Project ID
      * @return Response
      */
-    public function duplicate($id)
+    public function copy($id)
     {
         $project = Project::findOrFail($id)->replicate();
-        $types = ProjectType::orderBy('title')->get();
         $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
         $disciplines = Discipline::orderBy('title')->get();
+        $types = ProjectType::orderBy('title')->get();
         EventLog::log(Auth::user()->id, "Copied project {$project->title}");
-        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff', 'disciplines'));
+        return view('project.create', compact('project', 'programmes', 'courses', 'staff', 'disciplines', 'types'));
     }
 
     /**

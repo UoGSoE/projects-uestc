@@ -34,7 +34,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['middleware' => ['student']], function () {
-        Route::post('/choices', 'StudentChoicesController@update');
+        Route::post('/choices', 'StudentChoicesController@update')->name('choices.update');
         //Route::post('/user/chooseprojects', 'UserController@chooseProjects');
     });
 

@@ -20,7 +20,7 @@ class Project extends Model
 
     public function students()
     {
-        return $this->belongsToMany(User::class, 'project_student')->withPivot('choice', 'accepted');
+        return $this->belongsToMany(User::class, 'project_student')->withPivot('accepted');
     }
 
     public function discipline()
@@ -38,7 +38,21 @@ class Project extends Model
 
     public function isAvailable()
     {
-        return $this->students()->wherePivot('accepted', '=', true)->count() < $this->maximum_students;
+        if ($this->students()->count() >= config('projects.maximumAllowedToApply')) {
+            return false;
+        }
+        if ($this->acceptedStudents()->count() >= $this->maximum_students) {
+            return false;
+        }
+        return true;
+    }
+
+    public function acceptStudent($student)
+    {
+        if (is_numeric($student)) {
+            $student = User::findOrFail($student);
+        }
+        $this->students()->save($student);
     }
 
     public function acceptedStudents()

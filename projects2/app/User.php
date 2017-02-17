@@ -179,6 +179,11 @@ class User extends Model implements AuthenticatableContract,
         return preg_replace('/[^0-9]+/', '', $this->username);
     }
 
+    public function isStudent()
+    {
+        return $this->is_student;
+    }
+
     public function isStaff()
     {
         return ! $this->is_student;

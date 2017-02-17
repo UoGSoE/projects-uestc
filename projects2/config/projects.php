@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'requiredProjectChoices' => 2,
+    'requiredProjectChoices' => 3,
     'resetTokenExpires' => 7,
     'studentsDisabled' => env('ALLOW_STUDENT_LOGINS', true),
+    'maximumAllowedToApply' => 6,
 ];
