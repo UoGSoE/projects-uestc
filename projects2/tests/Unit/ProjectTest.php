@@ -43,7 +43,19 @@ class ProjectTest extends TestCase
             return;
         }
 
-        $this->fail('Added a student to an already fully subcribed project without throwing an exception');
+        $this->fail('Added a student to project which already has the maximum accepted without throwing an exception');
+    }
+
+    public function test_can_add_multiple_students()
+    {
+        $project = factory(Project::class)->create();
+        $student1 = factory(User::class)->states('student')->create();
+        $student2 = factory(User::class)->states('student')->create();
+
+        $project->addStudent($student1);
+        $project->addStudent($student2);
+
+        $this->assertEquals(2, $project->students()->count());
     }
 
     public function test_cannot_add_the_same_student_more_than_once()
@@ -57,4 +69,37 @@ class ProjectTest extends TestCase
         $this->assertEquals(1, $project->students()->count());
     }
 
+    public function test_accepting_a_student_removes_other_students_from_the_project_if_only_one_allowed()
+    {
+        $project = factory(Project::class)->create(['maximum_students' => 1]);
+        $student1 = factory(User::class)->states('student')->create();
+        $student2 = factory(User::class)->states('student')->create();
+        $project->addStudent($student1);
+        $project->addStudent($student2);
+
+        $project->acceptStudent($student1);
+
+        $this->assertEquals(1, $project->students()->count());
+        $this->assertDatabaseHas('project_student', ['user_id' => $student1->id, 'accepted' => true]);
+        $this->assertDatabaseMissing('project_student', ['user_id' => $student2->id]);
+    }
+
+    public function test_accepting_a_student_removes_other_students_from_the_project_if_now_filled()
+    {
+        $project = factory(Project::class)->create(['maximum_students' => 2]);
+        $student1 = factory(User::class)->states('student')->create();
+        $student2 = factory(User::class)->states('student')->create();
+        $student3 = factory(User::class)->states('student')->create();
+        $project->addStudent($student1);
+        $project->addStudent($student2);
+        $project->addStudent($student3);
+
+        $project->acceptStudent($student1);
+        $project->acceptStudent($student2);
+
+        $this->assertEquals(2, $project->students()->count());
+        $this->assertDatabaseHas('project_student', ['user_id' => $student1->id, 'accepted' => true]);
+        $this->assertDatabaseHas('project_student', ['user_id' => $student2->id, 'accepted' => true]);
+        $this->assertDatabaseMissing('project_student', ['user_id' => $student3->id]);
+    }
 }

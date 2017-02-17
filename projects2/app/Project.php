@@ -39,6 +39,9 @@ class Project extends Model
 
     public function isAvailable()
     {
+        if (!$this->is_active) {
+            return false;
+        }
         if ($this->isFullySubscribed()) {
             return false;
         }
@@ -60,10 +63,20 @@ class Project extends Model
 
     public function acceptStudent($student)
     {
+        if ($this->isFull()) {
+            throw new ProjectOversubscribedException;
+        }
+
         if (is_numeric($student)) {
             $student = User::findOrFail($student);
         }
-        $this->students()->sync([$student->id => ['accepted' => true], true]);
+
+        $this->students()->sync([$student->id => ['accepted' => true]], false);
+
+        if ($this->isFull()) {
+            $notChosen = $this->students()->wherePivot('accepted', false)->get();
+            $this->students()->detach($notChosen->pluck('id')->toArray());
+        }
     }
 
     public function acceptedStudents()
@@ -80,7 +93,7 @@ class Project extends Model
         if (is_numeric($student)) {
             $student = User::findOrFail($student);
         }
-        $this->students()->sync([$student->id => ['accepted' => $accepted]], true);
+        $this->students()->sync([$student->id => ['accepted' => $accepted]], false);
     }
 
     public function type()

@@ -158,4 +158,25 @@ class StudentProjectTest extends TestCase
         $response->assertRedirect('/');
         $response->assertSessionHasErrors(['full']);
     }
+
+    public function test_a_student_cant_apply_for_projects_when_in_read_only_mode()
+    {
+        $this->assertTrue(false);
+        Artisan::call('projects:applications no');
+        $student = factory(User::class)->states('student')->create();
+        $course = factory(Course::class)->create();
+        $course->students()->save($student);
+        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $projects->each(function ($project, $key) use ($course) {
+            $project->courses()->save($course);
+        });
+
+        $projectIds = $projects->pluck('id')->toArray();
+        $response = $this->actingAs($student)
+                        ->post(route('choices.update', ['choices' => $projectIds]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['disabled']);
+    }
 }
