@@ -106,97 +106,56 @@ class StudentProjectTest extends TestCase
         $response->assertSessionHas('success_message');
     }
 
-    public function test_staff_can_edit_their_own_project()
+    /**
+     * This is to check for a race condition.  Students all get told to pick at the same time,
+     * so if one has the list of projects open for a while - other students may have filled
+     * up their choice in the meantime
+     */
+    public function test_a_student_cant_apply_for_projects_which_are_fully_subscribed()
     {
-        $this->regularUser = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
-
-        $response = $this->actingAs($this->regularUser)
-                        ->post(route('project.update', $project->id), $this->defaultProjectData(['title' => 'UPDATEDPROJECT']));
-
-        $response->assertStatus(302);
-        $this->assertDatabaseHas('projects', ['title' => 'UPDATEDPROJECT']);
-        $this->assertDatabaseMissing('projects', ['title' => $project->title]);
-        $project = Project::first();
-        $response->assertRedirect(route('project.show', $project->id));
-    }
-
-    public function test_staff_cant_edit_someone_elses_project()
-    {
-        $this->regularUser = factory(User::class)->states('staff')->create();
-        $user2 = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $user2->id]);
-
-        $response = $this->actingAs($this->regularUser)
-                        ->post(route('project.update', $project->id), $this->defaultProjectData(['title' => 'UPDATEDPROJECT']));
-
-        $response->assertStatus(403);
-        $this->assertDatabaseHas('projects', ['title' => $project->title]);
-    }
-
-    public function test_admin_can_edit_someone_elses_project()
-    {
-        $admin = factory(User::class)->states('admin')->create();
-        $user2 = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $user2->id]);
-
-        $response = $this->actingAs($admin)
-                        ->post(route('project.update', $project->id), $this->defaultProjectData(['title' => 'UPDATEDPROJECT']));
-
-        $response->assertStatus(302);
-        $this->assertDatabaseHas('projects', ['title' => 'UPDATEDPROJECT']);
-    }
-
-    public function test_staff_can_delete_their_own_project()
-    {
-        $this->regularUser = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
-
-        $response = $this->actingAs($this->regularUser)
-                        ->delete(route('project.destroy', $project->id));
-
-        $response->assertStatus(302);
-        $this->assertDatabaseMissing('projects', ['title' => $project->title]);
-        $response->assertRedirect('/');
-    }
-
-    public function test_staff_cant_delete_someone_elses_project()
-    {
-        $this->regularUser = factory(User::class)->states('staff')->create();
-        $user2 = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
-
-        $response = $this->actingAs($user2)
-                        ->delete(route('project.destroy', $project->id));
-
-        $response->assertStatus(403);
-        $this->assertDatabaseHas('projects', ['title' => $project->title]);
-    }
-
-    public function test_staff_can_make_a_copy_of_their_project()
-    {
-        $this->regularUser = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
-
-        $response = $this->actingAs($this->regularUser)
-                        ->get(route('project.copy', $project->id));
-
-        $response->assertStatus(200);
-        $response->assertSee('Create A New Project');
-        $response->assertSee($project->title);
-    }
-
-
-    protected function defaultProjectData($overrides = [])
-    {
+        $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
-        return array_merge([
-            'title' => 'DEFAULTTITLE',
-            'description' => 'DEFAULTDESCRIPTION',
-            'is_active' => true,
-            'user_id' => $this->regularUser ? $this->regularUser->id : 1,
-            'maximum_students' => 1,
-            'courses' => [1 => $course->id],
-        ], $overrides);
+        $course->students()->save($student);
+        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $projects->each(function ($project, $key) use ($course) {
+            $project->courses()->save($course);
+        });
+        $otherStudents = factory(User::class, config('projects.maximumAllowedToApply'))->states('student')->create();
+        $firstProject = Project::first();
+        $firstProject->students()->saveMany($otherStudents);
+
+        $projectIds = $projects->pluck('id')->toArray();
+        $response = $this->actingAs($student)
+                        ->post(route('choices.update', ['choices' => $projectIds]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['oversubscribed']);
+    }
+
+    /**
+     * Another race condition to check. If the student takes ages to pick their choices, one of them
+     * might have had someone apply and be accepted - so they should get knocked back.
+     */
+    public function test_a_student_cant_apply_for_projects_which_are_full()
+    {
+        $student = factory(User::class)->states('student')->create();
+        $course = factory(Course::class)->create();
+        $course->students()->save($student);
+        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $projects->each(function ($project, $key) use ($course) {
+            $project->courses()->save($course);
+        });
+        $otherStudent = factory(User::class)->states('student')->create();
+        $firstProject = Project::first();
+        $firstProject->acceptStudent($otherStudent);
+
+        $projectIds = $projects->pluck('id')->toArray();
+        $response = $this->actingAs($student)
+                        ->post(route('choices.update', ['choices' => $projectIds]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['full']);
     }
 }

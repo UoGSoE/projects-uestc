@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Exceptions\ProjectOversubscribedException;
 
 class Project extends Model
 {
@@ -38,13 +39,23 @@ class Project extends Model
 
     public function isAvailable()
     {
-        if ($this->students()->count() >= config('projects.maximumAllowedToApply')) {
+        if ($this->isFullySubscribed()) {
             return false;
         }
-        if ($this->acceptedStudents()->count() >= $this->maximum_students) {
+        if ($this->isFull()) {
             return false;
         }
         return true;
+    }
+
+    public function isFullySubscribed()
+    {
+        return $this->students()->count() >= config('projects.maximumAllowedToApply');
+    }
+
+    public function isFull()
+    {
+        return $this->acceptedStudents()->count() >= $this->maximum_students;
     }
 
     public function acceptStudent($student)
@@ -52,12 +63,24 @@ class Project extends Model
         if (is_numeric($student)) {
             $student = User::findOrFail($student);
         }
-        $this->students()->save($student);
+        $this->students()->sync([$student->id => ['accepted' => true], true]);
     }
 
     public function acceptedStudents()
     {
         return $this->students()->wherePivot('accepted', '=', 1);
+    }
+
+    public function addStudent($student, $accepted = false)
+    {
+        if (!$this->isAvailable()) {
+            throw new ProjectOversubscribedException;
+        }
+
+        if (is_numeric($student)) {
+            $student = User::findOrFail($student);
+        }
+        $this->students()->sync([$student->id => ['accepted' => $accepted]], true);
     }
 
     public function type()
