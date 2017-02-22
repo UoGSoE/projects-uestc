@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->boolean('is_student')->default(false);
             $table->boolean('is_admin')->default(false);
             $table->datetime('last_login')->nullable()->default(null);
+            $table->text('bio')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

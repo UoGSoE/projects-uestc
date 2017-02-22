@@ -29,11 +29,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/project/{id}/copy', 'ProjectController@copy')->name('project.copy');
         Route::post('/project/{id}', 'ProjectController@update')->name('project.update');
         Route::delete('/project/{id}', 'ProjectController@destroy')->name('project.destroy');
+        Route::get('/profile/{id}', 'StudentProfileController@show')->name('student.profile_show');
     });
 
     Route::group(['middleware' => ['student']], function () {
         Route::post('/choices', 'StudentChoicesController@update')->name('choices.update');
-        //Route::post('/user/chooseprojects', 'UserController@chooseProjects');
+        Route::get('profile', 'StudentProfileController@edit')->name('student.profile_edit');
+        Route::post('profile', 'StudentProfileController@update')->name('student.profile_update');
     });
 
 
