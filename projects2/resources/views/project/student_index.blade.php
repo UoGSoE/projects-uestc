@@ -12,10 +12,13 @@
     {{ csrf_field() }}
     @foreach (Auth::user()->availableProjects() as $project)
         @if ($project->isAvailable())
-            <div class="panel panel-default {{ $project->discipline->cssTitle() }}>
+            <div class="panel panel-default @if ($project->discipline) {{ $project->discipline->cssTitle() }} @endif>
                 <div class="panel-heading fake-link">
                     <h3 class="panel-title">
-                        {{ $project->title }} ({{ $project->owner->fullName() }}) (field {{ $project->discipline->title }})
+                        {{ $project->title }} ({{ $project->owner->fullName() }})
+                        @if ($project->discipline) 
+                            (field {{ $project->discipline->title }})
+                        @endif
                     </h3>
                 </div>
                 <div class="panel-body" style="display: none">
