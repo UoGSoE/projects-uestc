@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
@@ -9,6 +10,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;
 use App\Course;
 use App\Project;
+use App\Discipline;
 
 class StudentProjectTest extends TestCase
 {
@@ -19,8 +21,13 @@ class StudentProjectTest extends TestCase
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
-        $project = factory(Project::class)->create(['maximum_students' => 1]);
+        $discipline = factory(Discipline::class)->create();
+        $project = factory(Project::class)->create(['maximum_students' => 1, 'discipline_id' => $discipline->id]);
         $project->courses()->save($course);
+        $project->links()->create(['url' => 'http://www.example.com']);
+        $disabledProject = factory(Project::class)->create(['is_active' => false]);
+        $disabledProject->courses()->save($course);
+        $projectNotForStudentsCourse = factory(Project::class)->create();
 
         $response = $this->actingAs($student)
                         ->get('/');
@@ -28,6 +35,10 @@ class StudentProjectTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Available Projects');
         $response->assertSee($project->title);
+        $response->assertSee($project->discipline->title);
+        $response->assertSee('http://www.example.com');
+        $response->assertDontSee($disabledProject->title);
+        $response->assertDontSee($projectNotForStudentsCourse->title);
     }
 
     public function test_student_cant_see_projects_which_already_have_the_maximum_number_of_students_accepted()
@@ -161,8 +172,6 @@ class StudentProjectTest extends TestCase
 
     public function test_a_student_cant_apply_for_projects_when_in_read_only_mode()
     {
-        $this->assertTrue(false);
-        // ??? Artisan::call('projects:applications no');
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
@@ -170,13 +179,21 @@ class StudentProjectTest extends TestCase
         $projects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
         });
-
         $projectIds = $projects->pluck('id')->toArray();
+
+        \Artisan::call('projects:allowapplications', ['flag' => 'no']);
+
+        $response = $this->actingAs($student)->get('/');
+        $response->assertStatus(200);
+        $response->assertSee($projects->first()->title);
+        $response->assertDontSee('choices[]');
+
         $response = $this->actingAs($student)
                         ->post(route('choices.update', ['choices' => $projectIds]));
-
         $response->assertStatus(302);
         $response->assertRedirect('/');
         $response->assertSessionHasErrors(['disabled']);
+
+        \Artisan::call('projects:allowapplications', ['flag' => 'yes']);
     }
 }

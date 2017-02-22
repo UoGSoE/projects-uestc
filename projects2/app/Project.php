@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\ProjectOversubscribedException;
+use Storage;
 
 class Project extends Model
 {
@@ -24,6 +25,11 @@ class Project extends Model
         return $this->belongsToMany(User::class, 'project_student')->withPivot('accepted');
     }
 
+    public function links()
+    {
+        return $this->hasMany(ProjectLink::class);
+    }
+
     public function discipline()
     {
         return $this->belongsTo(Discipline::class);
@@ -35,6 +41,11 @@ class Project extends Model
             return 'N/A';
         }
         return $this->discipline->title;
+    }
+
+    public static function applicationsEnabled()
+    {
+        return ! Storage::exists('projects.disabled');
     }
 
     public function isAvailable()
@@ -142,5 +153,13 @@ class Project extends Model
     public function hasCourse($id)
     {
         return $this->courses->contains($id);
+    }
+
+    public function syncLinks($links)
+    {
+        ProjectLink::where('project_id', '=', $this->id)->delete();
+        foreach ($links as $link) {
+            $this->links()->create(['url' => $link['url']]);
+        }
     }
 }

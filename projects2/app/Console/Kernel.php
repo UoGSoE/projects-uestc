@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\Inspire::class,
         \App\Console\Commands\AssignRole::class,
         \App\Console\Commands\CreateAdmin::class,
+        \App\Console\Commands\AllowApplications::class,
     ];
 
     /**

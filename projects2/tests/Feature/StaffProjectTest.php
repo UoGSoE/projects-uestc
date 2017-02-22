@@ -1,5 +1,5 @@
 <?php
-
+// @codingStandardsIgnoreFile
 namespace Tests\Feature;
 
 use Tests\TestCase;
@@ -24,7 +24,7 @@ class StaffProjectTest extends TestCase
                         ->post(route('project.store'), $this->defaultProjectData());
 
         $response->assertStatus(302);
-        $this->assertDatabaseHas('projects', ['title' => 'DEFAULTTITLE']);
+        $this->assertDatabaseHas('projects', ['title' => 'DEFAULTTITLE', 'discipline_id' => 1]);
         $project = Project::first();
         $response->assertRedirect(route('project.show', $project->id));
     }
@@ -109,6 +109,59 @@ class StaffProjectTest extends TestCase
         $response->assertSee($project->title);
     }
 
+    public function test_staff_can_preallocate_a_student_to_a_project()
+    {
+        $staff = factory(User::class)->states('staff')->create();
+        $student = factory(User::class)->states('student')->create();
+        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+
+        $response = $this->actingAs($staff)
+                        ->post(route('project.update', $project->id), $this->defaultProjectData(['student_id' => $student->id]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('project.show', $project->id));
+        $this->assertDatabaseHas('project_student', ['project_id' => $project->id, 'user_id' => $student->id, 'accepted' => true]);
+    }
+
+    public function test_staff_can_add_links_to_a_project()
+    {
+        $staff = factory(User::class)->states('staff')->create();
+        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+
+        $response = $this->actingAs($staff)
+                        ->post(route('project.update', $project->id), $this->defaultProjectData([
+                            'links' => [
+                                ['url' => 'http://www.example.com'], 
+                                ['url' => 'http://www.another.com']
+                            ]
+                        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('project.show', $project->id));
+        $this->assertDatabaseHas('project_links', ['project_id' => $project->id, 'url' => 'http://www.example.com']);
+        $this->assertDatabaseHas('project_links', ['project_id' => $project->id, 'url' => 'http://www.another.com']);
+    }
+
+    public function test_staff_can_remove_links_from_a_project()
+    {
+        $staff = factory(User::class)->states('staff')->create();
+        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+        $project->links()->create(['url' => 'http://site1.com']);
+        $project->links()->create(['url' => 'http://site2.com']);
+
+        $response = $this->actingAs($staff)
+                        ->post(route('project.update', $project->id), $this->defaultProjectData([
+                            'links' => [
+                                ['url' => 'http://site1.com'], 
+                            ]
+                        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('project.show', $project->id));
+        $this->assertDatabaseHas('project_links', ['project_id' => $project->id, 'url' => 'http://site1.com']);
+        $this->assertDatabaseMissing('project_links', ['project_id' => $project->id, 'url' => 'http://site2.com']);
+    }
+
 
     protected function defaultProjectData($overrides = [])
     {
@@ -120,6 +173,7 @@ class StaffProjectTest extends TestCase
             'user_id' => $this->regularUser ? $this->regularUser->id : 1,
             'maximum_students' => 1,
             'courses' => [1 => $course->id],
+            'discipline_id' => 1,
         ], $overrides);
     }
 }

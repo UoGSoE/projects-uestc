@@ -8,8 +8,15 @@ use App\Project;
 
 class StudentChoicesController extends Controller
 {
+    public function index()
+    {
+    }
+
     public function update(Request $request)
     {
+        if (!Project::applicationsEnabled()) {
+            return redirect()->to('/')->withErrors(['disabled' => 'Applications are currently disabled']);
+        }
         $student = $request->user();
         $picked = $request->choices;
         $result = $this->checkChoicesAreOk($picked);

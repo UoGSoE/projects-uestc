@@ -12,16 +12,14 @@ Route::post('auth/login', 'Auth\AuthController@login');
 Route::get('logout', 'Auth\AuthController@logout');
 
 Route::post('resetgenerate', 'Auth\AuthController@generateResetLink');
-Route::get('resetpassword/{token}', 'Auth\AuthController@password');
+Route::get('resetpassword/{token}', 'Auth\AuthController@password')->name('password.reset');
 Route::post('resetpassword/{token}', 'Auth\AuthController@resetPassword');
 
 // Routes you can only get to once authenticated
 Route::group(['middleware' => ['auth']], function () {
 
     // Homepage
-    Route::get('/', function () {
-        return view('home');
-    });
+    Route::get('/', 'HomeController@show');
 
     Route::group(['middleware' => ['staff']], function () {
         Route::get('/project/create', 'ProjectController@create')->name('project.create');
@@ -77,6 +75,12 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::resource('programme', 'ProgrammeController');
         Route::get('programme/{id}/delete', 'ProgrammeController@destroy');
+
+        Route::get('discipline', 'DisciplineController@index')->name('discipline.index');
+        Route::get('discipline/create', 'DisciplineController@create')->name('discipline.create');
+        Route::post('discipline', 'DisciplineController@store')->name('discipline.store');
+        Route::get('discipline/{id}/edit', 'DisciplineController@edit')->name('discipline.edit');
+        Route::post('discipline/{id}', 'DisciplineController@update')->name('discipline.update');
 
         Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfType');
         Route::get('/report/projects/bylocation/{id}', 'ReportController@allProjectsAtLocation');

@@ -73,6 +73,9 @@ class ProjectController extends Controller
         if ($request->has('programmes')) {
             $project->programmes()->sync($request->programmes);
         }
+        if ($request->has('links')) {
+            $project->syncLinks($request->links);
+        }
         EventLog::log(Auth::user()->id, "Created project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id);
     }
@@ -127,6 +130,7 @@ class ProjectController extends Controller
             'courses' => 'required|array',
             'maximum_students' => 'required|integer|min:1',
             'user_id' => 'required|integer',
+            'links.*.url' => 'url',
         ]);
         $project = Project::findOrFail($id);
         if (Gate::denies('edit_this_project', $project)) {
@@ -134,6 +138,12 @@ class ProjectController extends Controller
         }
         $project->fill($request->input());
         $project->save();
+        if ($request->has('student_id')) {
+            $project->acceptStudent($request->student_id);
+        }
+        if ($request->has('links')) {
+            $project->syncLinks($request->links);
+        }
         $project->courses()->sync($request->courses);
         //$project->programmes()->sync($request->programmes);
         EventLog::log(Auth::user()->id, "Updated project {$project->title}");

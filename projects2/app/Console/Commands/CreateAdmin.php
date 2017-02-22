@@ -42,22 +42,17 @@ class CreateAdmin extends Command
      */
     public function handle()
     {
-        $role = Role::where('title', '=', 'site_admin')->first();
-        if (!$role) {
-            $this->error('Could not find site_admin role!');
-            exit(1);
-        }
         $user = User::create([
             'username' => $this->argument('username'),
             'email' => $this->argument('email'),
             'password' => bcrypt(str_random(40)),
+            'is_admin' => true,
         ]);
-        $user->assignRole($role);
         $token = PasswordReset::create([
             'user_id' => $user->id,
             'token' => strtolower(str_random(64)),
         ]);
-        $url = Config::get('app.url') . URL::action('Auth\AuthController@password', ['token' => $token->token]);
+        $url = route('password.reset', ['token' => $token->token]);
         $this->info('Now go to ' . $url);
     }
 }

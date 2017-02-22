@@ -58,6 +58,7 @@ $factory->define(App\Project::class, function (Faker\Generator $faker) {
         'description' => $faker->paragraph(3),
         'maximum_students' => $faker->numberBetween(3, 10),
         'is_active' => true,
+        'discipline_id' => null,
         'user_id' => function () {
             return factory(App\User::class)->states('staff')->create()->id;
         },

@@ -1,6 +1,6 @@
 <div class="page-header">
     <h1>
-        <i>{{ $helloWords[array_rand($helloWords)] }}</i>
+        <i>Hello</i>
         {{ Auth::user()->fullName() }}
     </h1>
 </div>
@@ -12,36 +12,33 @@
     {{ csrf_field() }}
     @foreach (Auth::user()->availableProjects() as $project)
         @if ($project->isAvailable())
-            <div class="panel panel-default anyprogramme @foreach($project->programmes as $programme) {{md5($programme->title)}} @endforeach">
+            <div class="panel panel-default {{ $project->discipline->cssTitle() }}>
                 <div class="panel-heading fake-link">
                     <h3 class="panel-title">
-                        {{ $project->title }} ({{ $project->owner->fullName() }})
+                        {{ $project->title }} ({{ $project->owner->fullName() }}) (field {{ $project->discipline->title }})
                     </h3>
                 </div>
                 <div class="panel-body" style="display: none">
                     {{ $project->description }}
+                    @if ($project->links()->count() > 0)
+                        Links:
+                        <ul>
+                            @foreach ($project->links as $link)
+                                <li><a href="{{ $link->url }}">{{ $link->url }}</a></li>
+                            @endforeach
+                        </ul>
+                    @endif
                     <div class="help-block">
                         Prerequisites: {{ $project->prereq or 'None' }}
                     </div>
                 </div>
-                <div class="panel-footer" style="display: none">
-                    Preference :
-                    <label class="radio-inline">
-                        <input type="radio" id="project{{ $project->id }}_1" name="choice[1]" v-model="first" value="{{ $project->id }}"> 1
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" id="project{{ $project->id }}_2" name="choice[2]" v-model="second" value="{{ $project->id }}"> 2
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" id="project{{ $project->id }}_3" name="choice[3]" v-model="third" value="{{ $project->id }}"> 3
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" id="project{{ $project->id }}_4" name="choice[4]" v-model="fourth" value="{{ $project->id }}"> 4
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" id="project{{ $project->id }}_5" name="choice[5]" v-model="fifth" value="{{ $project->id }}"> 5
-                    </label>
-                </div>
+                @if ($applicationsEnabled)
+                    <div class="panel-footer" style="display: none">
+                        <label class="radio-inline">
+                            <input type="radio" id="project{{ $project->id }}_1" name="choices[]" v-model="first" value="{{ $project->id }}"> Apply
+                        </label>
+                    </div>
+                @endif
             </div>
         @endif
     @endforeach
@@ -71,7 +68,7 @@
             third: null,
             fourth: null,
             fifth: null,
-            required: {{ config('projects.requiredProjectChoices') }}
+            required: {{ $requiredProjectChoices }}
         },
         computed: {
             chosenRequiredAmount: function() {
