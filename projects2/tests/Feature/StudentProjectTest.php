@@ -162,7 +162,7 @@ class StudentProjectTest extends TestCase
     public function test_a_student_cant_apply_for_projects_when_in_read_only_mode()
     {
         $this->assertTrue(false);
-        Artisan::call('projects:applications no');
+        // ??? Artisan::call('projects:applications no');
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
