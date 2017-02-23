@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->boolean('is_admin')->default(false);
             $table->datetime('last_login')->nullable()->default(null);
             $table->text('bio')->nullable();
+            $table->string('cv_file')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

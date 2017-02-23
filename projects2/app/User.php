@@ -320,4 +320,35 @@ class User extends Model implements
         $this->projects()->sync($choices);
         return true;
     }
+
+    public function hasCV()
+    {
+        return $this->cv_file;
+    }
+
+    public function storeCV($cv)
+    {
+        $ext = $cv->guessClientExtension();
+        if (!$ext) {
+            $ext = $cv->getClientOriginalExtension();
+        }
+        $filename = $this->id . '_cv.' . $ext;
+        $cv->storeAs('cvs', $filename);
+        $this->cv_file = $filename;
+    }
+
+    public function deleteCV()
+    {
+        if (!$this->hasCV()) {
+            return true;
+        }
+        \Storage::delete("cvs/{$this->cv_file}");
+        $this->cv_file = null;
+        $this->save();
+    }
+
+    public function cvPath()
+    {
+        return storage_path("app/cvs/{$this->cv_file}");
+    }
 }

@@ -3,6 +3,17 @@
 @section('content')
 
     <h2>Projects</h2>
+    @if ($applicationsEnabled)
+        <form method="POST" action="{!! route('admin.deny_applications') !!}">
+            {!! csrf_field() !!}
+            <button class="btn btn-default">Deny Applications</button>
+        </form>
+    @else
+        <form method="POST" action="{!! route('admin.allow_applications') !!}">
+            {!! csrf_field() !!}
+            <button class="btn btn-default">Enable Applications</button>
+        </form>
+    @endif
     <p>
         Filters :
         <label class="checkbox-inline">
@@ -17,9 +28,9 @@
         <a href="{!! action('ReportController@allProjects') !!}">
             All
         </a>
-        @foreach ($types as $type)
-            <a href="{!! action('ReportController@allProjectsOfType', $type->id) !!}">
-                {{ $type->title }}
+        @foreach ($disciplines as $discipline)
+            <a href="{!! action('ReportController@allProjectsOfDiscipline', $discipline->id) !!}">
+                {{ $discipline->title }}
             </a>
         @endforeach
     </p>
@@ -50,9 +61,13 @@
                         </a>
                     </td>
                     <td>
-                        <a href="{!! action('ReportController@allProjectsOfType', $project->type->id) !!}">
-                            {{ $project->type->title }}
-                        </a>
+                        @if ($project->discipline)
+                            <a href="{!! action('ReportController@allProjectsOfDiscipline', $project->discipline->id) !!}">
+                                {{ $project->disciplineTitle() }}
+                            </a>
+                        @else
+                            {{ $project->disciplineTitle() }}
+                        @endif
                     </td>
                     <td>
                         {{ $project->maximum_students }},

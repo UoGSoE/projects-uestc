@@ -144,6 +144,12 @@ class ProjectController extends Controller
         if ($request->has('links')) {
             $project->syncLinks($request->links);
         }
+        if ($request->hasFile('files')) {
+            $project->addFiles($request->file('files'));
+        }
+        if ($request->has('deletefiles')) {
+            $project->deleteFiles($request->deletefiles);
+        }
         $project->courses()->sync($request->courses);
         //$project->programmes()->sync($request->programmes);
         EventLog::log(Auth::user()->id, "Updated project {$project->title}");

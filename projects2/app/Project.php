@@ -30,6 +30,11 @@ class Project extends Model
         return $this->hasMany(ProjectLink::class);
     }
 
+    public function files()
+    {
+        return $this->hasMany(ProjectFile::class);
+    }
+
     public function discipline()
     {
         return $this->belongsTo(Discipline::class);
@@ -85,8 +90,7 @@ class Project extends Model
         $this->students()->sync([$student->id => ['accepted' => true]], false);
 
         if ($this->isFull()) {
-            $notChosen = $this->students()->wherePivot('accepted', false)->get();
-            $this->students()->detach($notChosen->pluck('id')->toArray());
+            $this->removeUnsucessfulStudents();
         }
     }
 
@@ -161,5 +165,43 @@ class Project extends Model
         foreach ($links as $link) {
             $this->links()->create(['url' => $link['url']]);
         }
+    }
+
+    public function addFiles($files)
+    {
+        foreach ($files as $file) {
+            $originalName = $file->getClientOriginalName();
+            $size = $file->getClientSize();
+            $extension = preg_replace('/[^a-z0-9]/i', '', $file->getClientOriginalExtension());
+            $newName = $this->id . '/' . md5(time()) . '.' . $extension;
+            $projFile = $this->files()->create([
+                'original_filename' => $originalName,
+                'file_size' => $size,
+                'filename' => $newName
+            ]);
+        }
+    }
+
+    public function deleteFiles($files)
+    {
+        foreach ($files as $fileId) {
+            $file = $this->files()->where('id', '=', $fileId)->first();
+            $file->removeFromDisk();
+            $file->delete();
+        }
+    }
+
+    public static function clearAllUnsucessfulStudents()
+    {
+        $projects = static::all();
+        foreach ($projects as $project) {
+            $project->removeUnsucessfulStudents();
+        }
+    }
+
+    public function removeUnsucessfulStudents()
+    {
+        $notChosen = $this->students()->wherePivot('accepted', false)->get();
+        $this->students()->detach($notChosen->pluck('id')->toArray());
     }
 }

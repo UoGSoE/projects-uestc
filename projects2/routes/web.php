@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/project/{id}', 'ProjectController@update')->name('project.update');
         Route::delete('/project/{id}', 'ProjectController@destroy')->name('project.destroy');
         Route::get('/profile/{id}', 'StudentProfileController@show')->name('student.profile_show');
+        Route::get('/profile/{id}/cv', 'StudentProfileController@downloadCV')->name('student.cv');
     });
 
     Route::group(['middleware' => ['student']], function () {
@@ -92,6 +93,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/report/bulkallocate', 'ReportController@bulkAllocate')->name('bulk.allocate');
 
         Route::get('events', 'EventLogController@index');
+
+        Route::post('site/enableapplications', 'ApplicationsController@enable')->name('admin.allow_applications');
+        Route::post('site/disableapplications', 'ApplicationsController@disable')->name('admin.deny_applications');
+        Route::post('site/clearunsuccessful', 'ApplicationsController@clearUnsuccessful')->name('admin.clear_unsuccessful');
     });
 });
 //});

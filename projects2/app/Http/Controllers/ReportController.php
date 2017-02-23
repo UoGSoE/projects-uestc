@@ -6,6 +6,7 @@ use App\User;
 use App\Project;
 use App\Location;
 use App\ProjectType;
+use App\Discipline;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,9 +15,10 @@ class ReportController extends Controller
 {
     public function allProjects()
     {
+        $applicationsEnabled = Project::applicationsEnabled();
         $projects = Project::with('owner', 'students', 'acceptedStudents', 'type')->orderBy('title')->get();
-        $types = ProjectType::orderBy('title')->get();
-        return view('report.all_projects', compact('projects', 'types'));
+        $disciplines = Discipline::orderBy('title')->get();
+        return view('report.all_projects', compact('projects', 'disciplines', 'applicationsEnabled'));
     }
 
     public function allProjectsOfType($typeId)

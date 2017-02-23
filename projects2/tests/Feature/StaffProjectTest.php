@@ -162,6 +162,45 @@ class StaffProjectTest extends TestCase
         $this->assertDatabaseMissing('project_links', ['project_id' => $project->id, 'url' => 'http://site2.com']);
     }
 
+    public function test_staff_can_attach_files_to_a_project()
+    {
+        $staff = factory(User::class)->states('staff')->create();
+        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+
+        $filename = 'tests/data/test_cv.pdf';
+        $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+        $files = [
+            'files' => [$file]
+        ];
+        $response = $this->actingAs($staff)
+                        ->call('POST', route('project.update', $project->id), $this->defaultProjectData(), [], $files);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('project.show', $project->id));
+        $this->assertEquals(1, $project->files()->count());
+    }
+
+    public function test_staff_can_remove_existing_files_from_a_project()
+    {
+        $staff = factory(User::class)->states('staff')->create();
+        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+
+        $filename = 'tests/data/test_cv.pdf';
+        $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+        $files = [
+            'files' => [$file]
+        ];
+        $project->addFiles($files['files']);
+        $file = $project->files()->first();
+    
+        $response = $this->actingAs($staff)
+                        ->post(route('project.update', $project->id), $this->defaultProjectData(['deletefiles' => [$file->id]]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('project.show', $project->id));
+        $this->assertEquals(0, $project->files()->count());
+    }
+
 
     protected function defaultProjectData($overrides = [])
     {
