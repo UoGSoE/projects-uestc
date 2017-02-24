@@ -21,13 +21,6 @@
         <dd>{{ $project->is_active ? 'Yes' : 'No' }}</dd>
         <dt>Run By</dt>
         <dd>
-            @can('view_users')
-                <a href="{!! action('UserController@show', $project->owner->id) !!}">
-                    {{ $project->owner->fullName() }}
-                </a>
-            @else
-                    {{ $project->owner->fullName() }}
-            @endcan
         </dd>
         <dt>Maximum Students</dt>
         <dd>{{ $project->maximum_students }}</dd>
@@ -77,7 +70,6 @@
             <tr>
                 <th>Matric</th>
                 <th>Name</th>
-                <th>Choice</th>
                 <th>Accept?</th>
             </tr>
         </thead>
@@ -85,23 +77,17 @@
             @foreach ($project->students as $student)
                 <tr>
                     <td>
-                        {{ $student->matric() }}
+                        <a href="{!! route('student.profile_show', $student->id) !!}">
+                            {{ $student->matric() }}
+                        </a>
                         @if ($student->pivot->accepted)
                             <span class="glyphicon glyphicon-ok" title="Accepted">
                         @endif
                     </td>
                     <td>{{ $student->fullName() }}</td>
-                    <td>{{ $choices[$student->pivot->choice] }}</td>
                     <td>
-                        @can('allocate_students')
-                            <input type="hidden" value="0" name="accepted[{{ $student->id }}]">
-                            <input type="checkbox" value="1" name="accepted[{{ $student->id }}]" @if ($student->pivot->accepted) checked @endif>
-                        @else
-                            @if ($student->pivot->choice == 1)
-                                <input type="hidden" value="0" name="accepted[{{ $student->id }}]">
-                                <input type="checkbox" value="1" name="accepted[{{ $student->id }}]" @if ($student->pivot->accepted) checked @endif>
-                            @endif
-                        @endcan
+                        <input type="hidden" value="0" name="accepted[{{ $student->id }}]">
+                        <input type="checkbox" value="1" name="accepted[{{ $student->id }}]" @if ($student->pivot->accepted) checked @endif>
                     </td>
                 </tr>
             @endforeach

@@ -179,6 +179,7 @@ class Project extends Model
                 'file_size' => $size,
                 'filename' => $newName
             ]);
+            $projFile->saveToDisk($file, $newName);
         }
     }
 

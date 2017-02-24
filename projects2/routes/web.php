@@ -92,7 +92,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/report/staff', 'ReportController@allStaff')->name('report.staff');
         Route::get('/report/bulkallocate', 'ReportController@bulkAllocate')->name('bulk.allocate');
 
-        Route::get('events', 'EventLogController@index');
+        Route::get('events', 'EventLogController@index')->name('event.index');
 
         Route::post('site/enableapplications', 'ApplicationsController@enable')->name('admin.allow_applications');
         Route::post('site/disableapplications', 'ApplicationsController@disable')->name('admin.deny_applications');

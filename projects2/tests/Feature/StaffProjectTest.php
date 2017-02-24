@@ -178,6 +178,10 @@ class StaffProjectTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('project.show', $project->id));
         $this->assertEquals(1, $project->files()->count());
+
+        // remove test artifact
+        $file = $project->files()->first();
+        $file->removeFromDisk();
     }
 
     public function test_staff_can_remove_existing_files_from_a_project()
@@ -192,7 +196,7 @@ class StaffProjectTest extends TestCase
         ];
         $project->addFiles($files['files']);
         $file = $project->files()->first();
-    
+
         $response = $this->actingAs($staff)
                         ->post(route('project.update', $project->id), $this->defaultProjectData(['deletefiles' => [$file->id]]));
 

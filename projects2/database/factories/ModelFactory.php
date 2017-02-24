@@ -32,6 +32,7 @@ $factory->state(App\User::class, 'admin', function ($faker) {
 $factory->state(App\User::class, 'student', function ($faker) {
     return [
         'is_student' => true,
+        'username' => $faker->numberBetween(1000000, 9999999) . $faker->randomLetter,
     ];
 });
 $factory->state(App\User::class, 'staff', function ($faker) {
