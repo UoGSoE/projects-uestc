@@ -61,7 +61,7 @@ class User extends Model implements
     public function projects()
     {
         if ($this->is_student) {
-            return $this->belongsToMany(Project::class, 'project_student')->withPivot('choice', 'accepted');
+            return $this->belongsToMany(Project::class, 'project_student')->withPivot('accepted');
         }
         return $this->hasMany(Project::class)->with('students', 'acceptedStudents');
     }
@@ -132,7 +132,7 @@ class User extends Model implements
         if (!$course) {
             return [];
         }
-        return $course->projects()->active()->orderBy('title')->get();
+        return $course->projects()->active()->inRandomOrder()->get();
     }
 
     /**
@@ -335,6 +335,7 @@ class User extends Model implements
         $filename = $this->id . '_cv.' . $ext;
         $cv->storeAs('cvs', $filename);
         $this->cv_file = $filename;
+        $this->save();
     }
 
     public function deleteCV()

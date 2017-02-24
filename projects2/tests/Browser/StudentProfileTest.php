@@ -10,13 +10,33 @@ class StudentProfileTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
-    public function test_a_member_of_staff_can_view_a_students_profile()
+    /** @test */
+    public function students_can_edit_their_profile()
+    {
+        $student = $this->createStudent();
+
+        $this->browse(function ($browser) use ($student) {
+            $browser->loginAs($student)
+                    ->visit('/')
+                    ->clickLink('Edit my profile')
+                    ->assertSee('Your Profile')
+                    ->type('bio', 'MY THRILLING BIO')
+                    ->attach('cv', 'tests/data/test_cv.pdf')
+                    ->press('Update')
+                    ->assertPathIs('/')
+                    ->assertSee('Profile Updated')
+                    ->clickLink('Edit my profile')
+                    ->assertSee('MY THRILLING BIO');
+        });
+    }
+
+    /** @test */
+    public function staff_can_view_the_profile_of_a_student_who_has_applied_for_their_project()
     {
         $student = $this->createStudent();
         $filename = 'tests/data/test_cv.pdf';
         $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
         $student->storeCV($file);
-        $student->save();
         $staff = $this->createStaff();
         $project = $this->createProject(['user_id' => $staff->id]);
         $project->addStudent($student);
@@ -29,22 +49,7 @@ class StudentProfileTest extends DuskTestCase
                     ->assertSee($student->matric())
                     ->clickLink($student->matric())
                     ->assertSee($student->bio)
-                    ->assertSee('Download their CV');
+                    ->clickLink('Download their CV');
         });
-    }
-
-    private function createStudent()
-    {
-        return factory(\App\User::class)->states('student')->create(['bio' => 'NSNSNSNSNSNSNSNS']);
-    }
-
-    private function createStaff()
-    {
-        return factory(\App\User::class)->states('staff')->create();
-    }
-
-    private function createProject($attribs = [])
-    {
-        return factory(\App\Project::class)->create($attribs);
     }
 }

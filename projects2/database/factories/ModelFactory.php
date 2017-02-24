@@ -33,6 +33,7 @@ $factory->state(App\User::class, 'student', function ($faker) {
     return [
         'is_student' => true,
         'username' => $faker->numberBetween(1000000, 9999999) . $faker->randomLetter,
+        'bio' => $faker->paragraph,
     ];
 });
 $factory->state(App\User::class, 'staff', function ($faker) {
@@ -62,6 +63,17 @@ $factory->define(App\Project::class, function (Faker\Generator $faker) {
         'discipline_id' => null,
         'user_id' => function () {
             return factory(App\User::class)->states('staff')->create()->id;
+        },
+    ];
+});
+
+$factory->define(App\ProjectFile::class, function (Faker\Generator $faker) {
+    return [
+        'filename' => $faker->word . '.' . $faker->fileExtension,
+        'original_filename' => $faker->word . '.' . $faker->fileExtension,
+        'file_size' => $faker->numberBetween(1000, 10000),
+        'project_id' => function () {
+            return factory(App\Project::class)->create()->id;
         },
     ];
 });

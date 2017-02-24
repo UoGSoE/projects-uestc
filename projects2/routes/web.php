@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::delete('/project/{id}', 'ProjectController@destroy')->name('project.destroy');
         Route::get('/profile/{id}', 'StudentProfileController@show')->name('student.profile_show');
         Route::get('/profile/{id}/cv', 'StudentProfileController@downloadCV')->name('student.cv');
+        Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents')->name('project.enrol');
     });
 
     Route::group(['middleware' => ['student']], function () {
@@ -69,7 +70,6 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('project/bulkactive', 'ProjectController@bulkEditActive')->name('project.bulkedit');
         Route::post('project/bulkactive', 'ProjectController@bulkSaveActive')->name('project.bulkupdate');
-        Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents')->name('project.enrol');
         Route::post('project/bulkallocate', 'ProjectController@bulkAllocate')->name('project.bulkallocate');
 //        Route::resource('project', 'ProjectController');
 

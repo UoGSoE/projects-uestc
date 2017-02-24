@@ -77,6 +77,11 @@ class Project extends Model
         return $this->acceptedStudents()->count() >= $this->maximum_students;
     }
 
+    public function availablePlaces()
+    {
+        return $this->maximum_students - $this->acceptedStudents()->count();
+    }
+
     public function acceptStudent($student)
     {
         if ($this->isFull()) {

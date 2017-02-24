@@ -76,6 +76,9 @@ class ProjectController extends Controller
         if ($request->has('links')) {
             $project->syncLinks($request->links);
         }
+        if ($request->hasFile('files')) {
+            $project->addFiles($request->file('files'));
+        }
         EventLog::log(Auth::user()->id, "Created project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id);
     }
@@ -204,9 +207,12 @@ class ProjectController extends Controller
         if (!$request->has('accepted')) {
             return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'No changes');
         }
-        $studentList = $this->buildListOfStudents($request, $id);
-        $this->setThisAsOnlyChoiceForAcceptedStudents($studentList, $id);
-        $project->students()->sync($studentList);
+        if (count($request->accepted) > $project->availablePlaces()) {
+            return redirect()->back()->withErrors(['full' => "You cannot accept more then {$project->maximum_students} student onto the project"]);
+        }
+        foreach ($request->accepted as $studentId) {
+            $project->acceptStudent($studentId);
+        }
         EventLog::log(Auth::user()->id, "Accepted students onto project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'Allocations Saved');
     }

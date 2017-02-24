@@ -1,27 +1,31 @@
+@extends('layout')
+
+@section('content')
 <div class="page-header">
     <h1>
         <i>Hello</i>
         {{ Auth::user()->fullName() }}
     </h1>
+    <a href="{!! route('student.profile_edit') !!}" class="btn btn-default">Edit my profile</a>
 </div>
 <h2>Available Projects</h2>
 <p>
-    Please choose {{ config('projects.requiredProjectChoices') }} projects in order of preference.
+    Please choose {{ config('projects.requiredProjectChoices') }} projects.
 </p>
 <form method="POST" action="{!! route('choices.update') !!}" id="vueform">
     {{ csrf_field() }}
     @foreach (Auth::user()->availableProjects() as $project)
         @if ($project->isAvailable())
-            <div class="panel panel-default @if ($project->discipline) {{ $project->discipline->cssTitle() }} @endif>
-                <div class="panel-heading fake-link">
-                    <h3 class="panel-title">
+            <div class="panel panel-default @if ($project->discipline) {{ $project->discipline->cssTitle() }} @endif">
+                <div class="panel-heading fake-link" @click="showDetails({{ $project->id }})">
+                    <h3 class="panel-title titlebox-{{ $project->id }}">
                         {{ $project->title }} ({{ $project->owner->fullName() }})
                         @if ($project->discipline) 
                             (field {{ $project->discipline->title }})
                         @endif
                     </h3>
                 </div>
-                <div class="panel-body" style="display: none">
+                <div class="panel-body" v-if="projectVisible({{ $project->id}})">
                     {{ $project->description }}
                     @if ($project->links()->count() > 0)
                         Links:
@@ -31,58 +35,54 @@
                             @endforeach
                         </ul>
                     @endif
-                    <div class="help-block">
+                    <div class="help-block" v-if="projectVisible({{ $project->id}})">
                         Prerequisites: {{ $project->prereq or 'None' }}
                     </div>
                 </div>
                 @if ($applicationsEnabled)
-                    <div class="panel-footer" style="display: none">
+                    <div class="panel-footer" v-if="projectVisible({{ $project->id}})">
                         <label class="radio-inline">
-                            <input type="radio" id="project{{ $project->id }}_1" name="choices[]" v-model="first" value="{{ $project->id }}"> Apply
+                            <input type="radio" id="choose_{{ $project->id }}" name="choices[]" value="{{ $project->id }}" @click="toggleChoice({{$project->id}})"> Apply
                         </label>
                     </div>
                 @endif
             </div>
         @endif
     @endforeach
-    <button type="submit" id="submit" class="btn btn-primary" :disabled="!choicesAreOk">
-        <span v-if="choicesAreOk">Submit Choices</span>
-        <span v-else>Choose {{ config('projects.requiredProjectChoices') }} Different Choices</span>
+    <button type="submit" id="submit" class="btn btn-primary" v-if="validChoicesMade">
+        Submit Choices
     </button>
 </form>
-<script src="vendor/vue.min.js"></script>
+<script src="/vendor/vuejs_2.1.10.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.panel-title').click(function() {
-            var parent = $(this).parent();
-            parent.siblings().toggle();
-        });
-        $('#inputProgramme').change(function() {
-            var value = $(this).val();
-            $('.panel, .' + value).show();
-            $('.panel').not('.' + value).hide();
-        });
-    });
-    new Vue({
-        el: '#vueform',
-        data: {
-            first: null,
-            second: null,
-            third: null,
-            fourth: null,
-            fifth: null,
-            required: {{ $requiredProjectChoices }}
-        },
-        computed: {
-            chosenRequiredAmount: function() {
-                return this.first && this.second;
-            },
-            allDifferent: function() {
-                return this.first != this.second;
-            },
-            choicesAreOk: function() {
-                return this.chosenRequiredAmount && this.allDifferent;
+    var app = new Vue({
+      el: '#vueform',
+      data: {
+        choices: [],
+        requiredChoices: {{ config('projects.requiredProjectChoices') }},
+        visibleProjects: [],
+      },
+      methods: {
+        toggleChoice: function(choice) {
+            if (this.choices.indexOf(choice) >= 0) {
+                index = this.choices.indexOf(choice);
+                this.choices.splice(index, 1);
+                return;
             }
+            this.choices.push(choice);
+        },
+        showDetails: function(projectId) {
+            this.visibleProjects.push(projectId);
+        },
+        projectVisible: function(projectId) {
+            return this.choices.indexOf(projectId) >= 0;
         }
+      },
+      computed: {
+        validChoicesMade: function() {
+            return this.choices.length == this.requiredChoices;
+        }
+      }
     });
 </script>
+@endsection

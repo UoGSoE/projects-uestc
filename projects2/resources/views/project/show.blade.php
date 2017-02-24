@@ -18,22 +18,19 @@
         <dt>Prerequisits</dt>
         <dd>{{ $project->prereq or 'None' }}</dd>
         <dt>Active?</dt>
-        <dd>{{ $project->is_active ? 'Yes' : 'No' }}</dd>
+        <dd id="is_active">{{ $project->is_active ? 'Yes' : 'No' }}</dd>
         <dt>Run By</dt>
         <dd>
+            @can('view_users')
+                <a href="{!! action('UserController@show', $project->owner->id) !!}">
+                    {{ $project->owner->fullName() }}
+                </a>
+            @else
+                    {{ $project->owner->fullName() }}
+            @endcan
         </dd>
         <dt>Maximum Students</dt>
         <dd>{{ $project->maximum_students }}</dd>
-        @if ($project->programmes()->count() > 0)
-            <dt>Programmes</dt>
-            <dd>
-                <ul class="list-inline">
-                    @foreach ($project->programmes as $programme)
-                        <li>{{ $programme->title }}</li>
-                    @endforeach
-                </ul>
-            </dd>
-        @endif
         <dt>Courses</dt>
         <dd>
             <ul class="list-inline">
@@ -53,6 +50,16 @@
         <dt>Discipline</dt>
         <dd>{{ $project->disciplineTitle() }}</dd>
     </dl>
+    @if ($project->files()->count() > 0)
+        <h3>Attached Files</h3>
+        @foreach ($project->files as $file)
+            <li>
+                <a href="">
+                    {{ $file->original_filename }}
+                </a>
+            </li>
+        @endforeach
+    @endif
     <h3>
         Students who applied for this project
     </h3>
@@ -63,7 +70,7 @@
             <br /><b>Note:</b> You can only accept students who have made this project their first choice.
         @endcannot
     </p>
-    <form method="POST" action="{!! action('ProjectController@acceptStudents', $project->id) !!}">
+    <form method="POST" action="{!! route('project.enrol', $project->id) !!}">
     {{ csrf_field() }}
     <table class="table table-hover">
         <thead>
@@ -86,8 +93,7 @@
                     </td>
                     <td>{{ $student->fullName() }}</td>
                     <td>
-                        <input type="hidden" value="0" name="accepted[{{ $student->id }}]">
-                        <input type="checkbox" value="1" name="accepted[{{ $student->id }}]" @if ($student->pivot->accepted) checked @endif>
+                        <input type="checkbox" value="{{ $student->id }}" name="accepted[{{ $student->id }}]" @if ($student->pivot->accepted) checked disabled @endif>
                     </td>
                 </tr>
             @endforeach

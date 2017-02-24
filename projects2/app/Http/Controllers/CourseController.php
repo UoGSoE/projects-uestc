@@ -24,7 +24,6 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $this->authorize('edit_courses');
         $courses = Course::orderBy('code')->get();
         return view('course.index', compact('courses'));
     }
@@ -36,7 +35,6 @@ class CourseController extends Controller
      */
     public function create()
     {
-        $this->authorize('edit_courses');
         $course = new Course;
         return view('course.create', compact('course'));
     }
@@ -49,7 +47,6 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('edit_courses');
         $this->validate($request, [
             'code' => 'required|unique:courses',
             'title' => 'required'
@@ -69,7 +66,6 @@ class CourseController extends Controller
      */
     public function show($id)
     {
-        $this->authorize('edit_courses');
         $course = Course::findOrFail($id);
         return view('course.show', compact('course'));
     }
@@ -82,7 +78,6 @@ class CourseController extends Controller
      */
     public function edit($id)
     {
-        $this->authorize('edit_courses');
         $course = Course::findOrFail($id);
         return view('course.edit', compact('course'));
     }
@@ -96,7 +91,6 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->authorize('edit_courses');
         $this->validate($request, [
             'code' => 'required|unique:courses,code,' . $id,
             'title' => 'required'
@@ -116,7 +110,6 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('edit_courses');
         $course = Course::findOrFail($id);
         EventLog::log(Auth::user()->id, "Deleted course {$course->title} {$course->code}");
         $course->delete();
@@ -125,7 +118,6 @@ class CourseController extends Controller
 
     public function editStudents($id)
     {
-        $this->authorize('edit_courses');
         $course = Course::findOrFail($id);
         return view('course.edit_students', compact('course'));
     }
@@ -138,7 +130,6 @@ class CourseController extends Controller
      */
     public function updateStudents(Request $request, $id)
     {
-        $this->authorize('edit_courses');
         $course = Course::findOrFail($id);
         $studentIds = [];
         $sheet = Excel::load($request->file('file'))->get();
@@ -218,7 +209,6 @@ class CourseController extends Controller
      */
     public function removeStudents($courseId)
     {
-        $this->authorize('edit_courses');
         $course = Course::findOrFail($courseId);
         foreach ($course->students as $student) {
             // Note: this will remove any allocations to projects too

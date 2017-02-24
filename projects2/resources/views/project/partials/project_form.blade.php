@@ -38,20 +38,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="form-group">
-            <label for="inputType">Type</label>
-            <select id="inputType" name="type_id" class="form-control" required>
-                @foreach ($types as $type)
-                    <option value="{{ $type->id }}" @if ($project->type_id == $type->id) selected @endif>
-                        {{ $type->title }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="inputMaximumStudents">Maximum Students</label>
-            <input type="number" id="inputMaximumStudents" name="maximum_students" value="{{ old('maximum_students', $project->maximum_students) }}" class="form-control" required min="1">
-        </div>
+        <input type="hidden" name="maximum_students" value="1">
         @can('edit_projects')
             <div class="form-group">
                 <label for="inputOwner">Run By</label>
@@ -66,3 +53,22 @@
         @else
             <input type="hidden" name="user_id" value="{{ $project->user_id or Auth::user()->id }}">
         @endcan
+        @if ($project->files()->count() > 0)
+            @foreach ($project->files as $file)
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="deletefiles[{{$file->id}}]" value="{{ $file->id }}"> Remove file <em>{{ $file->original_filename }}</em>?
+                    </label>
+                </div>
+            @endforeach
+        @endif
+        <div class="form-group">
+            <label>Add new files</label>
+        </div>
+        @foreach (range(1, 3) as $counter)
+            <div class="form-group">
+                <input type="file" name="files[]" multiple>
+            </div>
+        @endforeach
+
+                         
