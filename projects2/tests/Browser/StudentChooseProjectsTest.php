@@ -45,20 +45,29 @@ class StudentChooseProjectsTest extends DuskTestCase
         list($project1, $project2, $project3, $project4) = factory(\App\Project::class, 4)->create()->each(function ($project) use ($course) {
             $project->courses()->sync([$course->id]);
         });
-        
+        $project1->syncLinks([['url' => 'http://www.example.com'], ['url' => 'http://www.blah.com']]);
+        $filename = 'tests/data/test_cv.pdf';
+        $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+        $files = [$file];
+        $project1->addFiles($files);
+
         $this->browse(function ($browser) use ($student, $project1, $project2, $project3, $project4) {
             $browser->loginAs($student)
                     ->visit('/')
-                    ->assertDontSee('Submit Choices')
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$project1->id}")
                     ->check("#choose_{$project1->id}")
-                    ->assertDontSee('Submit Choices')
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$project2->id}")
                     ->check("#choose_{$project2->id}")
-                    ->assertDontSee('Submit Choices')
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$project3->id}")
                     ->check("#choose_{$project3->id}")
-                    ->assertSee('Submit Choices')
+                    ->assertSee('Submit your choices')
+                    ->click("#title_{$project4->id}")
                     ->check("#choose_{$project4->id}")
                     ->pause(10000)
-                    ->assertDontSee('Submit Choices');
+                    ->assertDontSee('Submit your choices');
         });
     }
 }

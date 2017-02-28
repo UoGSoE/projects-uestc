@@ -135,6 +135,28 @@ class User extends Model implements
         return $course->projects()->active()->inRandomOrder()->get();
     }
 
+    public function availableProjectsJson()
+    {
+        $projects = $this->availableProjects();
+        $available = $projects->filter(function ($project, $key) {
+            return $project->isAvailable();
+        })->map(function ($project, $key) {
+            return [
+                'id' => $project->id,
+                'title' => $project->title,
+                'description' => $project->description,
+                'prereq' => $project->prereq,
+                'chosen' => false,
+                'discipline' => $project->disciplineTitle(),
+                'discipline_css' => str_slug($project->disciplineTitle()),
+                'owner' => $project->owner->fullName(),
+                'links' => $project->links->toArray(),
+                'files' => $project->files->toArray(),
+            ];
+        });
+        return $available->toJson();
+    }
+
     /**
      * Assign a role to this user
      * @param  Role   $role
