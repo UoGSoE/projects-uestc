@@ -78,6 +78,15 @@ $factory->define(App\ProjectFile::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\ProjectLink::class, function (Faker\Generator $faker) {
+    return [
+        'url' => $faker->url,
+        'project_id' => function () {
+            return factory(App\Project::class)->create()->id;
+        },
+    ];
+});
+
 $factory->define(App\Course::class, function (Faker\Generator $faker) {
     return [
         'title' => implode(" ", $faker->words(3)),

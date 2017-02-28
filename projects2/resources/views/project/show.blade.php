@@ -54,8 +54,18 @@
         <h3>Attached Files</h3>
         @foreach ($project->files as $file)
             <li>
-                <a href="">
+                <a href="{!! route('projectfile.download', $file->id) !!}">
                     {{ $file->original_filename }}
+                </a>
+            </li>
+        @endforeach
+    @endif
+    @if ($project->links()->count() > 0)
+        <h3>Attached links</h3>
+        @foreach ($project->links as $link)
+            <li>
+                <a href="{{ $link->url }}" target="_blank">
+                    {{ $link->url }}
                 </a>
             </li>
         @endforeach

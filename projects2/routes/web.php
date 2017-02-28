@@ -21,6 +21,8 @@ Route::group(['middleware' => ['auth']], function () {
     // Homepage
     Route::get('/', 'HomeController@show');
 
+    Route::get('/projectfile/{id}', 'ProjectFileController@download')->name('projectfile.download');
+
     Route::group(['middleware' => ['staff']], function () {
         Route::get('/project/create', 'ProjectController@create')->name('project.create');
         Route::post('/project', 'ProjectController@store')->name('project.store');

@@ -53,14 +53,14 @@ Vue.component('project-detail', {
             </div>
             <ul class="list-group">
                 <li class="list-group-item" v-for="link in project.links">
-                    <a href="@{{ link.url }}">
+                    <a :href="link.url" target="_blank">
                         @{{ link.url}}
                     </a>
                 </li>
-            </ul>
-            <ul>
-                <li class="" v-for="file in project.files">
-                    @{{ file.original_filename }}
+                <li class="list-group-item" v-for="file in project.files">
+                    <a :href="'/projectfile/' + file.id">
+                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span> @{{ file.original_filename }}
+                    </a>
                 </li>
             </ul>
             <div class="panel-footer" v-if="allowselect">

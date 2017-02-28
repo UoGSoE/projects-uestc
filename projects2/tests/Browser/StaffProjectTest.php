@@ -49,9 +49,9 @@ class StaffProjectTest extends DuskTestCase
         $disciplines = factory(\App\Discipline::class, 5)->create();
         $project = $this->createProject(['user_id' => $staff->id]);
         $project->courses()->sync([$course->id]);
-
         $this->browse(function ($browser) use ($staff, $course, $disciplines, $project) {
             $file = $this->createProjectFile(['project_id' => $project->id]);
+            $link = $this->createProjectLink(['project_id' => $project->id]);
             $browser->loginAs($staff)
                     ->visit('/')
                     ->assertSee('Your Projects')
@@ -60,12 +60,15 @@ class StaffProjectTest extends DuskTestCase
                     ->clickLink('Edit')
                     ->assertSee('Edit Project')
                     ->assertSee($file->original_filename)
+                    ->assertSee($link->url)
                     ->type('title', 'MY AMAZING PROJECT')
                     ->type('description', 'AN AMAZING DESCRIPTION')
                     ->type('prereq', 'AMAZING PREREQS')
                     ->uncheck('is_active')
                     ->check("deletefiles[{$file->id}]")
+                    ->check("deletelinks[{$link->id}]")
                     ->attach('files[]', 'tests/data/test_cv.pdf')
+                    ->type('links[][url]', 'http://www.veryunlikelytoexist.com')
                     ->press('Update')
                     ->assertSee('Project Details')
                     ->assertSee('MY AMAZING PROJECT')
@@ -73,7 +76,9 @@ class StaffProjectTest extends DuskTestCase
                     ->assertSee('AMAZING PREREQS')
                     ->assertSeeIn('#is_active', 'No')
                     ->assertDontSee($file->original_filename)
-                    ->assertSee('test_cv.pdf');
+                    ->assertDontSee($link->url)
+                    ->assertSee('test_cv.pdf')
+                    ->assertSee('http://www.veryunlikelytoexist.com');
         });
     }
 

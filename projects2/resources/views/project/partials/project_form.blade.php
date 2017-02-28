@@ -57,7 +57,7 @@
             @foreach ($project->files as $file)
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="deletefiles[{{$file->id}}]" value="{{ $file->id }}"> Remove file <em>{{ $file->original_filename }}</em>?
+                        <input type="checkbox" name="deletefiles[{{$file->id}}]" value="{{ $file->id }}"> Remove file <a href="{!! route('projectfile.download', $file->id) !!}">{{ $file->original_filename }}</a>?
                     </label>
                 </div>
             @endforeach
@@ -68,6 +68,24 @@
         @foreach (range(1, 3) as $counter)
             <div class="form-group">
                 <input type="file" name="files[]" multiple>
+            </div>
+        @endforeach
+
+        @if ($project->links()->count() > 0)
+            @foreach ($project->links as $link)
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="deletelinks[{{$link->id}}]" value="{{ $link->id }}"> Remove link to <a href="{{ $link->url }}" target="_blank">{{ $link->url }}</a>?
+                    </label>
+                </div>
+            @endforeach
+        @endif
+        <div class="form-group">
+            <label>Add new links</label>
+        </div>
+        @foreach (range(1, 3) as $counter)
+            <div class="form-group">
+                <input class="form-control" type="input" name="links[][url]" multiple>
             </div>
         @endforeach
 

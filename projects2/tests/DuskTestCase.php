@@ -40,6 +40,11 @@ abstract class DuskTestCase extends BaseTestCase
         return factory(\App\ProjectFile::class)->create($attribs);
     }
 
+    protected function createProjectLink($attribs)
+    {
+        return factory(\App\ProjectLink::class)->create($attribs);
+    }
+
     protected function createStudent($attribs = [])
     {
         return factory(\App\User::class)->states('student')->create($attribs);

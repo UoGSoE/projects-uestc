@@ -45,11 +45,6 @@ class StudentChooseProjectsTest extends DuskTestCase
         list($project1, $project2, $project3, $project4) = factory(\App\Project::class, 4)->create()->each(function ($project) use ($course) {
             $project->courses()->sync([$course->id]);
         });
-        $project1->syncLinks([['url' => 'http://www.example.com'], ['url' => 'http://www.blah.com']]);
-        $filename = 'tests/data/test_cv.pdf';
-        $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
-        $files = [$file];
-        $project1->addFiles($files);
 
         $this->browse(function ($browser) use ($student, $project1, $project2, $project3, $project4) {
             $browser->loginAs($student)
@@ -66,8 +61,33 @@ class StudentChooseProjectsTest extends DuskTestCase
                     ->assertSee('Submit your choices')
                     ->click("#title_{$project4->id}")
                     ->check("#choose_{$project4->id}")
-                    ->pause(10000)
                     ->assertDontSee('Submit your choices');
+        });
+    }
+
+    /** @test */
+    public function a_student_can_see_links_and_files_associated_with_a_project()
+    {
+        $staff = $this->createStaff();
+        $student = $this->createStudent();
+        $course = $this->createCourse();
+        $course->students()->sync([$student->id]);
+        $discipline = $this->createDiscipline();
+        $project = factory(\App\Project::class)->create();
+        $project->courses()->sync([$course->id]);
+        $project->syncLinks([['url' => 'http://www.example.com'], ['url' => 'http://www.blah.com']]);
+        $filename = 'tests/data/test_cv.pdf';
+        $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+        $files = [$file];
+        $project->addFiles($files);
+        
+        $this->browse(function ($browser) use ($student, $project) {
+            $browser->loginAs($student)
+                    ->visit('/')
+                    ->click("#title_{$project->id}")
+                    ->assertSee('http://www.example.com')
+                    ->assertSee('http://www.blah.com')
+                    ->assertSee('test_cv.pdf');
         });
     }
 }
