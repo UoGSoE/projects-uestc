@@ -59,7 +59,7 @@ class StudentProfileTest extends TestCase
         $response = $this->actingAs($staff)->get(route('student.profile_show', $student->id));
 
         $response->assertStatus(200);
-        $response->assertSee('NSNSNSNSNSNSNSNS');
+        $response->assertSee($student->bio);
         $response->assertSee('Download their CV');
     }
 
@@ -78,13 +78,4 @@ class StudentProfileTest extends TestCase
     //     $response->assertHeader('attachment');
     // }
 
-    private function createStudent()
-    {
-        return factory(\App\User::class)->states('student')->create(['bio' => 'NSNSNSNSNSNSNSNS']);
-    }
-
-    private function createStaff()
-    {
-        return factory(\App\User::class)->states('staff')->create();
-    }
 }

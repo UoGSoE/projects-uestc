@@ -81,13 +81,4 @@ class AdminDisciplineTest extends TestCase
         $response->assertRedirect(route('discipline.edit', $discipline1->id));
     }
 
-    private function createAdmin($attribs = [])
-    {
-        return factory(\App\User::class)->states('admin')->create($attribs);
-    }
-
-    private function createDiscipline($attribs = [])
-    {
-        return factory(\App\Discipline::class)->create($attribs);
-    }
 }

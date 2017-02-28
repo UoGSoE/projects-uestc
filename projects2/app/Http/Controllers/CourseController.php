@@ -55,7 +55,7 @@ class CourseController extends Controller
         $course->fill($request->input());
         $course->save();
         EventLog::log(Auth::user()->id, "Created course {$course->title} {$course->code}");
-        return redirect()->action('CourseController@show', $course->id);
+        return redirect()->route('course.index');
     }
 
     /**
@@ -99,7 +99,7 @@ class CourseController extends Controller
         $course->fill($request->input());
         $course->save();
         EventLog::log(Auth::user()->id, "Updated course {$course->title} {$course->code}");
-        return redirect()->action('CourseController@show', $course->id);
+        return redirect()->route('course.index');
     }
 
     /**

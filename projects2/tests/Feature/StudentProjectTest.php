@@ -24,7 +24,6 @@ class StudentProjectTest extends TestCase
         $discipline = factory(Discipline::class)->create();
         $project = factory(Project::class)->create(['maximum_students' => 1, 'discipline_id' => $discipline->id]);
         $project->courses()->save($course);
-        $project->links()->create(['url' => 'http://www.example.com']);
         $disabledProject = factory(Project::class)->create(['is_active' => false]);
         $disabledProject->courses()->save($course);
         $projectNotForStudentsCourse = factory(Project::class)->create();
@@ -36,7 +35,6 @@ class StudentProjectTest extends TestCase
         $response->assertSee('Available Projects');
         $response->assertSee($project->title);
         $response->assertSee($project->discipline->title);
-        $response->assertSee('http://www.example.com');
         $response->assertDontSee($disabledProject->title);
         $response->assertDontSee($projectNotForStudentsCourse->title);
     }
@@ -182,11 +180,6 @@ class StudentProjectTest extends TestCase
         $projectIds = $projects->pluck('id')->toArray();
 
         \Artisan::call('projects:allowapplications', ['flag' => 'no']);
-
-        $response = $this->actingAs($student)->get('/');
-        $response->assertStatus(200);
-        $response->assertSee($projects->first()->title);
-        $response->assertDontSee('choices[]');
 
         $response = $this->actingAs($student)
                         ->post(route('choices.update', ['choices' => $projectIds]));

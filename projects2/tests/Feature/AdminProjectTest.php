@@ -66,24 +66,4 @@ class AdminProjectTest extends TestCase
         $this->assertEquals(1, $project2->students()->count());
     }
 
-    private function createStudent($attribs = [])
-    {
-        return factory(\App\User::class)->states('student')->create($attribs);
-    }
-
-    private function createStaff($attribs = [])
-    {
-        return factory(\App\User::class)->states('staff')->create($attribs);
-    }
-
-    private function createAdmin($attribs = [])
-    {
-        return factory(\App\User::class)->states('admin')->create($attribs);
-    }
-
-    private function createProject($attribs = [])
-    {
-        return factory(\App\Project::class)->create($attribs);
-    }
-
 }
