@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/course/{id}/students', 'CourseEnrolmentController@edit')->name('enrol.edit');
         Route::post('/course/{id}/students', 'CourseEnrolmentController@update')->name('enrol.update');
         Route::post('/course/{id}/removestudents', 'CourseEnrolmentController@destroy')->name('enrol.destroy');
+        Route::get('/course/{id}/removestudents', 'CourseEnrolmentController@destroy')->name('enrol.get_destroy'); // need to fix bootstrap model JS in layout...
 
         Route::get('project/bulkactive', 'ProjectController@bulkEditActive')->name('project.bulkedit');
         Route::post('project/bulkactive', 'ProjectController@bulkSaveActive')->name('project.bulkupdate');

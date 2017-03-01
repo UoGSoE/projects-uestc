@@ -145,7 +145,7 @@ class User extends Model implements
     {
         $course = $this->course();
         if (!$course) {
-            return [];
+            return collect([]);
         }
         return $course->projects()->active()->inRandomOrder()->get();
     }

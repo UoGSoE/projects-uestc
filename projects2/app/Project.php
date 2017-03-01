@@ -168,7 +168,9 @@ class Project extends Model
     {
         ProjectLink::where('project_id', '=', $this->id)->delete();
         foreach ($links as $link) {
-            $this->links()->create(['url' => $link['url']]);
+            if ($link['url']) {
+                $this->links()->create(['url' => $link['url']]);
+            }
         }
     }
 

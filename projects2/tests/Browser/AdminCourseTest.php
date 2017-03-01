@@ -38,4 +38,31 @@ class AdminCourseTest extends DuskTestCase
                     ->assertDontSee('TEST1111');
         });
     }
+
+    /** @test */
+    public function admin_can_import_and_remove_students_from_a_course()
+    {
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+
+        $this->browse(function ($browser) use ($admin, $course) {
+            $browser->loginAs($admin)
+                    ->visit(route('course.show', $course->id))
+                    ->clickLink('Import')
+                    ->attach('file', 'tests/data/test_student.xlsx')
+                    ->press('Import')
+                    ->assertSee('SURNAME1')
+                    ->assertSee('NAMESUR2')
+                    ->clickLink('Remove All Students')
+                    ->waitFor('#dataConfirmModal')
+                    ->press('Cancel')
+                    ->assertSee('SURNAME1')
+                    ->clickLink('Remove All Students')
+                    ->waitFor('#dataConfirmModal')
+                    ->clickLink('OK')
+                    ->assertDontSee('SURNAME1')
+                    ->assertDontSee('NAMESUR1');
+        });
+        
+    }
 }

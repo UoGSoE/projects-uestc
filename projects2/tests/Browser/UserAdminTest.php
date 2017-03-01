@@ -83,6 +83,7 @@ class UserAdminTest extends DuskTestCase
         $staffUser = factory(User::class)->create(['is_student' => false]);
         $this->browse(function ($browser) use ($adminUser, $staffUser) {
             $browser->loginAs($adminUser)
+                    ->visit('/')
                     ->assertSee("Log Out {$adminUser->fullName()}")
                     ->visit(route('user.show', $staffUser->id))
                     ->clickLink('Log in as')
