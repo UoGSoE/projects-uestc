@@ -66,6 +66,21 @@ class User extends Model implements
         return $this->hasMany(Project::class)->with('students', 'acceptedStudents');
     }
 
+    public function projectsArray($index = null)
+    {
+        $projectArray = [null, null, null];
+        $projects = $this->projects;
+        $offset = 0;
+        while ($project = $projects->shift()) {
+            $projectArray[$offset] = $project;
+            $offset = $offset + 1;
+        }
+        if (! is_null($index)) {
+            return $projectArray[$index];
+        }
+        return $projectArray;
+    }
+
     public function resetToken()
     {
         return $this->hasOne(PasswordReset::class);

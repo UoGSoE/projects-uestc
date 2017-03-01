@@ -55,6 +55,11 @@ abstract class DuskTestCase extends BaseTestCase
         return factory(\App\User::class)->states('staff')->create($attribs);
     }
 
+    protected function createAdmin($attribs = [])
+    {
+        return factory(\App\User::class)->states('admin')->create($attribs);
+    }
+
     protected function createProject($attribs = [])
     {
         return factory(\App\Project::class)->create($attribs);

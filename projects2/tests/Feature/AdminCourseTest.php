@@ -57,4 +57,82 @@ class AdminCourseTest extends TestCase
         $this->assertDatabaseMissing('courses', ['title' => $course->title, 'code' => $course->code]);
     }
 
+    /** @test */
+    public function admin_can_delete_a_course()
+    {
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+        $course2 = $this->createCourse();
+        $project = $this->createProject();
+        $project->courses()->sync([$course->id, $course2->id]);
+
+        $response = $this->actingAs($admin)->delete(route('course.destroy', $course->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('course.index'));
+        $this->assertDatabaseMissing('courses', ['title' => $course->title, 'code' => $course->code]);
+        $this->assertDatabaseMissing('course_project', ['project_id' => $project->id, 'course_id' => $course->id]);
+        $this->assertDatabaseHas('course_project', ['project_id' => $project->id, 'course_id' => $course2->id]);
+    }
+
+    /** @test */
+    public function admin_can_remove_all_students_from_a_course()
+    {
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+        $course2 = $this->createCourse();
+        $project = $this->createProject();
+        $project->courses()->sync([$course->id, $course2->id]);
+        $student = $this->createStudent();
+        $student->projects()->sync([$project->id]);
+        $student->courses()->sync([$course->id]);
+
+        $response = $this->actingAs($admin)->post(route('enrol.destroy', $course->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('course.show', $course->id));
+        $this->assertDatabaseMissing('course_student', ['student_id' => $student->id, 'course_id' => $course->id]);
+        $this->assertDatabaseMissing('project_student', ['student_id' => $student->id, 'project_id' => $project->id]);
+    }
+
+    /** @test */
+    public function admin_can_import_a_spreadsheet_of_students_onto_a_course()
+    {
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+        $filename = 'tests/data/test_student.xlsx';
+        $file = new \Illuminate\Http\UploadedFile($filename, 'test_student.xlsx', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+
+        $response = $this->actingAs($admin)
+                        ->call('POST', route('enrol.update', $course->id), [], [], ['file' => $file]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('course.show', $course->id));
+        $student1 = \App\User::orderBy('id')->students()->first();
+        $student2 = \App\User::orderBy('id', 'desc')->students()->first();
+        $this->assertDatabaseHas('course_student', ['course_id' => $course->id, 'user_id' => $student1->id]);
+        $this->assertDatabaseHas('course_student', ['course_id' => $course->id, 'user_id' => $student2->id]);
+        $this->assertDatabaseHas('users', ['username' => '1234567s', 'surname' => 'SURNAME1']);
+        $this->assertDatabaseHas('users', ['username' => '7654321n', 'surname' => 'NAMESUR2']);
+    }
+
+    /** @test */
+    public function importing_students_onto_a_course_removes_any_existing_ones()
+    {
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+        $student = $this->createStudent();
+        $student->courses()->sync([$course->id]);
+        $filename = 'tests/data/test_student.xlsx';
+        $file = new \Illuminate\Http\UploadedFile($filename, 'test_student.xlsx', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+
+        $response = $this->actingAs($admin)
+                        ->call('POST', route('enrol.update', $course->id), [], [], ['file' => $file]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('course.show', $course->id));
+        $student1 = \App\User::orderBy('id')->students()->first();
+        $student2 = \App\User::orderBy('id', 'desc')->students()->first();
+        $this->assertDatabaseMissing('course_student', ['course_id' => $course->id, 'user_id' => $student->id]);
+    }
 }

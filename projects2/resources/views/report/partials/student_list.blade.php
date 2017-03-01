@@ -3,11 +3,9 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>1st</th>
-                <th>2nd</th>
-                <th>3rd</th>
-                <th>4th</th>
-                <th>5th</th>
+                @foreach (range(1, config('projects.requiredProjectChoices')) as $index)
+                    <th></th>
+                @endforeach
             </tr>
         </thead>
         <tbody>
@@ -19,20 +17,16 @@
                             {{ $student->course() ? $student->course()->code : 'N/A' }})
                         </a>
                     </td>
-                    @for ($i = 1; $i <= 5; $i++)
+                    @foreach (range(0, config('projects.requiredProjectChoices') - 1) as $index)
                         <td>
-                            @if ($student->projectChoice($i))
-                                <a href="{!! action('ProjectController@show', $student->projectChoice($i)->id) !!}"
-                                    title="{{ $student->projectChoice($i)->owner->fullName() }}"
-                                >
-                                    {{ $student->projectChoice($i)->title }}
-                                </a>
-                                @if ($student->projectChoice($i)->pivot->accepted)
-                                    <span class="glyphicon glyphicon-ok" title="Accepted">
-                                @endif
+                            @if ($student->projectsArray($index))
+                                {{ $student->projectsArray($index)->title }}
+                                }
+                            @else
+                                N/A
                             @endif
                         </td>
-                    @endfor
+                    @endforeach
                 </tr>
             @endforeach
         </tbody>
