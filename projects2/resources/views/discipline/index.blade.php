@@ -1,7 +1,12 @@
 @extends('layout')
 
 @section('content')
-    <h2>Disciplines</h2>
+    <h2>
+        Disciplines
+        <a href="{!! route('discipline.create') !!}" class="btn btn-default">
+            Add New Discipline
+        </a>
+    </h2>
     <table class="table table-striped table-hover datatable">
         <thead>
             <tr>
@@ -12,7 +17,11 @@
         <tbody>
             @foreach ($disciplines as $discipline)
                 <tr>
-                    <td>{{ $discipline->title }}</td>
+                    <td>
+                        <a href="{!! route('discipline.edit', $discipline->id) !!}">
+                            {{ $discipline->title }}
+                        </a>
+                    </td>
                     <td>0</td>
                 </tr>
             @endforeach

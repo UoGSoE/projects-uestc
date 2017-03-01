@@ -15,10 +15,8 @@ Route::post('resetgenerate', 'Auth\AuthController@generateResetLink');
 Route::get('resetpassword/{token}', 'Auth\AuthController@password')->name('password.reset');
 Route::post('resetpassword/{token}', 'Auth\AuthController@resetPassword');
 
-// Routes you can only get to once authenticated
 Route::group(['middleware' => ['auth']], function () {
 
-    // Homepage
     Route::get('/', 'HomeController@show');
 
     Route::get('/projectfile/{id}', 'ProjectFileController@download')->name('projectfile.download');
@@ -71,29 +69,23 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/course/{id}/removestudents', 'CourseEnrolmentController@destroy')->name('enrol.destroy');
         Route::get('/course/{id}/removestudents', 'CourseEnrolmentController@destroy')->name('enrol.get_destroy'); // need to fix bootstrap model JS in layout...
 
-        Route::get('project/bulkactive', 'ProjectController@bulkEditActive')->name('project.bulkedit');
-        Route::post('project/bulkactive', 'ProjectController@bulkSaveActive')->name('project.bulkupdate');
-        Route::post('project/bulkallocate', 'ProjectController@bulkAllocate')->name('project.bulkallocate');
-//        Route::resource('project', 'ProjectController');
-
-        Route::resource('projecttype', 'ProjectTypeController');
-        Route::get('projecttype/{id}/delete', 'ProjectTypeController@destroy');
-
-        Route::resource('programme', 'ProgrammeController');
-        Route::get('programme/{id}/delete', 'ProgrammeController@destroy');
-
         Route::get('discipline', 'DisciplineController@index')->name('discipline.index');
         Route::get('discipline/create', 'DisciplineController@create')->name('discipline.create');
         Route::post('discipline', 'DisciplineController@store')->name('discipline.store');
         Route::get('discipline/{id}/edit', 'DisciplineController@edit')->name('discipline.edit');
         Route::post('discipline/{id}', 'DisciplineController@update')->name('discipline.update');
 
-        Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfType');
+        Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfDiscipline');
         Route::get('/report/projects/bylocation/{id}', 'ReportController@allProjectsAtLocation');
         Route::get('/report/projects', 'ReportController@allProjects')->name('report.projects');
         Route::get('/report/students', 'ReportController@allStudents')->name('report.students');
         Route::get('/report/staff', 'ReportController@allStaff')->name('report.staff');
-        Route::get('/report/bulkallocate', 'ReportController@bulkAllocate')->name('bulk.allocate');
+
+        Route::get('/bulkallocate', 'BulkAllocateController@edit')->name('bulkallocate.edit');
+        Route::post('/bulkallocate', 'BulkAllocateController@update')->name('bulkallocate.update');
+
+        Route::get('/bulkactive', 'BulkActiveController@edit')->name('bulkactive.edit');
+        Route::post('/bulkactive', 'BulkActiveController@update')->name('bulkactive.update');
 
         Route::get('events', 'EventLogController@index')->name('event.index');
 
@@ -102,9 +94,3 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('site/clearunsuccessful', 'ApplicationsController@clearUnsuccessful')->name('admin.clear_unsuccessful');
     });
 });
-//});
-
-// Define our authentication middleware controller
-// Route::controllers([
-//     'auth' => 'Auth\AuthController',
-// ]);

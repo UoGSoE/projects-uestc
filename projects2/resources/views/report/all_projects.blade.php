@@ -2,18 +2,20 @@
 
 @section('content')
 
-    <h2>Projects</h2>
-    @if ($applicationsEnabled)
-        <form method="POST" action="{!! route('admin.deny_applications') !!}">
-            {!! csrf_field() !!}
-            <button class="btn btn-default">Deny Applications</button>
-        </form>
-    @else
-        <form method="POST" action="{!! route('admin.allow_applications') !!}">
-            {!! csrf_field() !!}
-            <button class="btn btn-default">Enable Applications</button>
-        </form>
-    @endif
+    <h2>
+        Projects
+        @if ($applicationsEnabled)
+            <form method="POST" action="{!! route('admin.deny_applications') !!}" class="pull-right">
+                {!! csrf_field() !!}
+                <button class="btn btn-default pull-right">Deny Applications</button>
+            </form>
+        @else
+            <form method="POST" action="{!! route('admin.allow_applications') !!}" class="pull-right">
+                {!! csrf_field() !!}
+                <button class="btn btn-default pull-right">Enable Applications</button>
+            </form>
+        @endif
+    </h2>
     <p>
         Filters :
         <label class="checkbox-inline">

@@ -16,19 +16,20 @@ class ReportController extends Controller
     public function allProjects()
     {
         $applicationsEnabled = Project::applicationsEnabled();
-        $projects = Project::with('owner', 'students', 'acceptedStudents', 'type')->orderBy('title')->get();
+        $projects = Project::with('owner', 'students', 'acceptedStudents', 'discipline')->orderBy('title')->get();
         $disciplines = Discipline::orderBy('title')->get();
         return view('report.all_projects', compact('projects', 'disciplines', 'applicationsEnabled'));
     }
 
-    public function allProjectsOfType($typeId)
+    public function allProjectsOfDiscipline($disciplineId)
     {
-        $projects = Project::where('type_id', '=', $typeId)
-                    ->with('owner', 'students', 'acceptedStudents', 'type')
+        $applicationsEnabled = Project::applicationsEnabled();
+        $projects = Project::where('discipline_id', '=', $disciplineId)
+                    ->with('owner', 'students', 'acceptedStudents', 'discipline')
                     ->orderBy('title')
                     ->get();
-        $types = ProjectType::orderBy('title')->get();
-        return view('report.all_projects', compact('projects', 'types'));
+        $disciplines = Discipline::orderBy('title')->get();
+        return view('report.all_projects', compact('projects', 'disciplines', 'applicationsEnabled'));
     }
 
     public function allStudents()
@@ -41,12 +42,6 @@ class ReportController extends Controller
     {
         $users = User::staff()->with('projects')->orderBy('surname')->get();
         return view('report.all_staff', compact('users'));
-    }
-
-    public function bulkAllocate()
-    {
-        $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
-        return view('report.bulk_allocation', compact('students'));
     }
 
 }

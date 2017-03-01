@@ -273,42 +273,5 @@ class ProjectController extends Controller
      * @param  Request $request
      * @return redirect
      */
-    public function bulkAllocate(Request $request)
-    {
-        if (!$request->has('student')) {
-            return redirect()->back();
-        }
-        foreach ($request->student as $student_id => $project_id) {
-            $student = User::findOrFail($student_id);
-            $data[$project_id] = [ 'accepted' => true ];
-            $student->projects()->sync($data);
-        }
-        return redirect()->action('ReportController@bulkAllocate')->with('success_message', 'Allocations saved');
-    }
 
-    /**
-     * Show the form to let admins bulk-edit whether projects are active or not
-     * @return view
-     */
-    public function bulkEditActive()
-    {
-        $projects = Project::orderBy('title')->get();
-        return view('project.bulk_active', compact('projects'));
-    }
-
-    /**
-     * Bulk save whether projects are active or not
-     * @param  Request $request
-     * @return redirect
-     */
-    public function bulkSaveActive(Request $request)
-    {
-        if (! $request->has('statuses')) {
-            return redirect()->action('ProjectController@bulkEditActive')->with('success_message', 'No changes made');
-        }
-        foreach ($request->statuses as $projectId => $status) {
-            Project::findOrFail($projectId)->update(['is_active' => $status]);
-        }
-        return redirect()->action('ProjectController@bulkEditActive')->with('success_message', 'Changes saved');
-    }
 }

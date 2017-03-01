@@ -19,6 +19,8 @@ class StudentChooseProjectsTest extends DuskTestCase
         list($project1, $project2, $project3) = factory(\App\Project::class, 3)->create()->each(function ($project) use ($course) {
             $project->courses()->sync([$course->id]);
         });
+        $project1->discipline_id = $discipline->id;
+        $project1->save();
         $disabledProject = $this->createProject(['is_active' => false]);
         $fullProject = $this->createProject(['maximum_students' => 0]);
 
@@ -27,6 +29,7 @@ class StudentChooseProjectsTest extends DuskTestCase
                     ->visit('/')
                     ->assertSee('Available Projects')
                     ->assertSee($project1->title)
+                    ->assertSee($project1->disciplineTitle())
                     ->assertSee($project2->title)
                     ->assertSee($project3->title)
                     ->assertDontSee($disabledProject->title)

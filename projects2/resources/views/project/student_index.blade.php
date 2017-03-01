@@ -34,7 +34,7 @@ Vue.component('project-detail', {
     },
     template: `
     <div>
-    <div class="panel panel-default @{{ project.discipline_css }}">
+    <div class="panel panel-default">
         <div class="panel-heading fake-link" :id="'title_' + project.id" @click="toggleDetails">
             <h3 class="panel-title">
                 @{{ project.title }} (@{{ project.owner }})
@@ -89,7 +89,7 @@ Vue.component('project-list', {
     props: ['projects', 'allowselect'],
     template: `
         <div>
-            <project-detail v-for="project in projects" :project="project" :key="project.id" :allowselect="allowselect">
+            <project-detail v-for="project in projects" :project="project" :key="project.id" :allowselect="allowselect" :discipline="project.discipline_css">
             </project-detail>
         </div>
     `,

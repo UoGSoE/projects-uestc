@@ -6,17 +6,15 @@
     <p>
         This page lets you bulk-allocate students who have not yet been allocated to a project.
     </p>
-    <form method="POST" action="{!! action('ProjectController@bulkAllocate') !!}">
+    <form method="POST" action="{!! route('bulkallocate.update') !!}">
     {!! csrf_field() !!}
     <table class="table table-striped table-hover datatable">
         <thead>
             <tr>
                 <th>Student</th>
-                <th>1st</th>
-                <th>2nd</th>
-                <th>3rd</th>
-                <th>4th</th>
-                <th>5th</th>
+                @foreach (range(1, config('projects.requiredProjectChoices')) as $index)
+                    <th></th>
+                @endforeach
             </tr>
         </thead>
         <tbody>
@@ -24,19 +22,22 @@
                 @if ($student->unallocated())
                     <tr>
                         <td>{{ $student->fullName() }} ({{ $student->matric() }} {{ $student->course() ? $student->course()->code : 'N/A' }})</td>
-                        @for ($i = 1; $i <= 5; $i++)
+                        @for ($i = 0; $i < config('projects.requiredProjectChoices'); $i++)
                             <td>
-                                @if ($student->projectChoice($i))
-                                    @if ($student->projectChoice($i)->isAvailable())
+                                {!! dd($student->projectsArray()) !!}
+                                @if ($student->projectsArray($i))
+                                    @if ($student->projectsArray($i)->isAvailable())
                                         <input type="radio" name="student[{{$student->id}}]" value="{{ $student->projectChoice($i)->id }}">
                                     @else
                                         (Full)
                                     @endif
-                                    <a href="{!! action('ProjectController@show', $student->projectChoice($i)->id) !!}"
-                                        title="{{ $student->projectChoice($i)->owner->fullName() }} - {{ $student->projectChoice($i)->maximum_students }} max"
+                                    <a href="{!! route('project.show', $student->projectsArray($i)->id) !!}"
+                                        title="{{ $student->projectsArray($i)->owner->fullName() }} - {{ $student->projectsArray($i)->maximum_students }} max"
                                     >
-                                        {{ $student->projectChoice($i)->title }}
+                                        {{ $student->projectsArray($i)->title }}
                                     </a>
+                                @else
+                                    WTF?
                                 @endif
                             </td>
                         @endfor

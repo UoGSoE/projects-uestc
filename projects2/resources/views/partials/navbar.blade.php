@@ -20,8 +20,8 @@
 			              		<li><a href="{!! route('report.projects') !!}">View All Projects</a></li>
 			              		<li><a href="{!! route('report.students') !!}">View All Students</a></li>
 			              		<li><a href="{!! route('report.staff') !!}">View All Staff</a></li>
-			              		<li><a href="{!! route('bulk.allocate') !!}">Bulk Allocations</a></li>
-			              		<li><a href="{!! route('project.bulkedit') !!}">Bulk Active/Inactive</a></li>
+			              		<li><a href="{!! route('bulkallocate.edit') !!}">Bulk Allocations</a></li>
+			              		<li><a href="{!! route('bulkactive.edit') !!}">Bulk Active/Inactive</a></li>
 				              </ul>
 				            </li>
 			            @endif
@@ -32,7 +32,7 @@
 				              		<li><a href="{!! route('staff.index') !!}">Staff</a></li>
 				              		<li><a href="{!! route('student.index') !!}">Students</a></li>
 				              		<li><a href="{!! route('course.index') !!}">Courses</a></li>
-				              		<li><a href="{!! route('projecttype.index') !!}">Project Types</a></li>
+				              		<li><a href="{!! route('discipline.index') !!}">Disciplines</a></li>
 				              		<li><a href="{!! route('event.index') !!}">Activity Log</a></li>
 				              </ul>
 				            </li>
