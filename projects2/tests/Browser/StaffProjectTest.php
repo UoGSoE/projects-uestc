@@ -88,20 +88,25 @@ class StaffProjectTest extends DuskTestCase
         $staff = $this->createStaff();
         $course = $this->createCourse();
         $student = $this->createStudent();
+        $student2 = $this->createStudent();
         $disciplines = factory(\App\Discipline::class, 5)->create();
         $project = $this->createProject(['user_id' => $staff->id, 'maximum_students' => 1]);
         $project->courses()->sync([$course->id]);
         $project->addStudent($student);
+        $project->addStudent($student2);
 
-        $this->browse(function ($browser) use ($staff, $project, $student) {
+        $this->browse(function ($browser) use ($staff, $project, $student, $student2) {
             $browser->loginAs($staff)
                     ->visit('/')
                     ->assertSee('Your Projects')
                     ->clickLink($project->title)
                     ->assertSee($student->fullName())
-                    ->check("accepted[{$student->id}]")
+                    ->assertSee($student2->fullName())
+                    ->radio("accepted", $student->id)
                     ->press('Allocate')
                     ->assertSee('Allocations Saved')
+                    ->assertSee($student->fullName())
+                    ->assertDontSee($student2->fullName())
                     ->assertDontSee('Allocate');
         });
         $this->assertDatabaseHas('project_student', [
@@ -112,6 +117,11 @@ class StaffProjectTest extends DuskTestCase
     }
 
     /** @test */
+    /*. 
+        Not needed at present as form input changed from checkboxes (when staff could
+        allocate more than one student to a project) to a radio so only one is ever (ha)
+        possible to submit.
+
     public function staff_cant_accept_more_than_maximum_allowed_students_onto_project()
     {
         $staff = $this->createStaff();
@@ -145,5 +155,5 @@ class StaffProjectTest extends DuskTestCase
             'project_id' => $project->id,
             'accepted' => false
         ]);
-    }
+    }*/
 }

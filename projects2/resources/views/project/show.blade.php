@@ -103,7 +103,11 @@
                     </td>
                     <td>{{ $student->fullName() }}</td>
                     <td>
-                        <input type="checkbox" value="{{ $student->id }}" name="accepted[{{ $student->id }}]" @if ($student->pivot->accepted) checked disabled @endif>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="accepted" id="optionsRadios1" value="{{ $student->id }}" @if ($student->pivot->accepted) checked disabled @endif>
+                      </label>
+                    </div>
                     </td>
                 </tr>
             @endforeach

@@ -210,9 +210,7 @@ class ProjectController extends Controller
         if (count($request->accepted) > $project->availablePlaces()) {
             return redirect()->back()->withErrors(['full' => "You cannot accept more then {$project->maximum_students} student onto the project"]);
         }
-        foreach ($request->accepted as $studentId) {
-            $project->acceptStudent($studentId);
-        }
+        $project->acceptStudent($request->accepted);
         EventLog::log(Auth::user()->id, "Accepted students onto project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'Allocations Saved');
     }
@@ -267,11 +265,4 @@ class ProjectController extends Controller
             $student->projects()->sync([$projectId]);
         }
     }
-
-    /**
-     * Bulk allocate students to projects
-     * @param  Request $request
-     * @return redirect
-     */
-
 }
