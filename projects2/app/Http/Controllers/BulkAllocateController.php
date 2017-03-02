@@ -9,7 +9,7 @@ class BulkAllocateController extends Controller
 {
     public function edit()
     {
-        $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
+        $students = User::students()->orderBy('surname')->get();
         return view('report.bulk_allocation', compact('students'));
     }
 

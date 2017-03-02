@@ -24,10 +24,9 @@
                         <td>{{ $student->fullName() }} ({{ $student->matric() }} {{ $student->course() ? $student->course()->code : 'N/A' }})</td>
                         @for ($i = 0; $i < config('projects.requiredProjectChoices'); $i++)
                             <td>
-                                {!! dd($student->projectsArray()) !!}
-                                @if ($student->projectsArray($i))
+                                @if (!is_null($student->projectsArray($i)))
                                     @if ($student->projectsArray($i)->isAvailable())
-                                        <input type="radio" name="student[{{$student->id}}]" value="{{ $student->projectChoice($i)->id }}">
+                                        <input type="radio" name="student[{{$student->id}}]" value="{{ $student->projectsArray($i)->id }}">
                                     @else
                                         (Full)
                                     @endif
@@ -36,8 +35,6 @@
                                     >
                                         {{ $student->projectsArray($i)->title }}
                                     </a>
-                                @else
-                                    WTF?
                                 @endif
                             </td>
                         @endfor

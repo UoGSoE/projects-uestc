@@ -69,7 +69,7 @@ class User extends Model implements
     public function projectsArray($index = null)
     {
         $projectArray = [null, null, null];
-        $projects = $this->projects;
+        $projects = $this->projects()->orderBy('title')->get();
         $offset = 0;
         while ($project = $projects->shift()) {
             $projectArray[$offset] = $project;
