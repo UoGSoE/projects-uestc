@@ -32,6 +32,6 @@ class StudentProfileController extends Controller
     public function downloadCV($id)
     {
         $student = User::findOrFail($id);
-        return response()->file($student->cvPath());
+        return response()->download($student->cvPath());
     }
 }

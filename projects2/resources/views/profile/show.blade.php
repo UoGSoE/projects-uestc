@@ -12,7 +12,7 @@
 </div>
 
 @if ($user->hasCV())
-    <a href="" class="btn btn-default">Download their CV</a>
+    <a href="{!! route('student.cv', $user->id) !!}" class="btn btn-default">Download their CV</a>
 @endif
 
 @endsection

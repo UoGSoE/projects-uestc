@@ -66,7 +66,7 @@ Vue.component('project-detail', {
             <div class="panel-footer" v-if="allowselect">
                 <div class="checkbox">
                     <label>
-                      <input type="checkbox" :id="'choose_' + project.id" name="choices[]" value="@{{ project.id }}" @click="updateChoice"> Apply
+                      <input type="checkbox" :id="'choose_' + project.id" name="choices[]" :value="project.id" @click="updateChoice"> Apply
                     </label>
                 </div>
             </div>
