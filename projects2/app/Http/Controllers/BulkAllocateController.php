@@ -29,7 +29,7 @@ class BulkAllocateController extends Controller
                     'oversubscribed' => "Cannot allocate student {$student->fullName()} to {$project->title} - project has been filled"
                 ]);
             }
-            $student->projects()->sync($data);
+            $project->acceptStudent($student);
         }
         return redirect()->route('bulkallocate.edit')->with('success_message', 'Allocations saved');
     }
