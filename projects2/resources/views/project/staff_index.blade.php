@@ -10,7 +10,7 @@
             <tr>
                 <th>Title</th>
                 <th>Students</th>
-                <th>Type</th>
+                <th>Discipline</th>
             </tr>
         </thead>
         <tbody>

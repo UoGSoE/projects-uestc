@@ -115,6 +115,29 @@ class StudentProjectTest extends TestCase
         $response->assertSessionHas('success_message');
     }
 
+    public function test_a_student_can_resubmit_and_change_their_choices()
+    {
+        $student = factory(User::class)->states('student')->create();
+        $course = factory(Course::class)->create();
+        $course->students()->save($student);
+        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $otherProjects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $projects->each(function ($project, $key) use ($course, $student) {
+            $project->courses()->save($course);
+            $project->addStudent($student);
+        });
+        $otherProjects->each(function ($project, $key) use ($course) {
+            $project->courses()->save($course);
+        });
+        $projectIds = $otherProjects->pluck('id')->toArray();
+        $response = $this->actingAs($student)
+                        ->post(route('choices.update', ['choices' => $projectIds]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHas('success_message');
+    }
+
     /**
      * This is to check for a race condition.  Students all get told to pick at the same time,
      * so if one has the list of projects open for a while - other students may have filled
