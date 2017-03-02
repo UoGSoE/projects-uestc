@@ -36,6 +36,11 @@ abstract class TestCase extends BaseTestCase
         return factory(\App\User::class)->states('admin')->create($attribs);
     }
 
+    protected function createConvenor($attribs = [])
+    {
+        return factory(\App\User::class)->states('convenor')->create($attribs);
+    }
+
     protected function createDiscipline($attribs = [])
     {
         return factory(\App\Discipline::class)->create($attribs);

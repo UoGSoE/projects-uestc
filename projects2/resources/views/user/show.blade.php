@@ -22,9 +22,14 @@
             <dd>{{ $user->last_login or 'Never'}}</dd>
             <dt>Roles</dt>
             <dd>
-                @if ($user->isAdmin())
-                    Admin
-                @else
+                @if ($user->hasRoles())
+                    @if ($user->isAdmin())
+                        &middot; Site Admin
+                    @endif
+                    @if ($user->isConvenor())
+                        &middot; Project Convenor
+                    @endif
+                @else 
                     Regular User
                 @endif
             </dd>

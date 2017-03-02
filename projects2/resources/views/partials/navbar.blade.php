@@ -13,7 +13,7 @@
 		        <div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 			            <!-- <li class="active"><a href="#">Home</a></li> -->
-						@if (Auth::user()->isAdmin())
+						@can('view_reports')
 				            <li class="dropdown">
 				              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
 				              <ul class="dropdown-menu">

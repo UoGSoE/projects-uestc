@@ -33,9 +33,13 @@ class UserAdminTest extends DuskTestCase
                     ->type('surname', 'Kitty')
                     ->type('forenames', 'Hello')
                     ->type('email', 'hello@kitty.com')
+                    ->check('is_convenor')
+                    ->check('is_admin')
                     ->press('Create')
                     ->assertSee('Details for')
                     ->assertSee('staff')
+                    ->assertSee('Site Admin')
+                    ->assertSee('Convenor')
                     ->assertSee('HELLOKITTY');
         });
     }

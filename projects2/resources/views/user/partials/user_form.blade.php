@@ -30,6 +30,19 @@
                     <input type="checkbox" id="is_student" name="is_student" value="1" @if ($user->is_student) checked @endif> Is a student?
                 </label>
             </div>
+            <div class="checkbox">
+                <label>
+                    <input type="hidden" name="is_admin" value="0">
+                    <input type="checkbox" id="is_admin" name="is_admin" value="1" @if ($user->is_admin) checked @endif> Is a site admin?
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="hidden" name="is_convenor" value="0">
+                    <input type="checkbox" id="is_convenor" name="is_convenor" value="1" @if ($user->is_convenor) checked @endif> Is a project convenor?
+                </label>
+            </div>
+
             <div class="form-group" id="course_select" @if (!$user->is_student) style="display:none" @endif>
                 <label for="inputCourse">Course</label>
                 <select id="inputCourse" name="course_id" class="form-control">

@@ -34,7 +34,7 @@ class User extends Model implements
      *
      * @var array
      */
-    protected $fillable = ['username', 'email', 'surname', 'forenames', 'is_student', 'is_admin'];
+    protected $fillable = ['username', 'email', 'surname', 'forenames', 'is_student', 'is_admin', 'is_convenor'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -190,9 +190,25 @@ class User extends Model implements
         return ! $this->is_student;
     }
 
+    public function hasRoles()
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+        if ($this->isConvenor()) {
+            return true;
+        }
+        return false;
+    }
+
     public function isAdmin()
     {
         return $this->is_admin;
+    }
+
+    public function isConvenor()
+    {
+        return $this->is_convenor;
     }
 
     /**

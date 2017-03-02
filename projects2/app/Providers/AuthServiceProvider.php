@@ -44,5 +44,16 @@ class AuthServiceProvider extends ServiceProvider
             }
             return $user->id == $project->user_id;
         });
+
+        Gate::define('view_reports', function ($user) {
+            if ($user->isAdmin()) {
+                return true;
+            }
+            if ($user->isConvenor()) {
+                return true;
+            }
+            return false;
+        });
+
     }
 }

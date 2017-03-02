@@ -29,6 +29,12 @@ $factory->state(App\User::class, 'admin', function ($faker) {
         'is_student' => false,
     ];
 });
+$factory->state(App\User::class, 'convenor', function ($faker) {
+    return [
+        'is_convenor' => true,
+        'is_student' => false,
+    ];
+});
 $factory->state(App\User::class, 'student', function ($faker) {
     return [
         'is_student' => true,
@@ -42,18 +48,6 @@ $factory->state(App\User::class, 'staff', function ($faker) {
     ];
 });
 
-$factory->define(App\Role::class, function (Faker\Generator $faker) {
-    return [
-        'title' => $faker->name,
-        'label' => $faker->sentence(3),
-    ];
-});
-$factory->define(App\Permission::class, function (Faker\Generator $faker) {
-    return [
-        'title' => $faker->name,
-        'label' => $faker->sentence(3),
-    ];
-});
 $factory->define(App\Project::class, function (Faker\Generator $faker) {
     return [
         'title' => implode(' ', $faker->words(3)),

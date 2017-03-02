@@ -74,6 +74,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('discipline', 'DisciplineController@store')->name('discipline.store');
         Route::get('discipline/{id}/edit', 'DisciplineController@edit')->name('discipline.edit');
         Route::post('discipline/{id}', 'DisciplineController@update')->name('discipline.update');
+    });
+
+    Route::group(['middleware' => ['convenor_or_admin'], 'prefix' => '/admin'], function () {
 
         Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfDiscipline');
         Route::get('/report/projects/bylocation/{id}', 'ReportController@allProjectsAtLocation');

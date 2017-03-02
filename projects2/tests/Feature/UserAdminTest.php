@@ -46,11 +46,12 @@ class UserAdminTest extends TestCase
                             'surname' => 'Kitty',
                             'forenames' => 'Hello',
                             'is_student' => false,
+                            'is_convenor' => true,
                             'email' => 'hellokitty@example.com'
                         ]);
 
         $response->assertStatus(302);
-        $this->assertDatabaseHas('users', ['email' => 'hellokitty@example.com']);
+        $this->assertDatabaseHas('users', ['email' => 'hellokitty@example.com', 'is_convenor' => true]);
     }
 
     public function test_admin_can_edit_an_existing_user()
