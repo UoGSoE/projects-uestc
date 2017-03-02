@@ -9,7 +9,6 @@ use App\Http\Requests;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Project;
-use App\Role;
 use App\User;
 use Auth;
 use Excel;
@@ -49,9 +48,8 @@ class UserController extends Controller
     public function create()
     {
         $user = new User;
-        $roles = Role::orderBy('label')->get();
         $courses = Course::orderBy('title')->get();
-        return view('user.create', compact('user', 'roles', 'courses'));
+        return view('user.create', compact('user', 'courses'));
     }
 
     public function store(CreateUserRequest $request)
@@ -63,10 +61,9 @@ class UserController extends Controller
     public function edit($userId)
     {
         $user = User::findOrFail($userId);
-        $roles = Role::orderBy('label')->get();
         $projects = Project::active()->orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
-        return view('user.edit', compact('user', 'roles', 'projects', 'courses'));
+        return view('user.edit', compact('user', 'projects', 'courses'));
     }
 
     public function update($id, UpdateUserRequest $request)

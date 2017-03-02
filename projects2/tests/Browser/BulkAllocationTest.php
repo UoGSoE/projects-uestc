@@ -34,7 +34,6 @@ class BulkAllocationTest extends DuskTestCase
                     ->assertSee($student2->fullName())
                     ->radio("student[{$student1->id}]", $project1->id)
                     ->radio("student[{$student2->id}]", $project2->id)
-                    ->pause(3000)
                     ->press('Allocate Choices')
                     ->assertSee('Allocations saved');
         });

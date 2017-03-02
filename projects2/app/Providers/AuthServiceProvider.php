@@ -27,12 +27,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // foreach ($this->getPermissions() as $permission) {
-        //     Gate::define($permission->title, function ($user) use ($permission) {
-        //         return $user->hasRole($permission->roles);
-        //     });
-        // }
-
         Gate::define('edit_users', function ($user) {
             return $user->isAdmin();
         });
@@ -50,14 +44,5 @@ class AuthServiceProvider extends ServiceProvider
             }
             return $user->id == $project->user_id;
         });
-    }
-
-    protected function getPermissions()
-    {
-        try {
-            return Permission::with('roles')->get();
-        } catch (\Exception $e) {
-            return collect([]);
-        }
     }
 }

@@ -21,17 +21,13 @@
             <dt>Last Login</dt>
             <dd>{{ $user->last_login or 'Never'}}</dd>
             <dt>Roles</dt>
-            @if ($user->roles()->count() > 0)
-                <dd>
-                    <ul class="list-inline">
-                        @foreach ($user->roles as $role)
-                            <li title="@foreach ($role->permissions as $permission) {{ $permission->label }}, @endforeach">{{ $role->label }}</li>
-                        @endforeach
-                    </ul>
-                </dd>
-            @else
-                Regular User
-            @endif
+            <dd>
+                @if ($user->isAdmin())
+                    Admin
+                @else
+                    Regular User
+                @endif
+            </dd>
             @if ($user->is_student)
                 <dt>Enrolled On</dt>
                 @if ($user->courses()->count() > 0)

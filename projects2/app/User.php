@@ -43,11 +43,6 @@ class User extends Model implements
      */
     protected $hidden = ['password', 'remember_token'];
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
-    }
-
     public function scopeStudents($query)
     {
         return $query->where('is_student', '=', 1);
@@ -172,39 +167,6 @@ class User extends Model implements
         return $available->toJson();
     }
 
-    /**
-     * Assign a role to this user
-     * @param  Role   $role
-     */
-    public function assignRole(Role $role)
-    {
-        if ($this->hasRole($role->title)) {
-            return false;
-        }
-        $this->roles()->save($role);
-    }
-
-    /**
-     * Check if this user has a given role(s).
-     * @param  Mixed  $roles Either a string role name, or a Role:: collection
-     * @return boolean
-     */
-    public function hasRole($roles)
-    {
-        if (is_string($roles)) {
-            return $this->roles->contains('title', $roles);
-        }
-        foreach ($roles as $role) {
-            if ($this->hasRole($role->title)) {
-                return true;
-            }
-        }
-        return false;
-        // the line below is from the laracasts tutorial on authorisation but doesn't seem to be working, hence
-        // the nasty foreach loop above
-        return !! $this->roles->intersect($roles)->count();
-    }
-
     public function fullName()
     {
         return $this->forenames . ' ' . $this->surname;
@@ -309,10 +271,6 @@ class User extends Model implements
             $user->password = bcrypt($request->password);
         }
         $user->save();
-        $user->roles()->detach();
-        if ($request->roles) {
-            $user->roles()->sync(array_filter($request->roles));
-        }
         if ($user->is_student) {
             $user->updateCourse($request);
         }
@@ -334,11 +292,6 @@ class User extends Model implements
             $user->allocateToProjects($choices);
         }
         $user->save();
-        if ($request->roles) {
-            $user->roles()->sync(array_filter($request->roles));
-        } else {
-            $user->roles()->detach();
-        }
         if ($user->is_student) {
             $user->updateCourse($request);
         }
