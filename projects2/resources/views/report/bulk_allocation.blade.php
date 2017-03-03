@@ -2,7 +2,13 @@
 
 @section('content')
 
-    <h2>Bulk Allocation</h2>
+    <h2>
+        Bulk Allocation
+        <a action-href="{!! route('admin.get_clear_unsuccessful') !!}" data-confirm="Really remove all un-successful applications" class="btn btn-danger pull-right data-confirm">
+            Remove All Unsuccesfull Applications
+        </a>
+
+    </h2>
     <p>
         This page lets you bulk-allocate students who have not yet been allocated to a project.
     </p>

@@ -99,5 +99,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('site/enableapplications', 'ApplicationsController@enable')->name('admin.allow_applications');
         Route::post('site/disableapplications', 'ApplicationsController@disable')->name('admin.deny_applications');
         Route::post('site/clearunsuccessful', 'ApplicationsController@clearUnsuccessful')->name('admin.clear_unsuccessful');
+        Route::get('site/clearunsuccessful', 'ApplicationsController@clearUnsuccessful')->name('admin.get_clear_unsuccessful');
     });
 });
