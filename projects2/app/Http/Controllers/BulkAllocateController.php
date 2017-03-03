@@ -22,7 +22,6 @@ class BulkAllocateController extends Controller
         }
         foreach ($request->student as $student_id => $project_id) {
             $student = User::findOrFail($student_id);
-            $data[$project_id] = [ 'accepted' => true ];
             $project = Project::findOrFail($project_id);
             if ($project->isFull()) {
                 return redirect()->route('bulkallocate.edit')->withErrors([
