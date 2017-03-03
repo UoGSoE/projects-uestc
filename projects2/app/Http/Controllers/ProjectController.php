@@ -210,7 +210,11 @@ class ProjectController extends Controller
         if (count($request->accepted) > $project->availablePlaces()) {
             return redirect()->back()->withErrors(['full' => "You cannot accept more then {$project->maximum_students} student onto the project"]);
         }
-        $project->acceptStudent($request->accepted);
+        $student = User::findOrFail($request->accepted);
+        if ($student->isAllocated()) {
+            return redirect()->back()->withErrors(['already_allocated' => "That student has already been accepted onto another project"]);
+        }
+        $project->acceptStudent($student);
         EventLog::log(Auth::user()->id, "Accepted students onto project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'Allocations Saved');
     }

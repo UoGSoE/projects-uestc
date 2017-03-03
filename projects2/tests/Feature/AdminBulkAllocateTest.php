@@ -7,6 +7,8 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Notifications\AllocatedToProject;
+use Illuminate\Support\Facades\Notification;
 
 class AdminBulkAllocateTest extends TestCase
 {
@@ -32,6 +34,27 @@ class AdminBulkAllocateTest extends TestCase
         $response->assertSessionHas('success_message');
         $this->assertDatabaseHas('project_student', ['project_id' => $project1->id, 'user_id' => $student1->id, 'accepted' => true]);
         $this->assertDatabaseHas('project_student', ['project_id' => $project2->id, 'user_id' => $student2->id, 'accepted' => true]);
+    }
+
+    /** @test */
+    public function notifications_are_sent_to_students_when_bulk_allocated_to_projects()
+    {
+        Notification::fake();
+        $admin = $this->createAdmin();
+        $project = $this->createProject();
+        $student = $this->createStudent();
+        $project->addStudent($student);
+        $data['student'][$student->id] = $project->id;
+
+        $response = $this->actingAs($admin)->post(route('bulkallocate.update'), $data);
+
+        Notification::assertSentTo(
+                    $student,
+                    AllocatedToProject::class,
+                    function ($notification, $channels) use ($project) {
+                        return $notification->project->id === $project->id;
+                    }
+        );
     }
 
     /** @test */

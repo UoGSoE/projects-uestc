@@ -29,13 +29,17 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/project/{id}/copy', 'ProjectController@copy')->name('project.copy');
         Route::post('/project/{id}', 'ProjectController@update')->name('project.update');
         Route::delete('/project/{id}', 'ProjectController@destroy')->name('project.destroy');
+
+        Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents')->name('project.enrol');
+
         Route::get('/profile/{id}', 'StudentProfileController@show')->name('student.profile_show');
         Route::get('/profile/{id}/cv', 'StudentProfileController@downloadCV')->name('student.cv');
-        Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents')->name('project.enrol');
+
     });
 
     Route::group(['middleware' => ['student']], function () {
         Route::post('/choices', 'StudentChoicesController@update')->name('choices.update');
+
         Route::get('profile', 'StudentProfileController@edit')->name('student.profile_edit');
         Route::post('profile', 'StudentProfileController@update')->name('student.profile_update');
     });
@@ -74,6 +78,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('discipline', 'DisciplineController@store')->name('discipline.store');
         Route::get('discipline/{id}/edit', 'DisciplineController@edit')->name('discipline.edit');
         Route::post('discipline/{id}', 'DisciplineController@update')->name('discipline.update');
+
+        Route::get('events', 'EventLogController@index')->name('event.index');
     });
 
     Route::group(['middleware' => ['convenor_or_admin'], 'prefix' => '/admin'], function () {
@@ -89,8 +95,6 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/bulkactive', 'BulkActiveController@edit')->name('bulkactive.edit');
         Route::post('/bulkactive', 'BulkActiveController@update')->name('bulkactive.update');
-
-        Route::get('events', 'EventLogController@index')->name('event.index');
 
         Route::post('site/enableapplications', 'ApplicationsController@enable')->name('admin.allow_applications');
         Route::post('site/disableapplications', 'ApplicationsController@disable')->name('admin.deny_applications');

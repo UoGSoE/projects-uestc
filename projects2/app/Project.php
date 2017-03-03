@@ -4,7 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\ProjectOversubscribedException;
+use App\Exceptions\StudentAlreadyAllocatedException;
 use Storage;
+use App\Notifications\AllocatedToProject;
 
 class Project extends Model
 {
@@ -92,8 +94,12 @@ class Project extends Model
             $student = User::findOrFail($student);
         }
 
-        $this->students()->sync([$student->id => ['accepted' => true]], false);
+        if ($student->isAllocated()) {
+            throw new StudentAlreadyAllocatedException;
+        }
 
+        $this->students()->sync([$student->id => ['accepted' => true]], false);
+        $student->notify(new AllocatedToProject($this));
         if ($this->isFull()) {
             $this->removeUnsucessfulStudents();
         }

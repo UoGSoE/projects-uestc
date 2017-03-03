@@ -226,6 +226,11 @@ class User extends Model implements
         return $this->projects()->wherePivot('accepted', '=', true)->count() == 0;
     }
 
+    public function isAllocated()
+    {
+        return ! $this->unallocated();
+    }
+
     /**
      * Nasty brute-force of a unique username - used when importing a spreadsheet of staff
      * as they login with their email address rather than a username - but we still need a username

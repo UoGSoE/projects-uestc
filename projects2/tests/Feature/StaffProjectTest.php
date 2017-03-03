@@ -9,6 +9,8 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;
 use App\Course;
 use App\Project;
+use App\Notifications\AllocatedToProject;
+use Illuminate\Support\Facades\Notification;
 
 class StaffProjectTest extends TestCase
 {
@@ -107,6 +109,67 @@ class StaffProjectTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Create A New Project');
         $response->assertSee($project->title);
+    }
+
+    /** @test */
+    public function staff_can_accept_a_student_onto_a_project()
+    {
+        $staff = factory(User::class)->states('staff')->create();
+        $student = factory(User::class)->states('student')->create();
+        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+
+        $response = $this->actingAs($staff)
+                        ->post(route('project.enrol', $project->id), ['accepted' => $student->id]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('project.show', $project->id));
+        $this->assertDatabaseHas('project_student', ['project_id' => $project->id, 'user_id' => $student->id, 'accepted' => true]);
+    }
+
+    /** @test */
+    public function a_notification_is_sent_to_the_student_when_accepted_onto_a_project()
+    {
+        Notification::fake();
+        $staff = factory(User::class)->states('staff')->create();
+        $student = factory(User::class)->states('student')->create();
+        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+
+        $response = $this->actingAs($staff)
+                        ->post(route('project.enrol', $project->id), ['accepted' => $student->id]);
+
+        Notification::assertSentTo(
+                    $student,
+                    AllocatedToProject::class,
+                    function ($notification, $channels) use ($project) {
+                        return $notification->project->id === $project->id;
+                    }
+        );
+    }
+
+    /** @test */
+    /* This is to check for a race condition.  If two members of staff have projects which the
+       same student has applied for - and both decide to accept them, then make sure the student
+       doesn't get accepted twice.  For instance, first staff member opens the page then takes
+       a phone call - in the meantime the other member of staff has accepted the student - when
+       the call ends and they accept the same student it could get quite confusing for the 
+       student (and possibly DB)
+    */
+    public function staff_cant_accept_a_student_onto_a_project_if_they_are_already_accepted_onto_one()
+    {
+        $staff1 = factory(User::class)->states('staff')->create();
+        $staff2 = factory(User::class)->states('staff')->create();
+        $student = factory(User::class)->states('student')->create();
+        $project1 = factory(Project::class)->create(['user_id' => $staff1->id]);
+        $project2 = factory(Project::class)->create(['user_id' => $staff2->id]);
+        $project2->acceptStudent($student);
+
+        $response = $this->actingAs($staff1)->from(route('project.show', $project1->id))
+                        ->post(route('project.enrol', $project1->id), ['accepted' => $student->id]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('project.show', $project1->id));
+        $response->assertSessionHasErrors(['already_allocated']);
+        $this->assertDatabaseMissing('project_student', ['project_id' => $project1->id, 'user_id' => $student->id, 'accepted' => true]);
     }
 
     public function test_staff_can_preallocate_a_student_to_a_project()

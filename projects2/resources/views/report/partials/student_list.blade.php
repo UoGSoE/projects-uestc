@@ -21,7 +21,6 @@
                         <td>
                             @if ($student->projectsArray($index))
                                 {{ $student->projectsArray($index)->title }}
-                                }
                             @else
                                 N/A
                             @endif
