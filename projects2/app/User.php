@@ -150,8 +150,10 @@ class User extends Model implements
         $projects = $this->availableProjects();
         $available = $projects->filter(function ($project, $key) {
             return $project->isAvailable();
-        })->map(function ($project, $key) {
-            return [
+        });
+        $projectArray = [];
+        foreach ($available as $project) {
+            $projectArray[] = [
                 'id' => $project->id,
                 'title' => $project->title,
                 'description' => $project->description,
@@ -163,8 +165,8 @@ class User extends Model implements
                 'links' => $project->links->toArray(),
                 'files' => $project->files->toArray(),
             ];
-        });
-        return $available->toJson();
+        }
+        return json_encode($projectArray);
     }
 
     public function fullName()

@@ -7,9 +7,9 @@
 Route::get('auth/login', function () {
     $data['page_title'] = "Log In";
     return View::make('login_form', $data);
-});
-Route::post('auth/login', 'Auth\AuthController@login');
-Route::get('logout', 'Auth\AuthController@logout');
+})->name('login.show');
+Route::post('auth/login', 'Auth\AuthController@login')->name('login.login');
+Route::get('logout', 'Auth\AuthController@logout')->name('logout');
 
 Route::post('resetgenerate', 'Auth\AuthController@generateResetLink');
 Route::get('resetpassword/{token}', 'Auth\AuthController@password')->name('password.reset');
@@ -17,7 +17,7 @@ Route::post('resetpassword/{token}', 'Auth\AuthController@resetPassword');
 
 Route::group(['middleware' => ['auth']], function () {
 
-    Route::get('/', 'HomeController@show');
+    Route::get('/', 'HomeController@show')->name('home');
 
     Route::get('/projectfile/{id}', 'ProjectFileController@download')->name('projectfile.download');
 
