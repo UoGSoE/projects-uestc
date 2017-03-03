@@ -54,18 +54,6 @@
                     @endforeach
                 </select>
             </div>
-            @can('edit_user_roles')
-                <div class="form-group">
-                    <label for="inputRoles">Roles (Optional)</label>
-                    <select id="inputRoles" name="roles[]" class="form-control select2" multiple>
-                        @foreach ($roles as $role)
-                            <option value="{{ $role->id }}" @if ($user->hasRole($role->title)) selected @endif>
-                                {{ $role->label }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            @endcan
         @if ($user->is_student)
             <div class="form-group">
                 <label for="inputProject">Allocate to project</label>
@@ -74,13 +62,13 @@
                     @foreach($projects as $project)
                         @if ($project->isAvailable())
                             <option value="{{ $project->id }}">
-                                {{ $project->title }} ({{$project->type->title}})
+                                {{ $project->title }} ({{$project->disciplineTitle()}})
                             </option>
                         @endif
                     @endforeach
                 </select>
                 <p class="help-block">
-                    This will allocate them as their first preference and automatically approve them.
+                    This will also allocate automatically approve them on the project.
                 </p>
             </div>
         @endif
