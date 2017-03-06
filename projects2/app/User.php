@@ -224,27 +224,6 @@ class User extends Model implements
     }
 
     /**
-     * Nasty brute-force of a unique username - used when importing a spreadsheet of staff
-     * as they login with their email address rather than a username - but we still need a username
-     * for db/null reasons (as per original (doomed) spec)
-     * @param  string $initialName The initial name to try and munge into a username
-     * @return string              A unique username
-     */
-    public static function generateUsername($initialName)
-    {
-        $newName = preg_replace('/\s+/', '', $initialName);
-        $suffix = 1;
-        while (static::where('username', '=', $newName)->first()) {
-            $newName = $newName . $suffix;
-            $suffix = $suffix + 1;
-            if ($suffix > 100) {    // give up after 100 tries - something is clearly up!
-                abort(500);
-            }
-        }
-        return $newName;
-    }
-
-    /**
      * Create or update an existing user based on data from a spreadsheet row (see UserController->updateStaff())
      * @param  array $row A row of data from the spreadsheet
      * @return Mixed      False if the data is invalid, otherwise an instance of App\User
@@ -266,7 +245,6 @@ class User extends Model implements
         if (!$user) {
             $user = new static;
             $user->email = $email;
-            // $user->username = static::generateUsername($surname . $forenames);
             $user->username = $email;
             $user->password = bcrypt(str_random(40));
         }

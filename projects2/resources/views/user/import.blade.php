@@ -1,11 +1,10 @@
 @extends ('layout')
 
 @section ('content')
-
     <h2>
         Import a list of staff.
     </h2>
-    <form method="POST" action="{!! action('UserController@updateStaff') !!}" enctype="multipart/form-data">
+    <form method="POST" action="{!! route('staff.do_import') !!}" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="form-group">
             <label for="inputFile">Upload an Excel file</label>

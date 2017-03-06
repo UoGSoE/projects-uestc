@@ -24,7 +24,7 @@ class StaffImportController extends Controller
                 abort(401);
             }
         }
-        EventLog::log(Auth::user()->id, "Updated staff list");
+        EventLog::log($request->user()->id, "Updated staff list");
         return redirect()->route('staff.index')->with('success_message', 'Updated staff list');
     }
 }

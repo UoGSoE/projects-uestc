@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
@@ -82,5 +83,24 @@ class UserAdminTest extends TestCase
 
         $response->assertStatus(302);
         $this->assertDatabaseMissing('users', ['email' => $regularUser->email]);
+    }
+
+    /** @test */
+    public function can_import_a_list_of_staff_from_a_spreadsheet()
+    {
+        $admin = $this->createAdmin();
+        $staff = $this->createStaff();
+        $filename = 'tests/data/test_staff.xlsx';
+        $file = new \Illuminate\Http\UploadedFile($filename, 'test_staff.xlsx', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+
+        $response = $this->actingAs($admin)
+                        ->call('POST', route('staff.do_import'), [], [], ['file' => $file]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('staff.index'));
+        $response->assertSessionHas('success_message');
+        $this->assertDatabaseHas('users', ['email' => 'abcd@qpwoeiryt.io']);
+        $this->assertDatabaseHas('users', ['email' => 'xyz@gmail.com']);
+        $this->assertDatabaseHas('users', ['email' => $staff->email]);
     }
 }
