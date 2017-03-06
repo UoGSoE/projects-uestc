@@ -310,9 +310,8 @@ class User extends Model implements
         }
         if ($request->project_id) {
             $project = Project::findOrFail($request->project_id);
-            $choices = [ $request->project_id => ["choice" => 1, "accepted" => true] ];
+            $project->acceptStudent($user);
             EventLog::log($request->user()->id, "Allocated student {$user->username} to project {$project->title}");
-            $user->allocateToProjects($choices);
         }
         $user->save();
         if ($user->is_student) {
