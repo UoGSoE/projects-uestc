@@ -24,7 +24,7 @@ class StudentChoicesController extends Controller
             return $result;
         }
         $student->allocateToProjects($picked);
-        $projects = Project::whereIn('id', array_keys($picked))->pluck('title')->toArray();
+        $projects = Project::whereIn('id', array_values($picked))->pluck('title')->toArray();
         EventLog::log($student->id, "Chose projects " . implode(', ', $projects));
         return redirect()->to('/')->with(
             'success_message',
@@ -49,7 +49,7 @@ class StudentChoicesController extends Controller
             return redirect()->back()->withErrors(['choice_diff' => "You must pick {$requiredChoices} *different* projects"]);
         }
 
-        $projects = Project::whereIn('id', array_keys($choices))->get();
+        $projects = Project::whereIn('id', array_values($choices))->get();
         foreach ($projects as $project) {
             if ($project->isFullySubscribed()) {
                 return redirect()->back()->withErrors([
