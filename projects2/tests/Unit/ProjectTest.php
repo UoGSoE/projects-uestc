@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
@@ -7,6 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;
 use App\Project;
+use App\ProjectConfig;
 use App\Exceptions\ProjectOversubscribedException;
 
 class ProjectTest extends TestCase
@@ -101,5 +103,17 @@ class ProjectTest extends TestCase
         $this->assertDatabaseHas('project_student', ['user_id' => $student1->id, 'accepted' => true]);
         $this->assertDatabaseHas('project_student', ['user_id' => $student2->id, 'accepted' => true]);
         $this->assertDatabaseMissing('project_student', ['user_id' => $student3->id]);
+    }
+
+    /** @test */
+    public function adding_a_student_to_a_project_updates_the_project_rounds_information()
+    {
+        $project = $this->createProject();
+        $student = $this->createStudent();
+        ProjectConfig::setOption('round', 1);
+
+        $project->addStudent($student);
+
+        $this->assertDatabaseHas('project_rounds', ['user_id' => $student->id, 'project_id' => $project->id, 'round' => 1]);
     }
 }

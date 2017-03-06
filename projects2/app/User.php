@@ -5,6 +5,7 @@ namespace App;
 use App\Course;
 use App\EventLog;
 use App\PasswordReset;
+use App\ProjectRound;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -51,6 +52,11 @@ class User extends Model implements
     public function scopeStaff($query)
     {
         return $query->where('is_student', '=', 0);
+    }
+
+    public function rounds()
+    {
+        return $this->hasMany(ProjectRound::class);
     }
 
     public function projects()
@@ -325,6 +331,32 @@ class User extends Model implements
     {
         $this->projects()->detach();
         $this->projects()->sync($choices);
+        $this->addRoundsInfo($choices);
         return true;
+    }
+
+    protected function addRoundsInfo($choices)
+    {
+        $currentRound = ProjectConfig::getOption('round');
+        $rounds = $this->rounds()->wherePivot('round', '=', $currentRound)->get();
+        foreach ($rounds as $round) {
+            $round->delete();
+        }
+        foreach ($choices as $choice) {
+            $this->rounds()->create(['project_id' => $choice, 'round' => $currentRound]);
+        }
+    }
+
+    protected function roundAccept($projectId)
+    {
+        $currentRound = ProjectConfig::getOption('round');
+        $round = $this->rounds()->wherePivot('round', '=', $currentRound)->wherePivot('project_id', '=', $projectId)->first();
+        if (!$round) {
+            $round = new ProjectRound;
+            $round->project_id = $projectId;
+            $round->user_id = $this->id;
+        }
+        $round->accepted = true;
+        $round->save();
     }
 }

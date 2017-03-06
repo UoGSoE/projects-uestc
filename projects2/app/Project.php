@@ -27,6 +27,11 @@ class Project extends Model
         return $this->belongsToMany(User::class, 'project_student')->withPivot('accepted');
     }
 
+    public function rounds()
+    {
+        return $this->hasMany(ProjectRound::class);
+    }
+
     public function links()
     {
         return $this->hasMany(ProjectLink::class);
@@ -100,6 +105,7 @@ class Project extends Model
 
         $this->students()->sync([$student->id => ['accepted' => true]], false);
         $student->notify(new AllocatedToProject($this));
+        $student->roundAccept($this->id);
         if ($this->isFull()) {
             $this->removeUnsucessfulStudents();
         }
@@ -120,6 +126,24 @@ class Project extends Model
             $student = User::findOrFail($student);
         }
         $this->students()->sync([$student->id => ['accepted' => $accepted]], false);
+        $this->updateRoundsInfo($student);
+    }
+
+    public function updateRoundsInfo($student)
+    {
+        $currentRound = ProjectConfig::getOption('round');
+        $round = ProjectRound::where('project_id', '=', $this->id)
+                    ->where('user_id', '=', $student->id)
+                    ->where('round', '=', $currentRound)
+                    ->first();
+        if (!$round) {
+            $round = new ProjectRound;
+            $round->user_id = $student->id;
+            $round->project_id = $this->id;
+            $round->round = $currentRound;
+        }
+        $round->save();
+        return $round;
     }
 
     public function type()
