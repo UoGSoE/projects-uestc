@@ -165,16 +165,16 @@ class AuthController extends Controller
     {
         $resetToken = PasswordReset::where('token', '=', $token)->first();
         if (!$resetToken) {
-            return redirect()->back()->withErrors(['errors' => 'Invalid token']);
+            return redirect()->back()->withErrors(['token_invalid' => 'Invalid token']);
         }
         if ($resetToken->hasExpired()) {
-            return redirect()->back()->withErrors(['errors' => 'Token has expired']);
+            return redirect()->back()->withErrors(['token_expired' => 'Token has expired']);
         }
         if ($request->password1 != $request->password2) {
-            return redirect()->back()->withErrors(['errors' => 'Passwords did not match']);
+            return redirect()->back()->withErrors(['password_mismatch' => 'Passwords did not match']);
         }
         if (strlen($request->password1) < 12) {
-            return redirect()->back()->withErrors(['errors' => 'Password was too short']);
+            return redirect()->back()->withErrors(['password_length' => 'Password was too short']);
         }
         $user = $resetToken->user;
         if (!$user) {

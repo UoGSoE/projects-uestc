@@ -50,4 +50,9 @@ abstract class TestCase extends BaseTestCase
     {
         return factory(\App\Course::class)->create($attribs);
     }
+
+    protected function createToken($attribs = [])
+    {
+        return factory(\App\PasswordReset::class)->create($attribs);
+    }
 }

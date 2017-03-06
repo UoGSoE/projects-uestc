@@ -13,7 +13,7 @@ Route::get('logout', 'Auth\AuthController@logout')->name('logout');
 
 Route::post('resetgenerate', 'Auth\AuthController@generateResetLink');
 Route::get('resetpassword/{token}', 'Auth\AuthController@password')->name('password.reset');
-Route::post('resetpassword/{token}', 'Auth\AuthController@resetPassword');
+Route::post('resetpassword/{token}', 'Auth\AuthController@resetPassword')->name('password.do_reset');
 
 Route::group(['middleware' => ['auth']], function () {
 
