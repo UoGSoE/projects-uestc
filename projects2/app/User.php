@@ -213,16 +213,6 @@ class User extends Model implements
         return $this->is_convenor;
     }
 
-    /**
-     * Get the project where it is the students $choice option
-     * @param  integer $choice Which choice to find (ie, 1, 2, 3 etc)
-     * @return App\Project
-     */
-    public function projectChoice($choice = 1)
-    {
-        return $this->projects()->wherePivot('choice', '=', $choice)->first();
-    }
-
     public function unallocated()
     {
         return $this->projects()->wherePivot('accepted', '=', true)->count() == 0;
@@ -321,18 +311,6 @@ class User extends Model implements
         return $user;
     }
 
-    /**
-     * Syncs the students project choices
-     * @param  array $choices Array of choices (see chooseProjects for instance)
-     * @return true
-     */
-    public function allocateToProjects($choices)
-    {
-        $this->projects()->detach();
-        $this->projects()->sync($choices);
-        return true;
-    }
-
     public function hasCV()
     {
         return $this->cv_file;
@@ -363,5 +341,12 @@ class User extends Model implements
     public function cvPath()
     {
         return storage_path("app/cvs/{$this->cv_file}");
+    }
+
+    public function allocateToProjects($choices)
+    {
+        $this->projects()->detach();
+        $this->projects()->sync($choices);
+        return true;
     }
 }

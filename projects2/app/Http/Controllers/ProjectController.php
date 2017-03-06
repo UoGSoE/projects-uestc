@@ -9,8 +9,6 @@ use App\Course;
 use App\Project;
 use App\EventLog;
 use App\Discipline;
-use App\Programme;
-use App\ProjectType;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -42,12 +40,10 @@ class ProjectController extends Controller
         $project->is_active = false;
         $project->maximum_students = 1;
         $project->user_id = Auth::user()->id;
-        $types = ProjectType::orderBy('title')->get();
-        $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
         $disciplines = Discipline::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
-        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff', 'disciplines'));
+        return view('project.create', compact('project', 'courses', 'staff', 'disciplines'));
     }
 
     /**
@@ -70,9 +66,6 @@ class ProjectController extends Controller
         $project->fill($request->input());
         $project->save();
         $project->courses()->sync($request->courses);
-        if ($request->has('programmes')) {
-            $project->programmes()->sync($request->programmes);
-        }
         if ($request->has('links')) {
             $project->syncLinks($request->links);
         }
@@ -110,12 +103,10 @@ class ProjectController extends Controller
         if (Gate::denies('edit_this_project', $project)) {
             abort(403);
         }
-        $types = ProjectType::orderBy('title')->get();
-        $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
         $disciplines = Discipline::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
-        return view('project.edit', compact('project', 'types', 'programmes', 'courses', 'staff', 'disciplines'));
+        return view('project.edit', compact('project', 'courses', 'staff', 'disciplines'));
     }
 
     /**
@@ -186,87 +177,25 @@ class ProjectController extends Controller
     public function copy($id)
     {
         $project = Project::findOrFail($id)->replicate();
-        $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
         $disciplines = Discipline::orderBy('title')->get();
-        $types = ProjectType::orderBy('title')->get();
         EventLog::log(Auth::user()->id, "Copied project {$project->title}");
-        return view('project.create', compact('project', 'programmes', 'courses', 'staff', 'disciplines', 'types'));
+        return view('project.create', compact('project', 'courses', 'staff', 'disciplines'));
     }
 
-    /**
-     * Accept (or un-accept) students onto projects
-     * @param  Request $request
-     * @param  integer  $id      The project ID
-     * @return Response
-     */
-    public function acceptStudents(Request $request, $id)
+    public function acceptStudent(Request $request, $id)
     {
         $project = Project::findOrFail($id);
-        if (!$request->has('accepted')) {
-            return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'No changes');
-        }
-        if (count($request->accepted) > $project->availablePlaces()) {
-            return redirect()->back()->withErrors(['full' => "You cannot accept more then {$project->maximum_students} student onto the project"]);
+        if (!$project->isAvailable()) {
+            return redirect()->route('project.show', $id)->withErrors(['full' => 'This project cannot accept students']);
         }
         $student = User::findOrFail($request->accepted);
         if ($student->isAllocated()) {
-            return redirect()->back()->withErrors(['already_allocated' => "That student has already been accepted onto another project"]);
+            return redirect()->route('project.show', $id)->withErrors(['already_allocated' => 'That student has been accepted on a project already']);
         }
         $project->acceptStudent($student);
-        EventLog::log(Auth::user()->id, "Accepted students onto project {$project->title}");
-        return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'Allocations Saved');
-    }
-
-    /**
-     * Builds an array suitable for ->sync() on projects based on the 'accepted[]' request input
-     * @param  Request $request   The form $request object
-     * @param  integer $projectId The project->id
-     * @return array            Array of data as $data[student_id] => ['accepted' => boolean]
-     */
-    private function buildListOfStudents($request, $projectId)
-    {
-        $data = [];
-        foreach ($request->accepted as $studentId => $accepted) {
-            $data[$studentId] = $this->acceptedPivotFlag($accepted);
-        }
-        return $data;
-    }
-
-    /**
-     * Readable helper to build the sync() suitable pivot data
-     * @param  boolean $accepted Whether or not a student was accepted
-     * @return array
-     */
-    private function acceptedPivotFlag($accepted)
-    {
-        return [ 'accepted' => $accepted ];
-    }
-
-    /**
-     * Loops over all the students passed and removes any other projects if they've been accepted onto this one
-     * @param array $studentList Array of students from buildListOfStudents()
-     * @param integer $projectId   ID of the project we're working with
-     */
-    private function setThisAsOnlyChoiceForAcceptedStudents($studentList, $projectId)
-    {
-        foreach ($studentList as $studentId => $accepted) {
-            $this->updateStudentProjectsWhereAccepted($studentId, $projectId, $accepted['accepted']);
-        }
-    }
-
-    /**
-     * If the student was accepted onto the project - remove all other choices they've made via sync()
-     * @param  integer $studentId
-     * @param  integer $projectId
-     * @param  boolean $accepted
-     */
-    private function updateStudentProjectsWhereAccepted($studentId, $projectId, $accepted)
-    {
-        if ($accepted) {
-            $student = User::findOrFail($studentId);
-            $student->projects()->sync([$projectId]);
-        }
+        EventLog::log(Auth::user()->id, "Accepted student {$student->fullName()} onto project {$project->title}");
+        return redirect()->route('project.show', $project->id)->with('success_message', 'Allocations Saved');
     }
 }

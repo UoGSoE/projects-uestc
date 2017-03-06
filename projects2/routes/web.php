@@ -30,11 +30,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/project/{id}', 'ProjectController@update')->name('project.update');
         Route::delete('/project/{id}', 'ProjectController@destroy')->name('project.destroy');
 
-        Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudents')->name('project.enrol');
+        Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudent')->name('project.enrol');
 
         Route::get('/profile/{id}', 'StudentProfileController@show')->name('student.profile_show');
         Route::get('/profile/{id}/cv', 'StudentProfileController@downloadCV')->name('student.cv');
-
     });
 
     Route::group(['middleware' => ['student']], function () {
