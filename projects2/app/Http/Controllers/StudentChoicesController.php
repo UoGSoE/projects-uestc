@@ -41,7 +41,6 @@ class StudentChoicesController extends Controller
     private function checkChoicesAreOk($choices)
     {
         $requiredChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
-
         if (count($choices) != $requiredChoices) {
             return redirect()->back()->withErrors(['choice_number' => "You must pick {$requiredChoices} choices"]);
         }

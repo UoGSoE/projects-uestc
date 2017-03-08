@@ -69,7 +69,10 @@ class User extends Model implements
 
     public function projectsArray($index = null)
     {
-        $projectArray = [null, null, null];
+        $projectArray = [];
+        foreach (range(1, ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3))) as $counter) {
+            $projectArray[] = null;
+        }
         $projects = $this->projects()->orderBy('title')->get();
         $offset = 0;
         while ($project = $projects->shift()) {

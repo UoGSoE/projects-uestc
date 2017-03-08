@@ -4,17 +4,7 @@
 
     <h2>
         Projects
-        @if ($applicationsEnabled)
-            <form method="POST" action="{!! route('admin.deny_applications') !!}" class="pull-right">
-                {!! csrf_field() !!}
-                <button class="btn btn-default pull-right">Deny Applications</button>
-            </form>
-        @else
-            <form method="POST" action="{!! route('admin.allow_applications') !!}" class="pull-right">
-                {!! csrf_field() !!}
-                <button class="btn btn-default pull-right">Enable Applications</button>
-            </form>
-        @endif
+        <a href="{!! route('options.edit') !!}" class="btn btn-default pull-right">Options</a>
     </h2>
     <p>
         Filters :
@@ -41,10 +31,12 @@
             <tr>
                 <th>Title</th>
                 <th>Owner</th>
-                <th>Type</th>
-                <th title="Max, Applied, Accepted">Students</th>
-                <th>Created</th>
-                <th>Updated</th>
+                <th>Discipline</th>
+                <th>1st round choices</th>
+                <th>1st round result</th>
+                <th>2nd round choices</th>
+                <th>2nd round result</th>
+                <th>Student</th>
             </tr>
         </thead>
         <tbody>
@@ -71,13 +63,25 @@
                             {{ $project->disciplineTitle() }}
                         @endif
                     </td>
-                    <td>
-                        {{ $project->maximum_students }},
-                        {{ $project->students->count() }},
-                        {{ $project->acceptedStudents->count() }}
+                    <td applicants="round1-applicants-{{ $project->roundStudentCount(1) }}">
+                        {{ $project->roundStudentCount(1) }}
                     </td>
-                    <td>{{ $project->created_at->format('d/m/Y') }}</td>
-                    <td>{{ $project->updated_at->format('d/m/Y') }}</td>
+                    <td applicants="round1-accepted-{{ $project->roundStudentAcceptedCount(1) }}">
+                        {{ $project->roundStudentAcceptedCount(1) }}
+                    </td>
+                    <td applicants="round2-applicants-{{ $project->roundStudentCount(2) }}">
+                        {{ $project->roundStudentCount(2) }}
+                    </td>
+                    <td applicants="round2-accepted-{{ $project->roundStudentAcceptedCount(2) }}">
+                        {{ $project->roundStudentAcceptedCount(2) }}
+                    </td>
+                    <td>
+                        @if ($project->numberAccepted() > 0)
+                            @foreach ($project->acceptedStudents()->get() as $student)
+                                {{ $student->fullname() }}
+                            @endforeach
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>

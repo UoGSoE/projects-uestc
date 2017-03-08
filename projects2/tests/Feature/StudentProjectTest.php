@@ -64,14 +64,15 @@ class StudentProjectTest extends TestCase
     public function test_student_cant_see_projects_which_the_maximum_number_have_already_applied()
     {
         ProjectConfig::setOption('round', 1);
+        $otherStudents = factory(User::class, 6)->states('student')->create();
         $student = factory(User::class)->states('student')->create();
-        $otherStudents = factory(User::class, config('projects.maximumAllowedToApply'))->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
         $project = factory(Project::class)->create(['maximum_students' => 1]);
         $project->courses()->save($course);
         $project->students()->saveMany($otherStudents);
 
+        ProjectConfig::setOption('maximum_applications', 6);
         $response = $this->actingAs($student)
                         ->get('/');
 
@@ -85,10 +86,11 @@ class StudentProjectTest extends TestCase
         ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         $project = factory(Project::class)->create();
-        $required = config('requiredProjectChoices');
+        $required = 3;
 
+        ProjectConfig::setOption('required_choices', $required);
         $response = $this->actingAs($student)
-                        ->post(route('choices.update'), ['choices' => []]);
+                        ->post(route('choices.update'), ['choices' => range(1, $required - 1)]);
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -212,14 +214,12 @@ class StudentProjectTest extends TestCase
         });
         $projectIds = $projects->pluck('id')->toArray();
 
-        \Artisan::call('projects:allowapplications', ['flag' => 'no']);
-
+        ProjectConfig::setOption('applications_allowed', 0);
         $response = $this->actingAs($student)
                         ->post(route('choices.update', ['choices' => $projectIds]));
+
         $response->assertStatus(302);
         $response->assertRedirect('/');
         $response->assertSessionHasErrors(['disabled']);
-
-        \Artisan::call('projects:allowapplications', ['flag' => 'yes']);
     }
 }

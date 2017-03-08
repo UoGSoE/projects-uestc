@@ -6,17 +6,16 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Project;
+use App\ProjectConfig;
 
 class AllowApplicationTest extends TestCase
 {
-    public function test_calling_artisan_command_creates_the_correct_file()
+    public function test_setting_project_config_flag_controls_application_enabling()
     {
-        \Artisan::call('projects:allowapplications', ['flag' => 'no']);
-        $this->assertTrue(file_exists(storage_path('app/projects.disabled')));
+        ProjectConfig::setOption('applications_allowed', 0);
         $this->assertFalse(Project::applicationsEnabled());
 
-        \Artisan::call('projects:allowapplications', ['flag' => 'yes']);
-        $this->assertFalse(file_exists(storage_path('app/projects.disabled')));
+        ProjectConfig::setOption('applications_allowed', 1);
         $this->assertTrue(Project::applicationsEnabled());
     }
 }

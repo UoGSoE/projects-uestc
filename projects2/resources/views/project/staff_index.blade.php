@@ -25,7 +25,7 @@
                             @endif
                         </a>
                     </td>
-                    <td>{{ $project->students->count() }} ({{ $project->maximum_students }} max)</td>
+                    <td>{{ $project->students->count() }} applied, {{ $project->numberAccepted() }} accepted</td>
                     <td>{{ $project->disciplineTitle() }}</td>
                 </tr>
             @endforeach

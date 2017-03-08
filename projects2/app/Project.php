@@ -58,7 +58,7 @@ class Project extends Model
 
     public static function applicationsEnabled()
     {
-        return ! Storage::exists('projects.disabled');
+        return (bool) ProjectConfig::getOption('applications_allowed', '1');
     }
 
     public function isAvailable()
@@ -85,9 +85,14 @@ class Project extends Model
         return $this->acceptedStudents()->count() >= $this->maximum_students;
     }
 
+    public function numberAccepted()
+    {
+        return $this->acceptedStudents()->count();
+    }
+
     public function availablePlaces()
     {
-        return $this->maximum_students - $this->acceptedStudents()->count();
+        return $this->maximum_students - $this->numberAccepted();
     }
 
     public function acceptStudent($student)
@@ -147,14 +152,14 @@ class Project extends Model
         return $round;
     }
 
-    public function type()
+    public function roundStudentCount($roundNumber)
     {
-        return $this->belongsTo(ProjectType::class, 'type_id');
+        return $this->rounds()->where('round', '=', $roundNumber)->get()->count();
     }
 
-    public function programmes()
+    public function roundStudentAcceptedCount($roundNumber)
     {
-        return $this->belongsToMany(Programme::class);
+        return $this->rounds()->where('round', '=', $roundNumber)->where('accepted', '=', true)->get()->count();
     }
 
     public function courses()

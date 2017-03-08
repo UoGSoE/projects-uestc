@@ -21,7 +21,7 @@ class ProjectConfig extends Model
     {
         $entry = static::where('key', '=', $key)->first();
         if (!$entry) {
-            if (!$default) {
+            if (is_null($default)) {
                 throw new \InvalidArgumentException("No config value for {$key}", 1);
             }
             return $default;

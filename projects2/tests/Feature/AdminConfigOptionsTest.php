@@ -17,7 +17,7 @@ class AdminConfigOptionsTest extends TestCase
 
         $response = $this->actingAs($admin)->post(route('options.update'), [
             'logins_allowed' => true,
-            'current_round' => 1,
+            'round' => 1,
             'applications_allowed' => true,
             'required_choices' => 3,
             'maximum_applications' => 6,
@@ -28,7 +28,7 @@ class AdminConfigOptionsTest extends TestCase
         $this->assertDatabaseHas('project_configs', ['key' => 'logins_allowed', 'value' => true]);
         $this->assertDatabaseHas('project_configs', ['key' => 'required_choices', 'value' => 3]);
         $this->assertDatabaseHas('project_configs', ['key' => 'maximum_applications', 'value' => 6]);
-        $this->assertDatabaseHas('project_configs', ['key' => 'current_round', 'value' => 1]);
+        $this->assertDatabaseHas('project_configs', ['key' => 'round', 'value' => 1]);
         $this->assertDatabaseHas('project_configs', ['key' => 'applications_allowed', 'value' => true]);
     }
 }
