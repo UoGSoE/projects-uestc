@@ -3,6 +3,7 @@
 
 namespace Tests\Feature;
 
+use App\ProjectConfig;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -15,6 +16,7 @@ class AdminBulkAllocateTest extends TestCase
     /** @test */
     public function admin_can_bulk_allocate_students()
     {
+        ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();
         $project1 = $this->createProject();
         $project2 = $this->createProject();
@@ -39,6 +41,7 @@ class AdminBulkAllocateTest extends TestCase
     /** @test */
     public function notifications_are_sent_to_students_when_bulk_allocated_to_projects()
     {
+        ProjectConfig::setOption('round', 1);
         Notification::fake();
         $admin = $this->createAdmin();
         $project = $this->createProject();
@@ -60,6 +63,7 @@ class AdminBulkAllocateTest extends TestCase
     /** @test */
     public function admin_cant_bulk_allocate_more_students_to_a_project_than_allowed()
     {
+        ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();
         $project1 = $this->createProject(['maximum_students' => 1]);
         $student1 = $this->createStudent();

@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Project;
-use App\Location;
-use App\ProjectType;
+use App\ProjectConfig;
 use App\Discipline;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -35,7 +34,8 @@ class ReportController extends Controller
     public function allStudents()
     {
         $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
-        return view('report.all_students', compact('students'));
+        $requiredChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices'));
+        return view('report.all_students', compact('students', 'requiredChoices'));
     }
 
     public function allStaff()

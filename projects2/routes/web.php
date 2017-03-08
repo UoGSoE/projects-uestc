@@ -81,6 +81,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('discipline/{id}', 'DisciplineController@update')->name('discipline.update');
 
         Route::get('events', 'EventLogController@index')->name('event.index');
+
+        Route::get('options', 'OptionsController@edit')->name('options.edit');
+        Route::post('options', 'OptionsController@update')->name('options.update');
     });
 
     Route::group(['middleware' => ['convenor_or_admin'], 'prefix' => '/admin'], function () {

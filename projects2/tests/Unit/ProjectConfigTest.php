@@ -42,11 +42,15 @@ class ProjectConfigTest extends TestCase
     }
 
     /** @test */
-    public function getting_a_non_existant_value_returns_null_if_no_default_given()
+    public function getting_a_non_existant_value_throws_an_exception_if_no_default_given()
     {
-        $value = ProjectConfig::getOption('testkey');
+        try {
+            $value = ProjectConfig::getOption('testkey');
+        } catch (\InvalidArgumentException $e) {
+            return;
+        }
 
-        $this->assertEquals(null, $value);        
+        $this->fail('Getting a non-existant value with no default passed did not throw an Exception');
     }
 
     /** @test */

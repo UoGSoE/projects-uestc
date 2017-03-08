@@ -17,6 +17,7 @@ class ProjectTest extends TestCase
 
     public function test_a_project_cannot_be_oversubscribed()
     {
+        ProjectConfig::setOption('round', 1);
         $project = factory(Project::class)->create();
         $student = factory(User::class)->states('student')->create();
         $otherStudents = factory(User::class, config('projects.maximumAllowedToApply'))->states('student')->create();
@@ -33,6 +34,7 @@ class ProjectTest extends TestCase
 
     public function test_a_project_cannot_accept_more_students_than_allowed()
     {
+        ProjectConfig::setOption('round', 1);
         $project = factory(Project::class)->create(['maximum_students' => 1]);
         $student1 = factory(User::class)->states('student')->create();
         $student2 = factory(User::class)->states('student')->create();
@@ -50,6 +52,7 @@ class ProjectTest extends TestCase
 
     public function test_can_add_multiple_students()
     {
+        ProjectConfig::setOption('round', 1);
         $project = factory(Project::class)->create();
         $student1 = factory(User::class)->states('student')->create();
         $student2 = factory(User::class)->states('student')->create();
@@ -62,6 +65,7 @@ class ProjectTest extends TestCase
 
     public function test_cannot_add_the_same_student_more_than_once()
     {
+        ProjectConfig::setOption('round', 1);
         $project = factory(Project::class)->create();
         $student = factory(User::class)->states('student')->create();
 
@@ -73,6 +77,7 @@ class ProjectTest extends TestCase
 
     public function test_accepting_a_student_removes_other_students_from_the_project_if_only_one_allowed()
     {
+        ProjectConfig::setOption('round', 1);
         $project = factory(Project::class)->create(['maximum_students' => 1]);
         $student1 = factory(User::class)->states('student')->create();
         $student2 = factory(User::class)->states('student')->create();
@@ -88,6 +93,7 @@ class ProjectTest extends TestCase
 
     public function test_accepting_a_student_removes_other_students_from_the_project_if_now_filled()
     {
+        ProjectConfig::setOption('round', 1);
         $project = factory(Project::class)->create(['maximum_students' => 2]);
         $student1 = factory(User::class)->states('student')->create();
         $student2 = factory(User::class)->states('student')->create();
@@ -108,9 +114,9 @@ class ProjectTest extends TestCase
     /** @test */
     public function adding_a_student_to_a_project_updates_the_project_rounds_information()
     {
+        ProjectConfig::setOption('round', 1);
         $project = $this->createProject();
         $student = $this->createStudent();
-        ProjectConfig::setOption('round', 1);
 
         $project->addStudent($student);
 

@@ -5,12 +5,14 @@ namespace Tests\Browser;
 
 use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\ProjectConfig;
 
 class AdminBulkActiveTest extends DuskTestCase
 {
     /** @test */
     public function admin_can_bulk_set_project_is_active_flags()
     {
+        ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();
         $project1 = $this->createProject(['is_active' => false]);
         $project2 = $this->createProject(['is_active' => true]);

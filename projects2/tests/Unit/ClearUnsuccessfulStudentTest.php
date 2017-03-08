@@ -5,7 +5,7 @@ namespace Tests\Unit;
 
 use App\Project;
 use App\User;
-
+use App\ProjectConfig;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -16,6 +16,7 @@ class ClearUnsuccessfulStudentTest extends TestCase
 
     public function test_can_remove_all_unsuccessful_student_choices()
     {
+        ProjectConfig::setOption('round', 1);
         $project1 = factory(Project::class)->create();
         $project2 = factory(Project::class)->create(['maximum_students' => 2]);
         $student1 = factory(User::class)->states('student')->create();

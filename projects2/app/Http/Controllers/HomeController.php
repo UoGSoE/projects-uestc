@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Project;
+use App\ProjectConfig;
 
 class HomeController extends Controller
 {
@@ -21,7 +22,7 @@ class HomeController extends Controller
         return view(
             'project.student_index',
             ['applicationsEnabled' => Project::applicationsEnabled(),
-             'requiredProjectChoices' => config('projects.requiredProjectChoices')]
+             'requiredProjectChoices' => ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3))]
         );
     }
 

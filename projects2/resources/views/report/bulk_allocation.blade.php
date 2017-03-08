@@ -18,7 +18,7 @@
         <thead>
             <tr>
                 <th>Student</th>
-                @foreach (range(1, config('projects.requiredProjectChoices')) as $index)
+                @foreach (range(1, $requiredChoices) as $index)
                     <th></th>
                 @endforeach
             </tr>
@@ -28,7 +28,7 @@
                 @if ($student->unallocated())
                     <tr>
                         <td>{{ $student->fullName() }} ({{ $student->matric() }} {{ $student->course() ? $student->course()->code : 'N/A' }})</td>
-                        @for ($i = 0; $i < config('projects.requiredProjectChoices'); $i++)
+                        @for ($i = 0; $i < $requiredChoices; $i++)
                             <td>
                                 @if (!is_null($student->projectsArray($i)))
                                     @if ($student->projectsArray($i)->isAvailable())

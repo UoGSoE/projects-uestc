@@ -5,6 +5,7 @@ namespace Tests\Browser;
 
 use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\ProjectConfig;
 
 class StaffProjectTest extends DuskTestCase
 {
@@ -85,6 +86,7 @@ class StaffProjectTest extends DuskTestCase
     /** @test */
     public function staff_can_accept_a_student_onto_project()
     {
+        ProjectConfig::setOption('round', 1);
         $staff = $this->createStaff();
         $course = $this->createCourse();
         $student = $this->createStudent();

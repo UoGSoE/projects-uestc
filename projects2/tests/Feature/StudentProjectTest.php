@@ -11,6 +11,7 @@ use App\User;
 use App\Course;
 use App\Project;
 use App\Discipline;
+use App\ProjectConfig;
 
 class StudentProjectTest extends TestCase
 {
@@ -18,6 +19,7 @@ class StudentProjectTest extends TestCase
 
     public function test_a_student_can_see_applicable_available_projects()
     {
+        ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
@@ -41,6 +43,7 @@ class StudentProjectTest extends TestCase
 
     public function test_student_cant_see_projects_which_already_have_the_maximum_number_of_students_accepted()
     {
+        ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         $student2 = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
@@ -60,6 +63,7 @@ class StudentProjectTest extends TestCase
 
     public function test_student_cant_see_projects_which_the_maximum_number_have_already_applied()
     {
+        ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         $otherStudents = factory(User::class, config('projects.maximumAllowedToApply'))->states('student')->create();
         $course = factory(Course::class)->create();
@@ -78,6 +82,7 @@ class StudentProjectTest extends TestCase
 
     public function test_a_student_must_apply_for_the_required_number_of_projects()
     {
+        ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         $project = factory(Project::class)->create();
         $required = config('requiredProjectChoices');
@@ -99,6 +104,7 @@ class StudentProjectTest extends TestCase
 
     public function test_a_student_can_successfully_apply_for_available_projects()
     {
+        ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
@@ -117,6 +123,7 @@ class StudentProjectTest extends TestCase
 
     public function test_a_student_can_resubmit_and_change_their_choices()
     {
+        ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
@@ -145,6 +152,7 @@ class StudentProjectTest extends TestCase
      */
     public function test_a_student_cant_apply_for_projects_which_are_fully_subscribed()
     {
+        ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
@@ -171,6 +179,7 @@ class StudentProjectTest extends TestCase
      */
     public function test_a_student_cant_apply_for_projects_which_are_full()
     {
+        ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
@@ -193,6 +202,7 @@ class StudentProjectTest extends TestCase
 
     public function test_a_student_cant_apply_for_projects_when_in_read_only_mode()
     {
+        ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);

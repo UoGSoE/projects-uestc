@@ -198,6 +198,6 @@ class AuthController extends Controller
 
     public function studentLoginsDisabled($username)
     {
-        return ($this->isAStudent($username) and config("projects.studentsDisabled") == true);
+        return ($this->isAStudent($username) and ProjectConfig::getOption('logins_allowed', config("projects.studentsDisabled")) == true);
     }
 }

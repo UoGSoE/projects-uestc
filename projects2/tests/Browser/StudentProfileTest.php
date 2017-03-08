@@ -5,6 +5,7 @@ namespace Tests\Browser;
 
 use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\ProjectConfig;
 
 class StudentProfileTest extends DuskTestCase
 {
@@ -33,6 +34,7 @@ class StudentProfileTest extends DuskTestCase
     /** @test */
     public function staff_can_view_the_profile_of_a_student_who_has_applied_for_their_project()
     {
+        ProjectConfig::setOption('round', 1);
         $student = $this->createStudent();
         $filename = 'tests/data/test_cv.pdf';
         $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);

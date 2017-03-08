@@ -5,12 +5,14 @@ namespace Tests\Browser;
 
 use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\ProjectConfig;
 
 class BulkAllocationTest extends DuskTestCase
 {
     /** @test */
     public function admin_can_bulk_allocate_students_to_projects()
     {
+        ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();
         $student1 = $this->createStudent();
         $student2 = $this->createStudent();

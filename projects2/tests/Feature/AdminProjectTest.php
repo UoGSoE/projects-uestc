@@ -5,6 +5,7 @@ namespace Tests\Feature;
 
 use App\Project;
 use Tests\TestCase;
+use App\ProjectConfig;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -47,6 +48,7 @@ class AdminProjectTest extends TestCase
 
     public function test_admin_can_clear_all_unsuccessful_student_applications()
     {
+        ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();
         $project1 = $this->createProject();
         $project2 = $this->createProject();

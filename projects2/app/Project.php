@@ -7,6 +7,7 @@ use App\Exceptions\ProjectOversubscribedException;
 use App\Exceptions\StudentAlreadyAllocatedException;
 use Storage;
 use App\Notifications\AllocatedToProject;
+use App\ProjectConfig;
 
 class Project extends Model
 {
@@ -76,7 +77,7 @@ class Project extends Model
 
     public function isFullySubscribed()
     {
-        return $this->students()->count() >= config('projects.maximumAllowedToApply');
+        return $this->students()->count() >= ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6));
     }
 
     public function isFull()

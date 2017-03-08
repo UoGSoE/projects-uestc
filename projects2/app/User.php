@@ -347,7 +347,7 @@ class User extends Model implements
         }
     }
 
-    protected function roundAccept($projectId)
+    public function roundAccept($projectId)
     {
         $currentRound = ProjectConfig::getOption('round');
         $round = $this->rounds()->wherePivot('round', '=', $currentRound)->wherePivot('project_id', '=', $projectId)->first();
@@ -355,6 +355,7 @@ class User extends Model implements
             $round = new ProjectRound;
             $round->project_id = $projectId;
             $round->user_id = $this->id;
+            $round->round = $currentRound;
         }
         $round->accepted = true;
         $round->save();

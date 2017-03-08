@@ -7,6 +7,7 @@ use Excel;
 use App\User;
 use App\Course;
 use App\EventLog;
+use App\ProjectConfig;
 use App\Http\Requests;
 use App\PasswordReset;
 use Illuminate\Http\Request;
@@ -45,7 +46,8 @@ class CourseController extends Controller
     public function show($id)
     {
         $course = Course::findOrFail($id);
-        return view('course.show', compact('course'));
+        $requiredChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices'));
+        return view('course.show', compact('course', 'requiredChoices'));
     }
 
     public function edit($id)

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;
 use App\Course;
 use App\Project;
+use App\ProjectConfig;
 use App\Notifications\AllocatedToProject;
 use Illuminate\Support\Facades\Notification;
 
@@ -114,6 +115,7 @@ class StaffProjectTest extends TestCase
     /** @test */
     public function staff_can_accept_a_student_onto_a_project()
     {
+        ProjectConfig::setOption('round', 1);
         $staff = factory(User::class)->states('staff')->create();
         $student = factory(User::class)->states('student')->create();
         $project = factory(Project::class)->create(['user_id' => $staff->id]);
@@ -156,6 +158,7 @@ class StaffProjectTest extends TestCase
     */
     public function staff_cant_accept_a_student_onto_a_project_if_they_are_already_accepted_onto_one()
     {
+        ProjectConfig::setOption('round', 1);
         $staff1 = factory(User::class)->states('staff')->create();
         $staff2 = factory(User::class)->states('staff')->create();
         $student = factory(User::class)->states('student')->create();
@@ -174,6 +177,7 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_can_preallocate_a_student_to_a_project()
     {
+        ProjectConfig::setOption('round', 1);
         $staff = factory(User::class)->states('staff')->create();
         $student = factory(User::class)->states('student')->create();
         $project = factory(Project::class)->create(['user_id' => $staff->id]);

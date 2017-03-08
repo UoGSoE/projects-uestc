@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>Name</th>
-                @foreach (range(1, config('projects.requiredProjectChoices')) as $index)
+                @foreach (range(1, $requiredChoices) as $index)
                     <th></th>
                 @endforeach
             </tr>
@@ -17,7 +17,7 @@
                             {{ $student->course() ? $student->course()->code : 'N/A' }})
                         </a>
                     </td>
-                    @foreach (range(0, config('projects.requiredProjectChoices') - 1) as $index)
+                    @foreach (range(0, $requiredChoices - 1) as $index)
                         <td>
                             @if ($student->projectsArray($index))
                                 {{ $student->projectsArray($index)->title }}

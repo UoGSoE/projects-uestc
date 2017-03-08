@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\EventLog;
 use App\Project;
+use App\ProjectConfig;
 
 class StudentChoicesController extends Controller
 {
@@ -39,7 +40,7 @@ class StudentChoicesController extends Controller
 
     private function checkChoicesAreOk($choices)
     {
-        $requiredChoices = config('projects.requiredProjectChoices', 5);
+        $requiredChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
 
         if (count($choices) != $requiredChoices) {
             return redirect()->back()->withErrors(['choice_number' => "You must pick {$requiredChoices} choices"]);

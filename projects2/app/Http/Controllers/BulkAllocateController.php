@@ -6,13 +6,15 @@ use Illuminate\Http\Request;
 use App\Exceptions\ProjectOversubscribedException;
 use App\User;
 use App\Project;
+use App\ProjectConfig;
 
 class BulkAllocateController extends Controller
 {
     public function edit()
     {
         $students = User::students()->orderBy('surname')->get();
-        return view('report.bulk_allocation', compact('students'));
+        $requiredChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices'));
+        return view('report.bulk_allocation', compact('students', 'requiredChoices'));
     }
 
     public function update(Request $request)
