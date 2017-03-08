@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;
+use App\ProjectConfig;
 
 class UserAdminTest extends TestCase
 {
@@ -102,5 +103,27 @@ class UserAdminTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'abcd@qpwoeiryt.io']);
         $this->assertDatabaseHas('users', ['email' => 'xyz@gmail.com']);
         $this->assertDatabaseHas('users', ['email' => $staff->email]);
+    }
+
+    /** @test */
+    public function deleting_a_student_removes_all_their_project_choices_and_round_stats()
+    {
+        ProjectConfig::setOption('round', 1);
+        $student = $this->createStudent();
+        $student2 = $this->createStudent();
+        $admin = $this->createAdmin();
+        $project1 = $this->createProject();
+        $project2 = $this->createProject();
+        $project1->addStudent($student);
+        $project2->addStudent($student);
+        $project2->addStudent($student2);
+
+        $student->delete();
+
+        $this->assertDatabaseMissing('users', ['id' => $student->id]);
+        $this->assertDatabaseMissing('project_student', ['user_id' => $student->id]);
+        $this->assertDatabaseMissing('project_rounds', ['user_id' => $student->id]);
+        $this->assertDatabaseHas('project_student', ['user_id' => $student2->id]);
+        $this->assertDatabaseHas('project_rounds', ['user_id' => $student2->id]);
     }
 }

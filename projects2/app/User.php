@@ -44,6 +44,24 @@ class User extends Model implements
      */
     protected $hidden = ['password', 'remember_token'];
 
+    public static function boot()
+    {
+        parent::boot();
+        
+        User::deleting(function ($user) {
+            foreach ($user->rounds as $round) {
+                $round->delete();
+            }
+            if ($user->isStudent()) {
+                $user->projects()->detach();
+            } else {
+                foreach ($user->projects as $project) {
+                    $project->delete();
+                }
+            }
+        });
+    }
+
     public function scopeStudents($query)
     {
         return $query->where('is_student', '=', 1);
