@@ -33,9 +33,9 @@
                 <th>Owner</th>
                 <th>Discipline</th>
                 <th>1st round choices</th>
-                <th>1st round result</th>
+                <th>Rresult</th>
                 <th>2nd round choices</th>
-                <th>2nd round result</th>
+                <th>Result</th>
                 <th>Student</th>
             </tr>
         </thead>
@@ -67,13 +67,21 @@
                         {{ $project->roundStudentCount(1) }}
                     </td>
                     <td applicants="round1-accepted-{{ $project->roundStudentAcceptedCount(1) }}">
-                        {{ $project->roundStudentAcceptedCount(1) }}
+                        @if ($project->roundStudentAcceptedCount(1) > 0)
+                            Y
+                        @else
+                            N
+                        @endif
                     </td>
                     <td applicants="round2-applicants-{{ $project->roundStudentCount(2) }}">
                         {{ $project->roundStudentCount(2) }}
                     </td>
                     <td applicants="round2-accepted-{{ $project->roundStudentAcceptedCount(2) }}">
-                        {{ $project->roundStudentAcceptedCount(2) }}
+                        @if ($project->roundStudentAcceptedCount(2) > 0)
+                            Y
+                        @else
+                            N
+                        @endif
                     </td>
                     <td>
                         @if ($project->numberAccepted() > 0)
