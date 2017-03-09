@@ -176,6 +176,10 @@ class User extends Model implements
         return $course->projects()->active()->inRandomOrder()->get();
     }
 
+    /**
+        Returns a JSON encoded map of the projects available to this student.
+        For use in the Vue.js code where students can pick projects.
+    */
     public function availableProjectsJson()
     {
         $projects = $this->availableProjects();
@@ -252,6 +256,11 @@ class User extends Model implements
     public function isAllocated()
     {
         return ! $this->unallocated();
+    }
+
+    public function allocatedProject()
+    {
+        return $this->projects()->wherePivot('accepted', '=', true)->first();
     }
 
     /**
@@ -384,5 +393,14 @@ class User extends Model implements
         }
         $round->accepted = true;
         $round->save();
+    }
+
+    public function acceptedOnRound($round)
+    {
+        $round = ProjectRound::where('user_id', '=', $this->id)->where('accepted', '=', true)->where('round', '=', $round)->first();
+        if ($round) {
+            return true;
+        }
+        return false;
     }
 }

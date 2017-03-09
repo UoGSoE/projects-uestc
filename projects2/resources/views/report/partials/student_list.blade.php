@@ -3,29 +3,50 @@
         <thead>
             <tr>
                 <th>Name</th>
-                @foreach (range(1, $requiredChoices) as $index)
-                    <th></th>
-                @endforeach
+                <th>1st Round</th>
+                <th>2nd Round</th>
+                <th>Project</th>
+                <th>Supervisor</th>
+                <th>Discipline</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($students as $student)
                 <tr class="">
                     <td @if ($student->unallocated()) class="bg-danger" @endif>
-                        <a href="{!! action('UserController@show', $student->id) !!}">
+                        <a href="{!! route('user.show', $student->id) !!}">
                             {{ $student->fullName() }} ({{ $student->matric() }} 
-                            {{ $student->course() ? $student->course()->code : 'N/A' }})
                         </a>
                     </td>
-                    @foreach (range(0, $requiredChoices - 1) as $index)
+                    <td>
+                        @if ($student->acceptedOnRound(1))
+                            Y
+                        @else
+                            N
+                        @endif
+                    </td>
+                    <td>
+                        @if ($student->acceptedOnRound(2))
+                            Y
+                        @else
+                            N
+                        @endif
+                    </td>
+                    @if ($student->unallocated())
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    @else
                         <td>
-                            @if ($student->projectsArray($index))
-                                {{ $student->projectsArray($index)->title }}
-                            @else
-                                N/A
-                            @endif
+                            {{ $student->allocatedProject()->title }}
                         </td>
-                    @endforeach
+                        <td>
+                            {{ $student->allocatedProject()->owner->fullName() }}
+                        </td>
+                        <td>
+                            {{ $student->allocatedProject()->disciplineTitle() }}
+                        </td>
+                    @endif
                 </tr>
             @endforeach
         </tbody>
