@@ -11,7 +11,10 @@ use App\ProjectConfig;
 
 class Project extends Model
 {
-    protected $fillable = ['title', 'description', 'prereq', 'is_active', 'user_id', 'type_id', 'maximum_students', 'discipline_id'];
+    protected $fillable = [
+        'title', 'description', 'prereq', 'is_active', 'user_id', 'type_id',
+        'maximum_students', 'discipline_id'
+    ];
 
     public function scopeActive($query)
     {
@@ -26,6 +29,11 @@ class Project extends Model
     public function students()
     {
         return $this->belongsToMany(User::class, 'project_student')->withPivot('accepted');
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class);
     }
 
     public function rounds()
@@ -77,12 +85,19 @@ class Project extends Model
 
     public function isFullySubscribed()
     {
-        return $this->students()->count() >= ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6));
+        $maximumAllowedToApply = ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6));
+        return $this->students()->count() >= $maximumAllowedToApply;
     }
 
     public function isFull()
     {
         return $this->acceptedStudents()->count() >= $this->maximum_students;
+    }
+
+
+    public function acceptedStudents()
+    {
+        return $this->students()->wherePivot('accepted', '=', 1);
     }
 
     public function numberAccepted()
@@ -115,11 +130,6 @@ class Project extends Model
         if ($this->isFull()) {
             $this->removeUnsucessfulStudents();
         }
-    }
-
-    public function acceptedStudents()
-    {
-        return $this->students()->wherePivot('accepted', '=', 1);
     }
 
     public function addStudent($student, $accepted = false)
@@ -162,39 +172,6 @@ class Project extends Model
         return $this->rounds()->where('round', '=', $roundNumber)->where('accepted', '=', true)->get()->count();
     }
 
-    public function courses()
-    {
-        return $this->belongsToMany(Course::class);
-    }
-
-    /**
-     * Mutator - just to make sure an empty string is saved as null - makes display in views easier
-     * as we can use {{ $project->prereq or 'None' }}
-     * @param string $prereq
-     */
-    public function setPrereqAttribute($prereq)
-    {
-        if (!$prereq) {
-            $prereq = null;
-        }
-        $this->attributes['prereq'] = $prereq;
-    }
-
-    /**
-     * Check if this project has a given programme id (not used by UESTC)
-     * @param  integer  $id
-     * @return boolean
-     */
-    public function hasProgramme($id)
-    {
-        return $this->programmes->contains($id);
-    }
-
-    /**
-     * Check if this project is associated with a given course id
-     * @param  integer  $id
-     * @return boolean
-     */
     public function hasCourse($id)
     {
         return $this->courses->contains($id);
@@ -204,10 +181,16 @@ class Project extends Model
     {
         ProjectLink::where('project_id', '=', $this->id)->delete();
         foreach ($links as $link) {
-            if ($link['url']) {
-                $this->links()->create(['url' => $link['url']]);
-            }
+            $this->addLink($link['url']);
         }
+    }
+
+    protected function addLink($url)
+    {
+        if (!$url) {
+            return;
+        }
+        $this->links()->create(['url' => $url]);
     }
 
     public function addFiles($files)
