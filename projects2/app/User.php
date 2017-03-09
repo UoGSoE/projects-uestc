@@ -85,6 +85,20 @@ class User extends Model implements
         return $this->hasMany(Project::class)->with('students', 'acceptedStudents');
     }
 
+    public function resetToken()
+    {
+        return $this->hasOne(PasswordReset::class);
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_student');
+    }
+
+    /**
+        This returns an array of fixed length (the number of required project choices)
+        for use in HTML tables (most in the admin/convenor reports)
+    */
     public function projectsArray($index = null)
     {
         $projectArray = [];
@@ -101,16 +115,6 @@ class User extends Model implements
             return $projectArray[$index];
         }
         return $projectArray;
-    }
-
-    public function resetToken()
-    {
-        return $this->hasOne(PasswordReset::class);
-    }
-
-    public function courses()
-    {
-        return $this->belongsToMany(Course::class, 'course_student');
     }
 
     public function totalStudents()
