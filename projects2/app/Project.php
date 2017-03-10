@@ -97,7 +97,7 @@ class Project extends Model
 
     public function acceptedStudents()
     {
-        return $this->students()->wherePivot('accepted', '=', 1);
+        return $this->students()->where('accepted', '=', 1);
     }
 
     public function numberAccepted()
@@ -228,7 +228,7 @@ class Project extends Model
 
     public function removeUnsucessfulStudents()
     {
-        $notChosen = $this->students()->wherePivot('accepted', false)->get();
+        $notChosen = $this->students()->where('accepted', false)->get();
         $this->students()->detach($notChosen->pluck('id')->toArray());
     }
 }

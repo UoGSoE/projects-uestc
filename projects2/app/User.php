@@ -250,7 +250,7 @@ class User extends Model implements
 
     public function unallocated()
     {
-        return $this->projects()->wherePivot('accepted', '=', true)->count() == 0;
+        return $this->projects()->where('accepted', '=', true)->count() == 0;
     }
 
     public function isAllocated()
@@ -260,7 +260,7 @@ class User extends Model implements
 
     public function allocatedProject()
     {
-        return $this->projects()->wherePivot('accepted', '=', true)->first();
+        return $this->projects()->where('accepted', '=', true)->first();
     }
 
     /**
@@ -372,7 +372,7 @@ class User extends Model implements
     protected function addRoundsInfo($choices)
     {
         $currentRound = ProjectConfig::getOption('round');
-        $rounds = $this->rounds()->wherePivot('round', '=', $currentRound)->get();
+        $rounds = $this->rounds()->where('round', '=', $currentRound)->get();
         foreach ($rounds as $round) {
             $round->delete();
         }
@@ -384,7 +384,7 @@ class User extends Model implements
     public function roundAccept($projectId)
     {
         $currentRound = ProjectConfig::getOption('round');
-        $round = $this->rounds()->wherePivot('round', '=', $currentRound)->wherePivot('project_id', '=', $projectId)->first();
+        $round = $this->rounds()->where('round', '=', $currentRound)->where('project_id', '=', $projectId)->first();
         if (!$round) {
             $round = new ProjectRound;
             $round->project_id = $projectId;
