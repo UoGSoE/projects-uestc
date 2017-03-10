@@ -401,6 +401,6 @@ class User extends Model implements
         if ($round) {
             return true;
         }
-        return false;
+        return 0; // this is because blade template echo's false as an empty string (possibly a new bug)
     }
 }

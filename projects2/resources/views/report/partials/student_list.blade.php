@@ -18,14 +18,14 @@
                             {{ $student->fullName() }} ({{ $student->matric() }} 
                         </a>
                     </td>
-                    <td>
+                    <td data="round_1_student_{{ $student->id}}_accepted_{{ $student->acceptedOnRound(1) }}">
                         @if ($student->acceptedOnRound(1))
                             Y
                         @else
                             N
                         @endif
                     </td>
-                    <td>
+                    <td data="round_2_student_{{ $student->id}}_accepted_{{ $student->acceptedOnRound(2) }}">
                         @if ($student->acceptedOnRound(2))
                             Y
                         @else
