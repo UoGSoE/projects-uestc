@@ -122,4 +122,5 @@ class ProjectTest extends TestCase
 
         $this->assertDatabaseHas('project_rounds', ['user_id' => $student->id, 'project_id' => $project->id, 'round' => 1]);
     }
+
 }

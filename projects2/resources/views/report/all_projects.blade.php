@@ -32,6 +32,7 @@
                 <th>Title</th>
                 <th>Owner</th>
                 <th>Discipline</th>
+                <th>Preallocated</th>
                 <th>1st round choices</th>
                 <th>Rresult</th>
                 <th>2nd round choices</th>
@@ -61,6 +62,15 @@
                             </a>
                         @else
                             {{ $project->disciplineTitle() }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($project->manually_allocated)
+                            <span class="preallocated-{{ $project->acceptedStudents()->first()->id }}">
+                                Y
+                            </span>
+                        @else
+                            N
                         @endif
                     </td>
                     <td applicants="round1-applicants-{{ $project->roundStudentCount(1) }}">

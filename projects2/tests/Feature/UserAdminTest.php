@@ -86,6 +86,64 @@ class UserAdminTest extends TestCase
         $this->assertDatabaseMissing('users', ['email' => $regularUser->email]);
     }
 
+    public function test_admin_can_preallocate_a_student_to_a_project()
+    {
+        ProjectConfig::setOption('round', 1);
+        $admin = $this->createAdmin();
+        $student = $this->createStudent();
+        $project = $this->createProject();
+
+        $response = $this->actingAs($admin)
+                        ->post(route('user.update', $student->id), [
+                            'username' => 'HELLOKITTY',
+                            'surname' => 'Kitty',
+                            'forenames' => 'Hello',
+                            'is_student' => true,
+                            'email' => 'hellokitty@example.com',
+                            'project_id' => $project->id
+                        ]);
+
+        $response->assertStatus(302);
+        $this->assertTrue($project->fresh()->manually_allocated);
+        $this->assertTrue($student->isAllocated());
+        $this->assertEquals(1, $student->projects()->count());
+    }
+
+    /** @test */
+    public function if_a_student_is_already_allocated_they_cant_be_manually_preallocated()
+    {
+        ProjectConfig::setOption('round', 1);
+        $admin = $this->createAdmin();
+        $student = $this->createStudent();
+        $project = $this->createProject();
+        $project->acceptStudent($student);
+
+        $response = $this->actingAs($admin)->get(route('user.edit', $student->id));
+
+        $response->assertStatus(200);
+        $response->assertDontSee($project->title);
+        $response->assertDontSee('inputProject');
+    }
+
+    /** @test */
+    public function if_a_project_is_full_it_doesnt_show_up_for_preallocation()
+    {
+        ProjectConfig::setOption('round', 1);
+        $admin = $this->createAdmin();
+        $student = $this->createStudent();
+        $project = $this->createProject(['maximum_students' => 1]);
+        $project->acceptStudent($student);
+        $project2 = $this->createProject();
+        $student2 = $this->createStudent();
+
+        $response = $this->actingAs($admin)->get(route('user.edit', $student2->id));
+
+        $response->assertStatus(200);
+        $response->assertDontSee($project->title);
+        $response->assertSee('inputProject');
+        $response->assertSee($project2->title);
+    }
+
     /** @test */
     public function can_import_a_list_of_staff_from_a_spreadsheet()
     {

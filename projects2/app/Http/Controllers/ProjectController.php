@@ -133,7 +133,7 @@ class ProjectController extends Controller
         $project->fill($request->input());
         $project->save();
         if ($request->has('student_id')) {
-            $project->acceptStudent($request->student_id);
+            $project->preAllocate($request->student_id);
         }
         if ($request->has('links')) {
             $project->syncLinks($request->links);

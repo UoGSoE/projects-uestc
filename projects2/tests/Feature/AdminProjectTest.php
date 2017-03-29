@@ -71,4 +71,26 @@ class AdminProjectTest extends TestCase
         $this->assertEquals(1, $project2->students()->count());
     }
 
+    /** @test */
+    public function manually_allocating_a_student_to_a_project_sets_the_preallocated_flag()
+    {
+        ProjectConfig::setOption('round', 1);
+        $project = $this->createProject();
+        $student = $this->createStudent();
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+
+        $response = $this->actingAs($admin)->post(route('project.update', $project->id), [
+            'title' => 'HELLO',
+            'description' => 'THERE',
+            'courses' => [$course->id],
+            'maximum_students' => 1,
+            'user_id' => $project->user_id,
+            'student_id' => $student->id
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('project.show', $project->id));
+        $this->assertTrue($project->fresh()->manually_allocated);
+    }
 }

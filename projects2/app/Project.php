@@ -16,6 +16,10 @@ class Project extends Model
         'maximum_students', 'discipline_id'
     ];
 
+    protected $casts = [
+        'manually_allocated' => 'boolean'
+    ];
+
     public function scopeActive($query)
     {
         return $query->where('is_active', '=', 1);
@@ -143,6 +147,13 @@ class Project extends Model
         }
         $this->students()->sync([$student->id => ['accepted' => $accepted]], false);
         $this->updateRoundsInfo($student);
+    }
+
+    public function preAllocate($student)
+    {
+        $this->acceptStudent($student);
+        $this->manually_allocated = true;
+        $this->save();
     }
 
     public function updateRoundsInfo($student)

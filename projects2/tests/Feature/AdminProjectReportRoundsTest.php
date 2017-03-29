@@ -35,4 +35,20 @@ class AdminProjectReportRoundsTest extends TestCase
         $response->assertSee('round2-applicants-1');
         $response->assertSee('round2-accepted-1');
     }
+
+    /** @test */
+    public function if_a_student_was_preallocated_then_that_shows_up_in_the_report()
+    {
+        ProjectConfig::setOption('round', 1);
+        $project = $this->createProject();
+        $student = $this->createStudent();
+        $admin = $this->createAdmin();
+        $project->preAllocate($student->id);
+
+        $response = $this->actingAs($admin)->get(route('report.projects'));
+
+        $response->assertStatus(200);
+        $response->assertSee($student->fullName());
+        $response->assertSee("preallocated-{$student->id}");
+    }
 }

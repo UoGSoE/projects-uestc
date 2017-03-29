@@ -54,7 +54,7 @@
                     @endforeach
                 </select>
             </div>
-        @if ($user->is_student)
+        @if ($user->is_student and $user->unallocated())
             <div class="form-group">
                 <label for="inputProject">Allocate to project</label>
                 <select id="inputProject" name="project_id" class="form-control">
