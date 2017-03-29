@@ -68,7 +68,7 @@
                     @endforeach
                 </select>
                 <p class="help-block">
-                    This will also allocate automatically approve them on the project.
+                    This will also automatically approve them on the project.
                 </p>
             </div>
         @endif
