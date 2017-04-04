@@ -8,18 +8,29 @@
     </h1>
     <a href="{!! route('student.profile_edit') !!}" class="btn btn-default">Edit my profile</a>
 </div>
-<h2>Available Projects</h2>
-<p>
-    Please choose {{ $requiredProjectChoices }} projects.
-</p>
-<form method="POST" action="{!! route('choices.update') !!}" id="vueform">
-    {{ csrf_field() }}
-    <project-list :projects="projects" :allowselect="allowSelect"></project-list>
-    <button :disabled="invalidChoices">
-        @{{ buttonText }}
-    </button>
+@if (Auth::user()->isAllocated())
+    <p>
+        You are allocated to the project "{{ Auth::user()->allocatedProject()->title }}".
+    </p>
+@elseif (Auth::user()->projects()->count() > 0)
+    <h2>Your choices</h2>
+    @foreach (Auth::user()->projects as $project)
+        @include('project.partials.panel', ['project' => $project])
+    @endforeach
+@else
+    <h2>Available Projects</h2>
+    <p>
+        Please choose {{ $requiredProjectChoices }} projects.
+    </p>
+    <form method="POST" action="{!! route('choices.update') !!}" id="vueform">
+        {{ csrf_field() }}
+        <project-list :projects="projects" :allowselect="allowSelect"></project-list>
+        <button :disabled="invalidChoices">
+            @{{ buttonText }}
+        </button>
 
-</form>
+    </form>
+
 <script src="/vendor/vuejs_2.1.10.js"></script>
 <script>
 
@@ -133,5 +144,7 @@ var app = new Vue({
     }
 });
 </script>
+
+@endif
 
 @endsection

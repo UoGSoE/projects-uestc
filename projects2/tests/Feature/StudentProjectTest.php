@@ -222,4 +222,53 @@ class StudentProjectTest extends TestCase
         $response->assertRedirect('/');
         $response->assertSessionHasErrors(['disabled']);
     }
+
+    /** @test */
+    public function a_student_who_has_been_accepted_onto_a_project_only_sees_that_project_title()
+    {
+        ProjectConfig::setOption('round', 1);
+        $student = factory(User::class)->states('student')->create();
+        $course = factory(Course::class)->create();
+        $course->students()->save($student);
+        $project1 = factory(Project::class)->create(['maximum_students' => 1]);
+        $project2 = factory(Project::class)->create(['maximum_students' => 1]);
+        $project1->courses()->save($course);
+        $project2->courses()->save($course);
+        $project1->acceptStudent($student);
+
+        $response = $this->actingAs($student)
+                        ->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('You are allocated to the project');
+        $response->assertSee($project1->title);
+        $response->assertDontSee($project2->title);
+    }
+
+    /** @test */
+    public function a_student_who_has_made_their_choices_only_sees_those_projects()
+    {
+        ProjectConfig::setOption('round', 1);
+        $student = factory(User::class)->states('student')->create();
+        $course = factory(Course::class)->create();
+        $course->students()->save($student);
+        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $projects->each(function ($project, $key) use ($course, $student) {
+            $project->courses()->save($course);
+            $project->addStudent($student);
+        });
+        $project2 = factory(Project::class)->create(['maximum_students' => 1]);
+        $project2->courses()->save($course);
+
+
+        $response = $this->actingAs($student)
+                        ->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('Your choices');
+        $projects->each(function ($project) use ($response) {
+            $response->assertSee($project->title);
+        });
+        $response->assertDontSee($project2->title);
+    }
 }

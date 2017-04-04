@@ -145,7 +145,6 @@ class ProjectController extends Controller
             $project->deleteFiles($request->deletefiles);
         }
         $project->courses()->sync($request->courses);
-        //$project->programmes()->sync($request->programmes);
         EventLog::log(Auth::user()->id, "Updated project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id);
     }

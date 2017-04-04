@@ -19,25 +19,6 @@ use Validator;
  */
 class UserController extends Controller
 {
-    public function index()
-    {
-        $this->authorize('edit_users');
-        $users = User::orderBy('surname')->get();
-        return view('user.index', compact('users'));
-    }
-
-    public function indexStaff()
-    {
-        $users = User::staff()->orderBy('surname')->get();
-        return view('user.index_staff', compact('users'));
-    }
-
-    public function indexStudents()
-    {
-        $users = User::students()->orderBy('surname')->get();
-        return view('user.index_students', compact('users'));
-    }
-
     public function show($userId)
     {
         $user = User::findOrFail($userId);
