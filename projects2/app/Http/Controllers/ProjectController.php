@@ -186,7 +186,7 @@ class ProjectController extends Controller
     public function acceptStudent(Request $request, $id)
     {
         $project = Project::findOrFail($id);
-        if (!$project->isAvailable()) {
+        if (!$project->canAcceptAStudent()) {
             return redirect()->route('project.show', $id)->withErrors(['full' => 'This project cannot accept students']);
         }
         $student = User::findOrFail($request->accepted);

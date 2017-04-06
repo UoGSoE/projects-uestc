@@ -79,11 +79,20 @@ class Project extends Model
             return false;
         }
         if ($this->isFullySubscribed()) {
-            dd('here');
             return false;
         }
         if ($this->isFull()) {
-            dd('hello');
+            return false;
+        }
+        return true;
+    }
+
+    public function canAcceptAStudent()
+    {
+        if (!$this->is_active) {
+            return false;
+        }
+        if ($this->isFull()) {
             return false;
         }
         return true;
