@@ -79,9 +79,11 @@ class Project extends Model
             return false;
         }
         if ($this->isFullySubscribed()) {
+            dd('here');
             return false;
         }
         if ($this->isFull()) {
+            dd('hello');
             return false;
         }
         return true;
