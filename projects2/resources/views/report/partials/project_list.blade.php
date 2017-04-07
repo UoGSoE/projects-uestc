@@ -6,10 +6,15 @@
                 <th>Discipline</th>
                 <th>Preallocated</th>
                 <th>1st round choices</th>
-                <th>Rresult</th>
+                <th>Result</th>
                 <th>2nd round choices</th>
                 <th>Result</th>
                 <th>Student</th>
+                @if (isset($excel))
+                    <td>
+                        Allocated?
+                    </td>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -69,9 +74,18 @@
                         @if ($project->numberAccepted() > 0)
                             @foreach ($project->acceptedStudents()->get() as $student)
                                 {{ $student->fullname() }}
+                                @if (isset($excel))
+                                    ({{ $student->matric() }})
+                                @endif
+
                             @endforeach
                         @endif
                     </td>
+                    @if (isset($excel))
+                        <td>
+                            {{ $project->numberAccepted() ? 'Y' : 'N' }}
+                        </td>
+                    @endif
                 </tr>
             @endforeach
         </tbody>
