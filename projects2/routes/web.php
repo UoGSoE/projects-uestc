@@ -100,6 +100,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/bulkactive', 'BulkActiveController@edit')->name('bulkactive.edit');
         Route::post('/bulkactive', 'BulkActiveController@update')->name('bulkactive.update');
 
+        Route::get('/bulkpreallocate', 'BulkPreallocateController@edit')->name('bulkpreallocate.edit');
+        Route::post('/bulkpreallocate', 'BulkPreallocateController@update')->name('bulkpreallocate.update');
+
         Route::post('site/enableapplications', 'ApplicationsController@enable')->name('admin.allow_applications');
         Route::post('site/disableapplications', 'ApplicationsController@disable')->name('admin.deny_applications');
         Route::post('site/clearunsuccessful', 'ApplicationsController@clearUnsuccessful')->name('admin.clear_unsuccessful');

@@ -20,9 +20,6 @@ class StaffImportController extends Controller
         $rows = $sheet->first();
         foreach ($rows as $row) {
             $user = User::fromSpreadsheetData($row);
-            if (!$user) {
-                abort(401);
-            }
         }
         EventLog::log($request->user()->id, "Updated staff list");
         return redirect()->route('staff.index')->with('success_message', 'Updated staff list');

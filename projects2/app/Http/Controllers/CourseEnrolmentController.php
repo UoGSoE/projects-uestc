@@ -35,11 +35,11 @@ class CourseEnrolmentController extends Controller
 
     private function parseExcelRow($row, $students)
     {
-        if (! $matric = $this->validMatric($row[1])) {
+        if (! $matric = $this->validMatric($row[0])) {
             return null;
         }
-        $surname = $row[2];
-        $forenames = $row[3];
+        $surname = $row[1];
+        $forenames = $row[2];
         if (!$this->validName($surname)) {
             return null;
         }

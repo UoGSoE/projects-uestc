@@ -21,6 +21,7 @@
 			              		<li><a href="{!! route('report.staff') !!}">View All Staff</a></li>
 			              		<li><a href="{!! route('bulkallocate.edit') !!}">Bulk Allocations</a></li>
 			              		<li><a href="{!! route('bulkactive.edit') !!}">Bulk Active/Inactive</a></li>
+			              		<li><a href="{!! route('bulkpreallocate.edit') !!}">Bulk Preallocations</a></li>
 				              </ul>
 				            </li>
 			            @endif
