@@ -123,4 +123,23 @@ class ProjectTest extends TestCase
         $this->assertDatabaseHas('project_rounds', ['user_id' => $student->id, 'project_id' => $project->id, 'round' => 1]);
     }
 
+    /** @test */
+    public function accepting_a_student_onto_a_project_also_removes_their_other_project_choices_but_doesnt_affect_other_students_choices_on_the_those_other_projects()
+    {
+        ProjectConfig::setOption('round', 1);
+        $project = $this->createProject();
+        $project2 = $this->createProject();
+        $student = $this->createStudent();
+        $student2 = $this->createStudent();
+        $project->addStudent($student);
+        $project2->addStudent($student);
+        $project->addStudent($student2);
+        $project2->addStudent($student2);
+
+        $project->acceptStudent($student);
+
+        $this->assertDatabaseHas('project_student', ['user_id' => $student->id, 'project_id' => $project->id, 'accepted' => true]);
+        $this->assertDatabaseMissing('project_student', ['user_id' => $student->id, 'project_id' => $project2->id]);
+        $this->assertDatabaseHas('project_student', ['user_id' => $student2->id, 'project_id' => $project2->id]);
+ }
 }

@@ -125,6 +125,7 @@ class Project extends Model
         return $this->maximum_students - $this->numberAccepted();
     }
 
+    // needs to remove students other choices!!
     public function acceptStudent($student)
     {
         if ($this->isFull()) {
@@ -140,6 +141,7 @@ class Project extends Model
         }
 
         $this->students()->sync([$student->id => ['accepted' => true]], false);
+        $student->projects()->sync([$this->id]);
         $student->notify(new AllocatedToProject($this));
         $student->roundAccept($this->id);
         if ($this->isFull()) {
