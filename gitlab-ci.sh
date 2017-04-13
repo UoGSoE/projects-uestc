@@ -18,7 +18,7 @@ php ../composer.phar install
 
 # Force world-writable on various dirs
 chmod -R 777 storage
-chmod -R 777 boostrap
+chmod -R 777 bootstrap
 
 # Copy over testing configuration.
 cp .env.testing .env
