@@ -224,7 +224,7 @@ class StudentProjectTest extends TestCase
     }
 
     /** @test */
-    public function a_student_who_has_been_accepted_onto_a_project_only_sees_that_project_title()
+    public function a_student_who_has_been_accepted_onto_a_project_only_sees_that_project()
     {
         ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
@@ -242,6 +242,7 @@ class StudentProjectTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('You are allocated to the project');
         $response->assertSee($project1->title);
+        $response->assertSee($project1->description);
         $response->assertDontSee($project2->title);
     }
 

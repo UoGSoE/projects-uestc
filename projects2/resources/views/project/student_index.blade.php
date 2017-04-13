@@ -11,6 +11,7 @@
 @if (Auth::user()->isAllocated())
     <p>
         You are allocated to the project "{{ Auth::user()->allocatedProject()->title }}".
+        @include('project.partials.panel', ['project' => Auth::user()->allocatedProject()])
     </p>
 @elseif (Auth::user()->projects()->count() > 0)
     <h2>Your choices</h2>

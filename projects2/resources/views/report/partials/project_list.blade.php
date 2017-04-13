@@ -75,7 +75,7 @@
                             @foreach ($project->acceptedStudents()->get() as $student)
                                 {{ $student->fullname() }}
                                 @if (isset($excel))
-                                    ({{ $student->matric() }})
+                                    ({{ $student->username }})
                                 @endif
 
                             @endforeach
