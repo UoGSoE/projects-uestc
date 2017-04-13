@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install dependencies only for Docker.
-[[ ! -e /.dockerinit ]] && exit 0
+#[[ ! -e /.dockerinit ]] && exit 0
 set -xe
 
 # Update packages and install composer and PHP dependencies.
@@ -15,6 +15,9 @@ apt-get install git libcurl4-gnutls-dev libicu-dev libmcrypt-dev libvpx-dev libj
 curl -sS https://getcomposer.org/installer | php
 cd projects2
 php ../composer.phar install
+
+# Install phpunit
+curl -sS https://phar.phpunit.de/phpunit-6.1.phar -o phpunit.phar
 
 # Copy over testing configuration.
 cp .env.testing .env
