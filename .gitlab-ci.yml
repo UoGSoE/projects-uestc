@@ -1,0 +1,4 @@
+test:php7.1:
+  image: bashy/docker-build:php71
+  script:
+  - vendor/bin/phpunit
