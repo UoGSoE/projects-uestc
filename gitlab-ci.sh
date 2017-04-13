@@ -16,9 +16,6 @@ curl -sS https://getcomposer.org/installer | php
 cd projects2
 php ../composer.phar install
 
-# Install phpunit
-curl -sS https://phar.phpunit.de/phpunit-6.1.phar -o phpunit.phar
-
 # Copy over testing configuration.
 cp .env.testing .env
 
