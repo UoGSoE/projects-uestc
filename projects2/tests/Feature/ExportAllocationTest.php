@@ -30,4 +30,24 @@ class ExportAllocationTest extends TestCase
         // should really try loading the sheet into memory and testing, but it's
         // Friday afternoon - yolo.
     }
+
+    public function test_can_export_the_student_list_as_a_spreadsheet()
+    {
+        ProjectConfig::setOption('round', 1);
+        $admin = $this->createAdmin();
+        $project1 = $this->createProject();
+        $project2 = $this->createProject();
+        $student1 = $this->createStudent();
+        $student2 = $this->createStudent();
+        $student3 = $this->createStudent();
+        $project1->acceptStudent($student1);
+        $project2->preAllocate($student2);
+
+        $response = $this->actingAs($admin)->get(route('export.students'));
+
+        $response->assertStatus(200);
+        $response->assertHeader('content-disposition', 'attachment; filename="students.xlsx"');
+        // should really try loading the sheet into memory and testing, but it's
+        // Friday afternoon - yolo.
+    }
 }

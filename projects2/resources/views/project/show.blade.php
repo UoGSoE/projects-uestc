@@ -76,9 +76,6 @@
     <p class="help-block">
         Please be careful accepting or un-accepting students. This triggers an automatic email to the student
         and can cause some confusion for them if you have made a mistake.
-        @cannot('allocate_students')
-            <br /><b>Note:</b> You can only accept students who have made this project their first choice.
-        @endcannot
     </p>
     <form method="POST" action="{!! route('project.enrol', $project->id) !!}">
     {{ csrf_field() }}

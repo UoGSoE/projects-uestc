@@ -104,6 +104,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/bulkpreallocate', 'BulkPreallocateController@update')->name('bulkpreallocate.update');
 
         Route::get('/export/allocations', 'ExportController@allocations')->name('export.allocations');
+        Route::get('/export/students', 'ExportController@students')->name('export.students');
 
         Route::post('site/enableapplications', 'ApplicationsController@enable')->name('admin.allow_applications');
         Route::post('site/disableapplications', 'ApplicationsController@disable')->name('admin.deny_applications');
