@@ -21,7 +21,7 @@ cp .env.testing .env
 
 # Generate an application key. Re-cache.
 php artisan key:generate
-#php artisan config:cache
+php artisan config:cache
 
 # Run database migrations.
 #php artisan migrate
