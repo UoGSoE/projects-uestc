@@ -3,6 +3,6 @@ before_script:
 test:php7.1:
   image: bashy/docker-build:php71
   script:
-  - cd projects2 && ./vendor/bin/phpunit --stop-on-failure || tail -500 storage/logs/laravel.log
+  - cd projects2 && ./vendor/bin/phpunit --filter=admin_can_change_project_active_flags_in_bulk || tail -500 storage/logs/laravel.log
 
   
