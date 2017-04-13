@@ -3,5 +3,5 @@ before_script:
 test:php7.1:
   image: bashy/docker-build:php71
   script:
-  - vendor/bin/phpunit
+  - cd projects2 && vendor/bin/phpunit
   
