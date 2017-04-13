@@ -16,6 +16,10 @@ curl -sS https://getcomposer.org/installer | php
 cd projects2
 php ../composer.phar install
 
+# Force world-writable on various dirs
+chmod -R 777 storage
+chmod -R 777 boostrap
+
 # Copy over testing configuration.
 cp .env.testing .env
 
