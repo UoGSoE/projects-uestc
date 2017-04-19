@@ -32,3 +32,5 @@ php artisan config:cache
 
 php vendor/bin/phpunit
 
+cat storage/logs/laravel.log
+
