@@ -1,8 +1,6 @@
-before_script:
-  - bash gitlab-ci.sh
 test:php7.1:
   image: bashy/docker-build:php71
   script:
-  - cd projects2 && ./vendor/bin/phpunit --filter=admin_can_change_project_active_flags_in_bulk || tail -500 storage/logs/laravel.log
+  - bash gitlab-ci.sh
 
   
