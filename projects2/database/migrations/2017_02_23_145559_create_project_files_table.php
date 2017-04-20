@@ -16,7 +16,7 @@ class CreateProjectFilesTable extends Migration
         Schema::create('project_files', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('project_id');
-            $table->foreign('project_id')->references('id')->on('projects');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->string('filename');
             $table->string('original_filename');
             $table->integer('file_size');
