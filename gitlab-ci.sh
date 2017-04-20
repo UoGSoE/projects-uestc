@@ -16,6 +16,7 @@ cat storage/logs/laravel.log
 # Install Composer and project dependencies.
 curl -sS https://getcomposer.org/installer | php
 cd projects2
+chmod -R 777 projects2
 php ../composer.phar install
 
 # Force world-writable on various dirs
@@ -27,6 +28,7 @@ cp .env.testing .env
 
 # Generate an application key. Re-cache.
 php artisan key:generate
+php artisan route:clear
 php artisan config:cache
 
 # Run database migrations.
