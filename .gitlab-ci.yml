@@ -1,6 +1,28 @@
-test:php7.1:
-  image: bashy/docker-build:php71
-  script:
-  - bash gitlab-ci.sh
+# Before Tests
+before_script:
+  - bash gitlabci.sh
 
-  
+# Services
+services:
+  - mysql:latest
+
+# Variables
+variables:
+  WITH_XDEBUG: "1"
+  MYSQL_ROOT_PASSWORD: secret
+  MYSQL_DATABASE: homestead
+  MYSQL_USER: homestead
+  MYSQL_PASSWORD: secret
+  COMPOSER_HOME: /cache/composer
+
+# Stages
+stages:
+  - test
+
+# PHP 7.0 FPM
+php:7-fpm:
+  image: php:7-fpm
+  stage: test
+  script:
+    - php -v
+    - cd projects2 && php vendor/bin/phpunit 

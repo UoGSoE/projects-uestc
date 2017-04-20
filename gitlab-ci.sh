@@ -1,41 +1,41 @@
 #!/bin/bash
 
-# Install dependencies only for Docker.
-#[[ ! -e /.dockerinit ]] && exit 0
+# We need to install dependencies only for Docker
+#[[ ! -e /.dockerenv ]] && [[ ! -e /.dockerinit ]] && exit 0
+
 #set -xe
 
 # Update packages and install composer and PHP dependencies.
-#apt-get update -yqq
-apt-get install git libcurl4-gnutls-dev libicu-dev libmcrypt-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libpq-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev -yqq
+apt-get update -yqq
+apt-get install git zlib1g-dev -yqq
 
 # Compile PHP, include these extensions.
-#docker-php-ext-install mbstring mcrypt pdo_mysql curl json intl gd xml zip bz2 opcache
-
-php -m
-php -i
+docker-php-ext-install pdo_mysql zip
 
 # Install Composer and project dependencies.
-curl -sS https://getcomposer.org/installer | php
-chmod -R 777 projects2
-cd projects2
-php ../composer.phar install
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Force world-writable on various dirs
-chmod -R 777 storage
-chmod -R 777 bootstrap
+# Ping the mysql container
+ping -c 3 mysql
+
+# Composer install parallel install plugin
+composer global require "hirak/prestissimo:^0.3"
+
+cd projects2
+
+# Composer install project dependencies
+composer install --no-progress --no-interaction
 
 # Copy over testing configuration.
 cp .env.testing .env
 
 # Generate an application key. Re-cache.
 php artisan key:generate
-php artisan route:clear
 php artisan config:cache
 
 # Run database migrations.
-#php artisan migrate
+php artisan migrate:refresh
 
-php vendor/bin/phpunit
-
-cat storage/logs/laravel.log
+# Run database seed.
+php artisan db:seed
 
