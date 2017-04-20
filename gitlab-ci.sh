@@ -22,13 +22,12 @@ ping -c 3 mysql
 composer global require "hirak/prestissimo:^0.3"
 
 cd projects2
-git status
 
 # Composer install project dependencies
 composer install --no-progress --no-interaction
 
 # Copy over testing configuration.
-cp .env.testing .env
+cp .env.gitlab .env
 
 # Generate an application key. Re-cache.
 php artisan key:generate
