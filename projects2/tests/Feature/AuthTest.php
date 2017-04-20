@@ -35,6 +35,8 @@ class AuthTest extends TestCase
     /** @test */
     public function an_invalid_password_fails()
     {
+	$this->disableExceptionHandling();
+
         $user = $this->createStaff(['password' => bcrypt('HELLOKITTY1234')]);
 
         $response = $this->post(route('login.login', ['username' => $user->email, 'password' => 'NOTHELLOKITTY1234']));

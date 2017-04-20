@@ -91,8 +91,8 @@ class AdminCourseTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect(route('course.show', $course->id));
-        $this->assertDatabaseMissing('course_student', ['student_id' => $student->id, 'course_id' => $course->id]);
-        $this->assertDatabaseMissing('project_student', ['student_id' => $student->id, 'project_id' => $project->id]);
+        $this->assertDatabaseMissing('course_student', ['user_id' => $student->id, 'course_id' => $course->id]);
+        $this->assertDatabaseMissing('project_student', ['user_id' => $student->id, 'project_id' => $project->id]);
     }
 
     /** @test */
