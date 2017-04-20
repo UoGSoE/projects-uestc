@@ -92,7 +92,7 @@ class User extends Model implements
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_student');
+        return $this->belongsToMany(Course::class, 'course_student', 'user_id');
     }
 
     /**
