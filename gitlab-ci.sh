@@ -7,10 +7,13 @@
 
 # Update packages and install composer and PHP dependencies.
 apt-get update -yqq
-apt-get install git zlib1g-dev -yqq
+apt-get install git zlib1g-dev libldap2-dev -yqq
+rm -rf /var/lib/apt/lists/*
 
 # Compile PHP, include these extensions.
-docker-php-ext-install pdo_mysql zip ldap
+docker-php-ext-install pdo_mysql zip
+docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
+docker-php-ext-install ldap
 
 # Install Composer and project dependencies.
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
