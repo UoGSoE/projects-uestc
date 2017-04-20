@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # We need to install dependencies only for Docker
-#[[ ! -e /.dockerenv ]] && [[ ! -e /.dockerinit ]] && exit 0
+[[ ! -e /.dockerenv ]] && [[ ! -e /.dockerinit ]] && exit 0
 
-#set -xe
+set -xe
 
 # Update packages and install composer and PHP dependencies.
 apt-get update -yqq
@@ -22,12 +22,12 @@ curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 ping -c 3 mysql
 
 # Composer install parallel install plugin
-composer global require "hirak/prestissimo:^0.3"
+composer -q global require "hirak/prestissimo:^0.3"
 
 cd projects2
 
 # Composer install project dependencies
-composer install --no-progress --no-interaction
+composer -q install --no-progress --no-interaction
 
 # Copy over testing configuration.
 cp -f .env.gitlab .env
@@ -35,8 +35,6 @@ cp -f .env.gitlab .env
 # Generate an application key. Re-cache.
 php artisan key:generate
 php artisan config:cache
-
-cat .env
 
 # Run database migrations.
 php artisan migrate:refresh
