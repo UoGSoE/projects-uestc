@@ -27,11 +27,13 @@ cd projects2
 composer install --no-progress --no-interaction
 
 # Copy over testing configuration.
-cp .env.gitlab .env
+cp -f .env.gitlab .env
 
 # Generate an application key. Re-cache.
 php artisan key:generate
 php artisan config:cache
+
+cat .env
 
 # Run database migrations.
 php artisan migrate:refresh
