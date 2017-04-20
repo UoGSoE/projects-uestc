@@ -11,12 +11,13 @@ apt-get install git libcurl4-gnutls-dev libicu-dev libmcrypt-dev libvpx-dev libj
 # Compile PHP, include these extensions.
 #docker-php-ext-install mbstring mcrypt pdo_mysql curl json intl gd xml zip bz2 opcache
 
-cat storage/logs/laravel.log
+php -m
+php -i
 
 # Install Composer and project dependencies.
 curl -sS https://getcomposer.org/installer | php
-cd projects2
 chmod -R 777 projects2
+cd projects2
 php ../composer.phar install
 
 # Force world-writable on various dirs
