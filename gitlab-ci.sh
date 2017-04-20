@@ -10,7 +10,7 @@ apt-get update -yqq
 apt-get install git zlib1g-dev -yqq
 
 # Compile PHP, include these extensions.
-docker-php-ext-install pdo_mysql zip
+docker-php-ext-install pdo_mysql zip ldap
 
 # Install Composer and project dependencies.
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
