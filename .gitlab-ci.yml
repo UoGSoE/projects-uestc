@@ -1,6 +1,6 @@
 # Before Tests
 before_script:
-  - bash gitlab-ci.sh
+  - bash gitlab-ci.sh >> /dev/null
 
 # Services
 services:
