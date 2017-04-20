@@ -77,6 +77,8 @@ class UserAdminTest extends TestCase
 
     public function test_admin_can_delete_a_user()
     {
+	$this->disableExceptionHandling();
+
         $adminUser = factory(User::class)->states('admin')->create();
         $regularUser = factory(User::class)->states('staff')->create();
 
