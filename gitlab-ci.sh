@@ -37,5 +37,5 @@ php artisan config:cache
 php artisan migrate:refresh
 
 # Run database seed.
-php artisan db:seed
+#php artisan db:seed
 
