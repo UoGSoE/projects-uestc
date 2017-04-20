@@ -22,6 +22,7 @@ ping -c 3 mysql
 composer global require "hirak/prestissimo:^0.3"
 
 cd projects2
+git status
 
 # Composer install project dependencies
 composer install --no-progress --no-interaction
