@@ -7,7 +7,7 @@ yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 yum-config-manager --enable remi-php71
 
 #yum -y install mariadb-server mariadb rh-php56 rh-php56-php-mysqlnd rh-php56-php-mbstring rh-php56-php httpd24-httpd vim rh-php56-php-ldap wget
-yum -y install mariadb-server mariadb vim wget httpd
+yum -y install mariadb-server mariadb vim wget httpd kernel-devel kernel-headers kernel-uek-devel
 yum -y install php71 php71-php-json php71-php-ldap php71-php-mbstring php71-php-pdo php71-php php71-php-mysqlnd php71-php-xml php71-php-pecl-zip
 systemctl enable httpd.service
 systemctl enable mariadb.service

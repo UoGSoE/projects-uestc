@@ -47,7 +47,7 @@ class User extends Model implements
     public static function boot()
     {
         parent::boot();
-        
+
         User::deleting(function ($user) {
             foreach ($user->rounds as $round) {
                 $round->delete();
