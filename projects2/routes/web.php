@@ -84,6 +84,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('options', 'OptionsController@edit')->name('options.edit');
         Route::post('options', 'OptionsController@update')->name('options.update');
+
+        Route::get('allocations', 'ImportAllocationsController@index')->name('allocations.import');
+        Route::post('allocations', 'ImportAllocationsController@update')->name('allocations.do_import');
     });
 
     Route::group(['middleware' => ['convenor_or_admin'], 'prefix' => '/admin'], function () {
@@ -100,11 +103,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/bulkactive', 'BulkActiveController@edit')->name('bulkactive.edit');
         Route::post('/bulkactive', 'BulkActiveController@update')->name('bulkactive.update');
 
-        Route::get('/bulkpreallocate', 'BulkPreallocateController@edit')->name('bulkpreallocate.edit');
-        Route::post('/bulkpreallocate', 'BulkPreallocateController@update')->name('bulkpreallocate.update');
-
         Route::get('/export/allocations', 'ExportController@allocations')->name('export.allocations');
         Route::get('/export/students', 'ExportController@students')->name('export.students');
+        Route::get('/export/staff', 'ExportController@staff')->name('export.staff');
 
         Route::post('site/enableapplications', 'ApplicationsController@enable')->name('admin.allow_applications');
         Route::post('site/disableapplications', 'ApplicationsController@disable')->name('admin.deny_applications');

@@ -35,7 +35,7 @@ class User extends Model implements
      *
      * @var array
      */
-    protected $fillable = ['username', 'email', 'surname', 'forenames', 'is_student', 'is_admin', 'is_convenor'];
+    protected $fillable = ['username', 'email', 'surname', 'forenames', 'is_student', 'is_admin', 'is_convenor', 'institution'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -188,6 +188,7 @@ class User extends Model implements
         });
         $projectArray = [];
         foreach ($available as $project) {
+            $popularityPercent = 100 * ($project->students()->count() / $project->maximum_students);
             $projectArray[] = [
                 'id' => $project->id,
                 'title' => $project->title,
@@ -195,10 +196,12 @@ class User extends Model implements
                 'prereq' => $project->prereq,
                 'chosen' => false,
                 'discipline' => $project->disciplineTitle(),
+                'institution' => $project->institution,
                 'discipline_css' => str_slug($project->disciplineTitle()),
                 'owner' => $project->owner->fullName(),
                 'links' => $project->links->toArray(),
                 'files' => $project->files->toArray(),
+                'popularity' => $this->getPopularity($popularityPercent),
             ];
         }
         return json_encode($projectArray);
@@ -273,12 +276,14 @@ class User extends Model implements
         $email = strtolower(trim($row[0]));
         $surname = trim($row[1]);
         $forenames = trim($row[2]);
+        $institution = trim($row[3]);
         $rules = [
             'email' => 'required|email',
             'surname' => 'required',
-            'forenames' => 'required'
+            'forenames' => 'required',
+            'institution' => 'required'
         ];
-        if (Validator::make(['email' => $email, 'surname' => $surname, 'forenames' => $forenames], $rules)->fails()) {
+        if (Validator::make(['email' => $email, 'surname' => $surname, 'forenames' => $forenames, 'institution' => $institution], $rules)->fails()) {
             return false;
         }
         $user = static::where('email', '=', $email)->first();
@@ -290,6 +295,7 @@ class User extends Model implements
         }
         $user->surname = $surname;
         $user->forenames = $forenames;
+        $user->institution = $institution;
         $user->save();
         return $user;
     }
@@ -402,5 +408,38 @@ class User extends Model implements
             return true;
         }
         return 0; // this is because blade template echo's false as an empty string (possibly a new bug)
+    }
+
+    public function getPopularity($percent)
+    {
+        return [
+            'percent' => $percent,
+            'colour' => $this->getProgressColour($percent),
+            'caption' => $this->getProgressCaption($percent),
+        ];
+    }
+
+    public function getProgressColour($percent)
+    {
+        if ($percent < 50) {
+            return 'progress-bar-success';
+        } elseif ($percent < 70) {
+            return 'progress-bar-warning';
+        } else {
+            return 'progress-bar-danger';
+        }
+    }
+
+    public function getProgressCaption($percent)
+    {
+        if ($percent < 10) {
+            return '';
+        } elseif ($percent < 50) {
+            return 'Somwhat popular';
+        } elseif ($percent < 70) {
+            return 'Very popular';
+        } else {
+            return 'Extremely popular';
+        }
     }
 }

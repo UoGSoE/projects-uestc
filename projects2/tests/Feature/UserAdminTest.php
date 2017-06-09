@@ -68,11 +68,12 @@ class UserAdminTest extends TestCase
                             'surname' => 'Kitty',
                             'forenames' => 'Hello',
                             'is_student' => false,
-                            'email' => 'hellokitty@example.com'
+                            'email' => 'hellokitty@example.com',
+                            'institution' => 'UESTC',
                         ]);
 
         $response->assertStatus(302);
-        $this->assertDatabaseHas('users', ['email' => 'hellokitty@example.com']);
+        $this->assertDatabaseHas('users', ['email' => 'hellokitty@example.com', 'institution' => 'UESTC']);
         $this->assertDatabaseMissing('users', ['email' => $regularUser->email]);
     }
 

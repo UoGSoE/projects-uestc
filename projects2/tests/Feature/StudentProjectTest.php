@@ -104,9 +104,39 @@ class StudentProjectTest extends TestCase
         $response->assertSessionHasErrors(['choice_number']);
     }
 
+    /** @test */
+    public function a_student_must_apply_for_correct_number_of_uog_and_uestc_projects () {
+        ProjectConfig::setOption('round', 1);
+        $student = factory(User::class)->states('student')->create();
+        factory(Project::class, 3)->create();
+        factory(Project::class, 6)->create(['institution' => 'UESTC']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), ['choices' => range(1, 8)]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['choice_number']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), ['choices' => [1,2,4,5,6,7,8,9]]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['choice_number']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), ['choices' => [1,2,3,5,6,7,8,9]]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['choice_number']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), ['choices' => range(1,9)]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHas(['success_message' => 'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.']);
+
+    }
+
     public function test_a_student_can_successfully_apply_for_available_projects()
     {
         ProjectConfig::setOption('round', 1);
+        ProjectConfig::setOption('uestc_required_choices', 0);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
@@ -126,6 +156,7 @@ class StudentProjectTest extends TestCase
     public function test_a_student_can_resubmit_and_change_their_choices()
     {
         ProjectConfig::setOption('round', 1);
+        ProjectConfig::setOption('uestc_required_choices', 0);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
@@ -155,6 +186,7 @@ class StudentProjectTest extends TestCase
     public function test_a_student_cant_apply_for_projects_which_are_fully_subscribed()
     {
         ProjectConfig::setOption('round', 1);
+        ProjectConfig::setOption('uestc_required_choices', 0);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
@@ -182,6 +214,7 @@ class StudentProjectTest extends TestCase
     public function test_a_student_cant_apply_for_projects_which_are_full()
     {
         ProjectConfig::setOption('round', 1);
+        ProjectConfig::setOption('uestc_required_choices', 0);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);

@@ -38,6 +38,38 @@ class StudentChooseProjectsTest extends DuskTestCase
     }
 
     /** @test */
+    public function a_student_can_see_popularity_of_projects()
+    {
+        $staff = $this->createStaff();
+        $student = $this->createStudent();
+        $student2 = $this->createStudent();
+        $student3 = $this->createStudent();
+        $course = $this->createCourse();
+        $course->students()->sync([$student->id]);
+        $discipline = $this->createDiscipline();
+        list($project1, $project2, $project3) = factory(\App\Project::class, 3)->create()->each(function ($project) use ($course, $student2, $student3) {
+            $project->courses()->sync([$course->id]);
+            $project->students()->sync([$student2->id, $student3->id]);
+        });
+        $fullProject = $this->createProject(['maximum_students' => 0]);
+
+        $this->browse(function ($browser) use ($student, $project1, $project2, $project3, $fullProject) {
+            $browser->loginAs($student)
+                    ->visit('/')
+                    ->assertSee('Available Projects')
+                    ->assertSee($project1->title)
+                    ->assertSee($project1->disciplineTitle())
+                    ->click("#title_{$project1->id}")
+                    ->click("#title_{$project2->id}")
+                    ->click("#title_{$project3->id}")
+                    ->assertSee("Somewhat popular")
+                    ->assertSee($project2->title)
+                    ->assertSee($project3->title)
+                    ->assertDontSee($fullProject->title);
+        });
+    }
+
+    /** @test */
     public function a_student_can_only_pick_configured_maximum_of_projects()
     {
         $staff = $this->createStaff();
@@ -45,26 +77,54 @@ class StudentChooseProjectsTest extends DuskTestCase
         $course = $this->createCourse();
         $course->students()->sync([$student->id]);
         $discipline = $this->createDiscipline();
-        list($project1, $project2, $project3, $project4) = factory(\App\Project::class, 4)->create()->each(function ($project) use ($course) {
-            $project->courses()->sync([$course->id]);
+        list($uogProject1, $uogProject2, $uogProject3, $uogProject4) = factory(\App\Project::class, 4)->create()->each(function ($uogProject) use ($course) {
+            $uogProject->courses()->sync([$course->id]);
+        });
+        list($uestcProject1, $uestcProject2, $uestcProject3, $uestcProject4, $uestcProject5, $uestcProject6, $uestcProject7) = factory(\App\Project::class, 7)->create(['institution' => 'UESTC'])->each(function ($uestcProject) use ($course) {
+            $uestcProject->courses()->sync([$course->id]);
         });
 
-        $this->browse(function ($browser) use ($student, $project1, $project2, $project3, $project4) {
+        $this->browse(function ($browser) use ($student, $uogProject1, $uogProject2, $uogProject3, $uogProject4, $uestcProject1, $uestcProject2, $uestcProject3, $uestcProject4, $uestcProject5, $uestcProject6, $uestcProject7) {
             $browser->loginAs($student)
                     ->visit('/')
                     ->assertDontSee('Submit your choices')
-                    ->click("#title_{$project1->id}")
-                    ->check("#choose_{$project1->id}")
+                    ->click("#title_{$uogProject1->id}")
+                    ->check("#choose_{$uogProject1->id}")
                     ->assertDontSee('Submit your choices')
-                    ->click("#title_{$project2->id}")
-                    ->check("#choose_{$project2->id}")
+                    ->click("#title_{$uogProject2->id}")
+                    ->check("#choose_{$uogProject2->id}")
                     ->assertDontSee('Submit your choices')
-                    ->click("#title_{$project3->id}")
-                    ->check("#choose_{$project3->id}")
-                    ->assertSee('Submit your choices')
-                    ->click("#title_{$project4->id}")
-                    ->check("#choose_{$project4->id}")
-                    ->assertDontSee('Submit your choices');
+                    ->click("#title_{$uogProject3->id}")
+                    ->check("#choose_{$uogProject3->id}")
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$uogProject4->id}")
+                    ->check("#choose_{$uogProject4->id}")
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$uestcProject1->id}")
+                    ->check("#choose_{$uestcProject1->id}")
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$uestcProject2->id}")
+                    ->check("#choose_{$uestcProject2->id}")
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$uestcProject3->id}")
+                    ->check("#choose_{$uestcProject3->id}")
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$uestcProject4->id}")
+                    ->check("#choose_{$uestcProject4->id}")
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$uestcProject5->id}")
+                    ->check("#choose_{$uestcProject5->id}")
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$uestcProject6->id}")
+                    ->check("#choose_{$uestcProject6->id}")
+                    ->assertDontSee('Submit your choices')
+                    ->click("#title_{$uestcProject7->id}")
+                    ->check("#choose_{$uestcProject7->id}")
+                    ->assertDontSee('Submit your choices')
+                    ->uncheck("#choose_{$uestcProject7->id}")
+                    ->assertDontSee('Submit your choices')
+                    ->uncheck("#choose_{$uogProject4->id}")
+                    ->assertSee('Submit your choices');
         });
     }
 

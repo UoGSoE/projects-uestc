@@ -73,18 +73,11 @@
     <h3>
         Students who applied for this project
     </h3>
-    <p class="help-block">
-        Please be careful accepting or un-accepting students. This triggers an automatic email to the student
-        and can cause some confusion for them if you have made a mistake.
-    </p>
-    <form method="POST" action="{!! route('project.enrol', $project->id) !!}">
-    {{ csrf_field() }}
     <table class="table table-hover">
         <thead>
             <tr>
                 <th>Matric</th>
                 <th>Name</th>
-                <th>Accept?</th>
             </tr>
         </thead>
         <tbody>
@@ -99,19 +92,8 @@
                         @endif
                     </td>
                     <td>{{ $student->fullName() }}</td>
-                    <td>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" name="accepted" id="optionsRadios1" value="{{ $student->id }}" @if ($student->pivot->accepted) checked disabled @endif>
-                      </label>
-                    </div>
-                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    @if ($project->acceptedStudents->count() < $project->maximum_students or Auth::user()->can('allocate_students'))
-        <button type="submit" class="btn btn-primary pull-right">Allocate</button>
-    @endif
-    </form>
 @stop

@@ -37,7 +37,7 @@ class ProjectController extends Controller
     public function create()
     {
         $project = new Project;
-        $project->is_active = false;
+        $project->is_active = true;
         $project->maximum_students = 1;
         $project->user_id = Auth::user()->id;
         $courses = Course::orderBy('title')->get();

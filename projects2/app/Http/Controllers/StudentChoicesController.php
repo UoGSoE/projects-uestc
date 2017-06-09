@@ -20,6 +20,10 @@ class StudentChoicesController extends Controller
         }
         $student = $request->user();
         $picked = $request->choices;
+        $correctAmountOfChoices = $this->validNumberOfChoices($picked);
+        if ($correctAmountOfChoices !== true) {
+            return $correctAmountOfChoices;
+        }
         $result = $this->checkChoicesAreOk($picked);
         if ($result !== true) {
             return $result;
@@ -40,20 +44,17 @@ class StudentChoicesController extends Controller
 
     private function checkChoicesAreOk($choices)
     {
-        $requiredChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
-        if (count($choices) != $requiredChoices) {
-            return redirect()->back()->withErrors(['choice_number' => "You must pick {$requiredChoices} choices"]);
-        }
-
         if (!$this->choicesAreAllDifferent($choices)) {
-            return redirect()->back()->withErrors(['choice_diff' => "You must pick {$requiredChoices} *different* projects"]);
+            return redirect()->back()->withErrors([
+                'choice_diff' => "You must pick {$requiredChoices} *different* projects"
+            ]);
         }
-
         $projects = Project::whereIn('id', array_values($choices))->get();
         foreach ($projects as $project) {
             if ($project->isFullySubscribed()) {
                 return redirect()->back()->withErrors([
-                    'oversubscribed' => "Project {$project->title} is now over-subscribed. Please make your choices again."
+                    'oversubscribed' =>
+                    "Project {$project->title} is now over-subscribed. Please make your choices again."
                 ]);
             }
             if ($project->isFull()) {
@@ -63,6 +64,30 @@ class StudentChoicesController extends Controller
             }
         }
 
+        return true;
+    }
+
+    public function validNumberOfChoices($choices)
+    {
+        $requiredUOGChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
+        $requiredUESTCChoices = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
+        $uogCount = 0;
+        $uestcCount = 0;
+
+        $projects = Project::whereIn('id', array_values($choices))->get();
+        foreach ($projects as $project) {
+            if ($project->institution == 'UoG') {
+                $uogCount ++;
+            } else {
+                $uestcCount ++;
+            }
+        }
+
+        if ($uogCount != $requiredUOGChoices or $uestcCount != $requiredUESTCChoices) {
+            return redirect()->back()->withErrors([
+                'choice_number' => "You must pick {$requiredUOGChoices} University of Glasgow projects
+                    and {$requiredUESTCChoices} UESTC projects."]);
+        }
         return true;
     }
 }

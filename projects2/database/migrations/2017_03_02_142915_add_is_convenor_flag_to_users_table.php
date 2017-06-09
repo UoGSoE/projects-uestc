@@ -14,7 +14,7 @@ class AddIsConvenorFlagToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_convenor')->default(false);
+            // $table->boolean('is_convenor')->default(false);
         });
     }
 
@@ -26,7 +26,7 @@ class AddIsConvenorFlagToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('is_convenor');
+            // $table->dropColumn('is_convenor');
         });
     }
 }

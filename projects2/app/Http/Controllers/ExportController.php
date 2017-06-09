@@ -32,4 +32,15 @@ class ExportController extends Controller
         })->store('xlsx', false, true);
         return response()->download($sheet['full'], 'students.xlsx');
     }
+
+    public function staff()
+    {
+        $sheet = Excel::create('ProjectAllocations', function ($excel) {
+            $excel->sheet('Sheet1', function ($sheet) {
+                $users = User::staff()->with('projects')->orderBy('surname')->get();
+                $sheet->loadView('report.partials.staff_list', compact('users', 'excel'));
+            });
+        })->store('xlsx', false, true);
+        return response()->download($sheet['full'], 'staff.xlsx');
+    }
 }

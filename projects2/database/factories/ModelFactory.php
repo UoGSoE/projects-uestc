@@ -21,6 +21,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'last_login' => $faker->dateTimeThisYear(),
         'is_admin' => false,
         'remember_token' => str_random(10),
+        'institution' => 'UoG'
     ];
 });
 $factory->state(App\User::class, 'admin', function ($faker) {
@@ -55,6 +56,7 @@ $factory->define(App\Project::class, function (Faker\Generator $faker) {
         'maximum_students' => $faker->numberBetween(3, 10),
         'is_active' => true,
         'discipline_id' => null,
+        'institution' => 'UoG',
         'user_id' => function () {
             return factory(App\User::class)->states('staff')->create()->id;
         },

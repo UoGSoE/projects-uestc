@@ -1,20 +1,17 @@
     <table class="table table-striped table-hover datatable">
         <thead>
             <tr>
-                <th>Title</th>
+                <th>Project Title</th>
                 <th>Owner</th>
+                <th>University</th>
                 <th>Discipline</th>
-                <th>Preallocated</th>
                 <th>1st round choices</th>
-                <th>Result</th>
-                <th>2nd round choices</th>
-                <th>Result</th>
-                <th>Student</th>
                 @if (isset($excel))
-                    <td>
+                    <th>
                         Allocated?
-                    </td>
+                    </th>
                 @endif
+                <th>Project Description</th>
             </tr>
         </thead>
         <tbody>
@@ -33,6 +30,9 @@
                         </a>
                     </td>
                     <td>
+                        {{ $project->institution }}
+                    </td>
+                    <td>
                         @if ($project->discipline)
                             <a href="{!! action('ReportController@allProjectsOfDiscipline', $project->discipline->id) !!}">
                                 {{ $project->disciplineTitle() }}
@@ -41,51 +41,17 @@
                             {{ $project->disciplineTitle() }}
                         @endif
                     </td>
-                    <td>
-                        @if ($project->manually_allocated)
-                            <span class="preallocated-{{ $project->acceptedStudents()->first()->id }}">
-                                Y
-                            </span>
-                        @else
-                            N
-                        @endif
-                    </td>
                     <td applicants="round1-applicants-{{ $project->roundStudentCount(1) }}">
                         {{ $project->roundStudentCount(1) }}
                     </td>
-                    <td applicants="round1-accepted-{{ $project->roundStudentAcceptedCount(1) }}">
-                        @if ($project->roundStudentAcceptedCount(1) > 0)
-                            Y
-                        @else
-                            N
-                        @endif
-                    </td>
-                    <td applicants="round2-applicants-{{ $project->roundStudentCount(2) }}">
-                        {{ $project->roundStudentCount(2) }}
-                    </td>
-                    <td applicants="round2-accepted-{{ $project->roundStudentAcceptedCount(2) }}">
-                        @if ($project->roundStudentAcceptedCount(2) > 0)
-                            Y
-                        @else
-                            N
-                        @endif
-                    </td>
-                    <td>
-                        @if ($project->numberAccepted() > 0)
-                            @foreach ($project->acceptedStudents()->get() as $student)
-                                {{ $student->fullname() }}
-                                @if (isset($excel))
-                                    ({{ $student->username }})
-                                @endif
-
-                            @endforeach
-                        @endif
-                    </td>
                     @if (isset($excel))
-                        <td>
-                            {{ $project->numberAccepted() ? 'Y' : 'N' }}
-                        </td>
+                    <td>
+                        {{ $project->numberAccepted() ? 'Y' : 'N' }}
+                    </td>
                     @endif
+                    <td>
+                        {{ $project->description }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>

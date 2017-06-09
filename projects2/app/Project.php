@@ -8,12 +8,13 @@ use App\Exceptions\StudentAlreadyAllocatedException;
 use Storage;
 use App\Notifications\AllocatedToProject;
 use App\ProjectConfig;
+use Auth;
 
 class Project extends Model
 {
     protected $fillable = [
         'title', 'description', 'prereq', 'is_active', 'user_id', 'type_id',
-        'maximum_students', 'discipline_id'
+        'maximum_students', 'discipline_id', 'institution'
     ];
 
     protected $casts = [
@@ -254,5 +255,13 @@ class Project extends Model
     {
         $notChosen = $this->students()->where('accepted', false)->get();
         $this->students()->detach($notChosen->pluck('id')->toArray());
+    }
+
+    public function getInstitution()
+    {
+        if ($this->institution) {
+            return $this->institution;
+        }
+        return Auth::user()->institution;
     }
 }

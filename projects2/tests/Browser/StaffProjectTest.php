@@ -83,40 +83,41 @@ class StaffProjectTest extends DuskTestCase
         });
     }
 
-    /** @test */
-    public function staff_can_accept_a_student_onto_project()
-    {
-        ProjectConfig::setOption('round', 1);
-        $staff = $this->createStaff();
-        $course = $this->createCourse();
-        $student = $this->createStudent();
-        $student2 = $this->createStudent();
-        $disciplines = factory(\App\Discipline::class, 5)->create();
-        $project = $this->createProject(['user_id' => $staff->id, 'maximum_students' => 1]);
-        $project->courses()->sync([$course->id]);
-        $project->addStudent($student);
-        $project->addStudent($student2);
+    //Functionality was removed as staff are no longer allowed to pick their students
+    // /** @test */
+    // public function staff_can_accept_a_student_onto_project()
+    // {
+    //     ProjectConfig::setOption('round', 1);
+    //     $staff = $this->createStaff();
+    //     $course = $this->createCourse();
+    //     $student = $this->createStudent();
+    //     $student2 = $this->createStudent();
+    //     $disciplines = factory(\App\Discipline::class, 5)->create();
+    //     $project = $this->createProject(['user_id' => $staff->id, 'maximum_students' => 1]);
+    //     $project->courses()->sync([$course->id]);
+    //     $project->addStudent($student);
+    //     $project->addStudent($student2);
 
-        $this->browse(function ($browser) use ($staff, $project, $student, $student2) {
-            $browser->loginAs($staff)
-                    ->visit('/')
-                    ->assertSee('Your Projects')
-                    ->clickLink($project->title)
-                    ->assertSee($student->fullName())
-                    ->assertSee($student2->fullName())
-                    ->radio("accepted", $student->id)
-                    ->press('Allocate')
-                    ->assertSee('Allocations Saved')
-                    ->assertSee($student->fullName())
-                    ->assertDontSee($student2->fullName())
-                    ->assertDontSee('Allocate');
-        });
-        $this->assertDatabaseHas('project_student', [
-            'user_id' => $student->id,
-            'project_id' => $project->id,
-            'accepted' => true
-        ]);
-    }
+    //     $this->browse(function ($browser) use ($staff, $project, $student, $student2) {
+    //         $browser->loginAs($staff)
+    //                 ->visit('/')
+    //                 ->assertSee('Your Projects')
+    //                 ->clickLink($project->title)
+    //                 ->assertSee($student->fullName())
+    //                 ->assertSee($student2->fullName())
+    //                 ->radio("accepted", $student->id)
+    //                 ->press('Allocate')
+    //                 ->assertSee('Allocations Saved')
+    //                 ->assertSee($student->fullName())
+    //                 ->assertDontSee($student2->fullName())
+    //                 ->assertDontSee('Allocate');
+    //     });
+    //     $this->assertDatabaseHas('project_student', [
+    //         'user_id' => $student->id,
+    //         'project_id' => $project->id,
+    //         'accepted' => true
+    //     ]);
+    // }
 
     /** @test */
     /*. 

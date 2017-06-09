@@ -16,6 +16,17 @@
                 <label for="inputEmail">Email</label>
                 <input type="email" id="inputEmail" name="email" value="{{ old('email', $user->email) }}" class="form-control" required>
             </div>
+            <div class="form-group" id="institute_select">
+                <label for="institution">Institution</label>
+                <select id="institution" name="institution" class="form-control">
+                        <option value="UoG" @if ($user->institution == 'UoG') selected @endif>
+                            UoG
+                        </option>
+                        <option value="UESTC" @if ($user->institution == 'UESTC') selected @endif>
+                            UESTC
+                        </option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="inputPassword">Password</label>
                 <input type="password" id="inputPassword" name="password" value="" class="form-control">

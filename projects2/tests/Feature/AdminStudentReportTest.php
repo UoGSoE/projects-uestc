@@ -43,14 +43,5 @@ class AdminStudentReportTest extends TestCase
         $response->assertSee($project1->title);
         $response->assertSee($project2->title);
         $response->assertDontSee($project3->title);
-        $response->assertSee($project1->owner->fullName());
-        $response->assertSee($project2->owner->fullName());
-        $response->assertDontSee($project3->owner->fullName());
-        $response->assertSee("round_1_student_{$student1->id}_accepted_0");
-        $response->assertSee("round_2_student_{$student1->id}_accepted_1");
-        $response->assertSee("round_1_student_{$student2->id}_accepted_1");
-        $response->assertSee("round_2_student_{$student2->id}_accepted_0");
-        $response->assertSee("round_1_student_{$student3->id}_accepted_0");
-        $response->assertSee("round_2_student_{$student3->id}_accepted_0");
     }
 }

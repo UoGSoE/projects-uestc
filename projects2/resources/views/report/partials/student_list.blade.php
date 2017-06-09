@@ -1,68 +1,38 @@
     <table class="table table-striped table-hover datatable">
         <thead>
             <tr>
+                <th>GUID</th>
                 <th>Name</th>
-                <th>Preallocated?</th>
-                <th>1st Round</th>
-                <th>2nd Round</th>
-                <th>Project</th>
-                <th>Supervisor</th>
-                <th>Discipline</th>
+                <th>Choice 1</th>
+                <th>Choice 2</th>
+                <th>Choice 3</th>
+                <th>Choice 4</th>
+                <th>Choice 5</th>
+                <th>Choice 6</th>
+                <th>Choice 7</th>
+                <th>Choice 8</th>
+                <th>Choice 9</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($students as $student)
                 <tr class="">
+                    <td>
+                        {{ $student->username }}
+                    </td>
                     <td @if ($student->unallocated()) class="bg-danger" @endif>
                         <a href="{!! route('user.show', $student->id) !!}">
-                            {{ $student->fullName() }} ({{ $student->username }})
+                            {{ $student->fullName() }}
                         </a>
                     </td>
-                    <td>
-                        @if ($student->isAllocated())
-                            @if ($student->allocatedProject()->manually_allocated)
-                                <span>
-                                    Y
-                                </span>
-                            @else
-                                N
-                            @endif
-                        @else
-                            N
-                        @endif
-                    </td>
-                    <td data="round_1_student_{{ $student->id}}_accepted_{{ $student->acceptedOnRound(1) }}">
-                        @if ($student->acceptedOnRound(1))
-                            Y
-                        @else
-                            N
-                        @endif
-                    </td>
-                    <td data="round_2_student_{{ $student->id}}_accepted_{{ $student->acceptedOnRound(2) }}">
-                        @if ($student->acceptedOnRound(2))
-                            Y
-                        @else
-                            N
-                        @endif
-                    </td>
-                    @if ($student->unallocated())
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    @else
+                    @foreach ($student->projects()->get() as $project)
                         <td>
-                            {{ $student->allocatedProject()->title }}
-                            @if ($student->allocatedProject()->manually_allocated)
-                                (Pre)
-                            @endif
+                             {{ $project->title }}
                         </td>
-                        <td>
-                            {{ $student->allocatedProject()->owner->fullName() }}
-                        </td>
-                        <td>
-                            {{ $student->allocatedProject()->disciplineTitle() }}
-                        </td>
-                    @endif
+                    @endforeach
+                    @for ($i = 9 - $student->projects()->count(); $i > 0; $i--)
+                        <td></td>
+                    @endfor
                 </tr>
             @endforeach
         </tbody>

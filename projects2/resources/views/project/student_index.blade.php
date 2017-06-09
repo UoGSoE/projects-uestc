@@ -25,16 +25,37 @@
     </p>
     <form method="POST" action="{!! route('choices.update') !!}" id="vueform">
         {{ csrf_field() }}
+        <div style="margin-top:50px" class="navbar navbar-default navbar-fixed-top courses-bar" hidden>
+            <div class="container">
+                <div class="navbar-header" style="font-size:18px">
+                    <div style="float:left; margin-right: 40px">
+                        <img :src="'img/UoG.png'" alt="UoG" height="30" width="55"> @{{ numberOfUoG }}/@{{ requiredUoGChoices }}
+                    </div>
+                    <div style="display:inline-block;">
+                        <img :src="'img/UESTC.png'" alt="UESTC" height="30" width="55"> @{{ numberOfUESTC }}/@{{ requiredUESTCChoices }}
+                    </div>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <button :disabled="invalidChoices" class="btn">@{{ buttonText }}</button>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <project-list :projects="projects" :allowselect="allowSelect"></project-list>
         <button :disabled="invalidChoices">
             @{{ buttonText }}
         </button>
-
     </form>
 
+<script>
+$( document ).ready(function() {
+    $( ".page-header" ).css("margin-top", "120px");
+    $(".courses-bar").show();
+});
+</script>
 <script src="/vendor/vuejs_2.1.10.js"></script>
 <script>
-
 window.Event = new Vue();
 
 Vue.component('project-detail', {
@@ -52,6 +73,9 @@ Vue.component('project-detail', {
                 @{{ project.title }} (@{{ project.owner }})
                 <span v-if="project.discipline">
                     (field @{{ project.discipline }})
+                </span>
+                <span style="float:right">
+                    <img :src="'img/'+project.institution+'.png'" :alt="project.institution" height="20" width="30">
                 </span>
             </h3>
         </div>
@@ -76,10 +100,18 @@ Vue.component('project-detail', {
                 </li>
             </ul>
             <div class="panel-footer" v-if="allowselect">
-                <div class="checkbox">
-                    <label>
-                      <input type="checkbox" :id="'choose_' + project.id" name="choices[]" :value="project.id" @click="updateChoice"> Apply
-                    </label>
+                <div style="height:20px;">
+                    <div class="progress" style="float:left; width:50%; background-color:white">
+                        <div :class="'progress-bar '+ project.popularity.colour" role="progressbar" :aria-valuenow="project.popularity.percent"
+                          aria-valuemin="0" aria-valuemax="100" :style="'min-width: 2em; width:'+project.popularity.percent+'%'">
+                            @{{ project.popularity.caption }}
+                        </div>
+                    </div>
+                    <div class="checkbox" style="float:right; margin-top:0px;">
+                        <label>
+                          <input type="checkbox" :id="'choose_' + project.id" name="choices[]" :value="project.id" @click="updateChoice"> Apply
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,6 +145,8 @@ var app = new Vue({
         projects: {!! Auth::user()->availableProjectsJson() !!},
         allowSelect: {{ $applicationsEnabled }},
         requiredChoices: {{ $requiredProjectChoices }},
+        requiredUoGChoices: 3,
+        requiredUESTCChoices: 6,
     },
     methods: {
         toggleChoice(projectId) {
@@ -131,13 +165,29 @@ var app = new Vue({
             }, 0);
         },
         invalidChoices: function() {
-            return this.chosenCount != this.requiredChoices;
+            return this.numberOfUoG != this.requiredUoGChoices || this.numberOfUESTC != this.requiredUESTCChoices;
         },
         buttonText: function() {
             if (this.invalidChoices) {
-                return 'You must choose ' + this.requiredChoices + ' projects';
+                return 'You must choose ' + this.requiredUoGChoices + ' UoG projects and ' + this.requiredUESTCChoices + ' UESTC projects.';
             }
             return 'Submit your choices';
+        },
+        numberOfUoG: function() {
+            return this.projects.reduce(function(prevVal, project) {
+                if (!project.chosen) {
+                    return prevVal;
+                }
+                return prevVal + (project.institution === 'UoG' ? 1 : 0);
+            }, 0);
+        },
+        numberOfUESTC: function() {
+            return this.projects.reduce(function(prevVal, project) {
+                if (!project.chosen) {
+                    return prevVal;
+                }
+                return prevVal + (project.institution === 'UESTC' ? 1 : 0);
+            }, 0);
         }
     },
     created() {

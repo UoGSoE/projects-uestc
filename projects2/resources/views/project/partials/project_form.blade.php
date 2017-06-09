@@ -38,6 +38,17 @@
                 @endforeach
             </select>
         </div>
+        <div class="form-group" id="institute_select">
+            <label for="institution">Institution</label>
+            <select id="institution" name="institution" class="{{$project->getInstitution()}} form-control">
+                    <option value="UoG" @if ($project->getInstitution() == 'UoG') selected @endif>
+                        UoG
+                    </option>
+                    <option value="UESTC" @if ($project->getInstitution() == 'UESTC') selected @endif>
+                        UESTC
+                    </option>
+            </select>
+        </div>
         <input type="hidden" name="maximum_students" value="1">
         @can('edit_projects')
             <div class="form-group">
