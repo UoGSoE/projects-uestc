@@ -133,6 +133,22 @@ class StudentProjectTest extends TestCase
 
     }
 
+    /** @test */
+    public function a_student_must_apply_for_projects_that_do_not_have_the_same_supervisor () {
+        ProjectConfig::setOption('round', 1);
+        $supervisor = factory(User::class)->states('student')->create();
+        $student = factory(User::class)->states('student')->create();
+        $project1 = factory(Project::class)->create(['user_id' => $supervisor->id]);
+        $project2 = factory(Project::class)->create(['user_id' => $supervisor->id]);
+        factory(Project::class)->create();
+        factory(Project::class, 6)->create(['institution' => 'UESTC']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), ['choices' => range(1, 9)]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['supervisor_diff']);
+    }
+
     public function test_a_student_can_successfully_apply_for_available_projects()
     {
         ProjectConfig::setOption('round', 1);

@@ -42,11 +42,26 @@ class StudentChoicesController extends Controller
         return count($choices) == count(array_unique($choices));
     }
 
+    public function choicesHaveDifferentSupervisors($choices)
+    {
+        $supervisorIds = Project::find($choices)->pluck('user_id')->all();
+        $uniqueIds = array_unique($supervisorIds);
+        if ($supervisorIds == $uniqueIds) {
+            return true;
+        }
+        return false;
+    }
+
     private function checkChoicesAreOk($choices)
     {
         if (!$this->choicesAreAllDifferent($choices)) {
             return redirect()->back()->withErrors([
                 'choice_diff' => "You must pick {$requiredChoices} *different* projects"
+            ]);
+        }
+        if (!$this->choicesHaveDifferentSupervisors($choices)) {
+            return redirect()->back()->withErrors([
+                'supervisor_diff' => "You cannot choose two projects that have the same supervisor"
             ]);
         }
         $projects = Project::whereIn('id', array_values($choices))->get();
