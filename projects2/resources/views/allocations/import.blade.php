@@ -15,7 +15,7 @@
             <input type="text" class="form-control" readonly>
         </div>
         <p class="help-block">
-            Spreadsheet must in of the form <pre>email|surname|forenames</pre>
+            Spreadsheet must in of the form <pre>GUID|Name|Project</pre>
         </p>
         <button type="submit" class="btn btn-success" disabled>Submit</button>
     </form>
