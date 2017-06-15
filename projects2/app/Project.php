@@ -2,13 +2,14 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\ProjectOversubscribedException;
 use App\Exceptions\StudentAlreadyAllocatedException;
-use Storage;
 use App\Notifications\AllocatedToProject;
 use App\ProjectConfig;
 use Auth;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Storage;
 
 class Project extends Model
 {
@@ -143,7 +144,7 @@ class Project extends Model
 
         $this->students()->sync([$student->id => ['accepted' => true]], false);
         $student->projects()->sync([$this->id]);
-        $student->notify(new AllocatedToProject($this));
+        $student->notify((new AllocatedToProject($this))->delay(Carbon::now()->addSeconds(rand(10, 600))));
         $student->roundAccept($this->id);
         if ($this->isFull()) {
             $this->removeUnsucessfulStudents();
