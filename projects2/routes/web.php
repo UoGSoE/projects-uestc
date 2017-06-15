@@ -15,6 +15,8 @@ Route::post('resetgenerate', 'Auth\AuthController@generateResetLink');
 Route::get('resetpassword/{token}', 'Auth\AuthController@password')->name('password.reset');
 Route::post('resetpassword/{token}', 'Auth\AuthController@resetPassword')->name('password.do_reset');
 
+Route::get('api/projects', 'ProjectController@getProjectsJSON')->name('api.projects');
+
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/', 'HomeController@show')->name('home');
@@ -28,7 +30,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/project/{id}/edit', 'ProjectController@edit')->name('project.edit');
         Route::get('/project/{id}/copy', 'ProjectController@copy')->name('project.copy');
         Route::post('/project/{id}', 'ProjectController@update')->name('project.update');
-        Route::delete('/project/{id}', 'ProjectController@destroy')->name('project.destroy');
+        Route::get('/project/{id}/delete', 'ProjectController@destroy')->name('project.destroy');
 
         Route::post('project/{id}/acceptstudent', 'ProjectController@acceptStudent')->name('project.enrol');
 
@@ -46,6 +48,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['middleware' => ['admin'], 'prefix' => '/admin'], function () {
         Route::get('/staff', 'StaffController@index')->name('staff.index');
+        Route::post('/staff/email/{id}', 'StaffController@sendPasswordEmail');
         Route::get('/staff/import', 'StaffImportController@edit')->name('staff.import');
         Route::post('/staff/import', 'StaffImportController@update')->name('staff.do_import');
 
@@ -58,7 +61,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/user/{id}', 'UserController@show')->name('user.show');
         Route::get('/user/{id}/edit', 'UserController@edit')->name('user.edit');
         Route::post('/user/{id}', 'UserController@update')->name('user.update');
-        Route::delete('/user/{id}', 'UserController@destroy')->name('user.destroy');
+        Route::get('/user/{id}/delete', 'UserController@destroy')->name('user.destroy');
         Route::get('/user/{id}/loginas', 'UserController@logInAs')->name('user.impersonate');
 
         Route::get('/course', 'CourseController@index')->name('course.index');
@@ -67,7 +70,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/course/{id}', 'CourseController@show')->name('course.show');
         Route::get('/course/{id}/edit', 'CourseController@edit')->name('course.edit');
         Route::post('/course/{id}', 'CourseController@update')->name('course.update');
-        Route::delete('/course/{id}', 'CourseController@destroy')->name('course.destroy');
+        Route::get('/course/{id}/delete', 'CourseController@destroy')->name('course.destroy');
 
         Route::get('/course/{id}/students', 'CourseEnrolmentController@edit')->name('enrol.edit');
         Route::post('/course/{id}/students', 'CourseEnrolmentController@update')->name('enrol.update');

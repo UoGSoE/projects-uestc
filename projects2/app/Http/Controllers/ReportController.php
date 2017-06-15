@@ -34,8 +34,7 @@ class ReportController extends Controller
     public function allStudents()
     {
         $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
-        $requiredChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices'));
-        return view('report.all_students', compact('students', 'requiredChoices'));
+        return view('report.all_students', compact('students'));
     }
 
     public function allStaff()

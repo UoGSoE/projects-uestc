@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h2>
-            Reset your password
+            Update your password
         </h2>
 
         <form method="POST" action="{!! action('Auth\AuthController@resetPassword', $token) !!}">
@@ -20,7 +20,7 @@
                 <input type="password" id="inputPassword2" name="password2" value="" class="form-control" required>
             </div>
             <p></p>
-            <button type="submit" class="btn btn-primary">Reset and log in</button>
+            <button type="submit" class="btn btn-primary">Update and log in</button>
 
         </form>
     </div>

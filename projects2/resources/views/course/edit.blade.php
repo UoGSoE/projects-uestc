@@ -4,13 +4,9 @@
     <div class="container">
         <h2>
             Edit Course {{ $course->code }}
-            <form method="POST" action="{!! route('course.destroy', $course->id) !!}" class="pull-right">
-                {!! csrf_field() !!}
-                <input type="hidden" name="_method" value="DELETE">
-                <button class="btn btn-danger pull-right">
-                    Delete
-                </button>
-            </form>
+            <a href="{!! route('course.destroy', $course->id) !!}" class="btn btn-danger pull-right">
+                Delete
+            </a>
         </h2>
 
         <form method="POST" action="{!! action('CourseController@update', $course->id) !!}">

@@ -21,7 +21,7 @@
 @else
     <h2>Available Projects</h2>
     <p>
-        Please choose {{ $requiredProjectChoices }} projects.
+        Please choose {{ $requiredUoGChoices }} UoG projects and {{ $requiredUESTCChoices }} UESTC projects.
     </p>
     <form method="POST" action="{!! route('choices.update') !!}" id="vueform">
         {{ csrf_field() }}
@@ -50,7 +50,6 @@
 
 <script>
 $( document ).ready(function() {
-    $( ".page-header" ).css("margin-top", "120px");
     $(".courses-bar").show();
 });
 </script>
@@ -144,9 +143,8 @@ var app = new Vue({
     data: {
         projects: {!! Auth::user()->availableProjectsJson() !!},
         allowSelect: {{ $applicationsEnabled }},
-        requiredChoices: {{ $requiredProjectChoices }},
-        requiredUoGChoices: 3,
-        requiredUESTCChoices: 6,
+        requiredUoGChoices: {{ $requiredUoGChoices }},
+        requiredUESTCChoices: {{ $requiredUESTCChoices }},
     },
     methods: {
         toggleChoice(projectId) {

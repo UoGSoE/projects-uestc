@@ -33,7 +33,7 @@ class AdminCourseTest extends DuskTestCase
                     ->assertSee('TEST1111')
                     ->clickLink('TEST1111')
                     ->clickLink('Edit')
-                    ->press('Delete')
+                    ->clickLink('Delete')
                     ->assertSee('Course Deleted')
                     ->assertDontSee('TEST1111');
         });
@@ -63,6 +63,5 @@ class AdminCourseTest extends DuskTestCase
                     ->assertDontSee('SURNAME1')
                     ->assertDontSee('NAMESUR1');
         });
-        
     }
 }

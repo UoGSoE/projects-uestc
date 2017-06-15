@@ -3,12 +3,14 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Notifications\StaffPasswordNotification;
+use App\ProjectConfig;
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\User;
-use App\ProjectConfig;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Notification;
+use Tests\TestCase;
 
 class UserAdminTest extends TestCase
 {
@@ -84,7 +86,7 @@ class UserAdminTest extends TestCase
         $adminUser = factory(User::class)->states('admin')->create();
         $regularUser = factory(User::class)->states('staff')->create();
 
-        $response = $this->actingAs($adminUser)->delete(route('user.destroy', $regularUser->id));
+        $response = $this->actingAs($adminUser)->get(route('user.destroy', $regularUser->id));
 
         $response->assertStatus(302);
         $this->assertDatabaseMissing('users', ['email' => $regularUser->email]);
@@ -149,7 +151,7 @@ class UserAdminTest extends TestCase
     }
 
     /** @test */
-    public function can_import_a_list_of_staff_from_a_spreadsheet()
+    public function can_import_a_list_of_staff_from_a_spreadsheet_with_new_users()
     {
         $admin = $this->createAdmin();
         $staff = $this->createStaff();
@@ -159,9 +161,9 @@ class UserAdminTest extends TestCase
         $response = $this->actingAs($admin)
                         ->call('POST', route('staff.do_import'), [], [], ['file' => $file]);
 
-        $response->assertStatus(302);
-        $response->assertRedirect(route('staff.index'));
-        $response->assertSessionHas('success_message');
+        $response->assertStatus(200);
+        $response->assertSee('New Users');
+        $response->assertSee('Send Email');
         $this->assertDatabaseHas('users', ['email' => 'abcd@qpwoeiryt.io']);
         $this->assertDatabaseHas('users', ['email' => 'xyz@gmail.com']);
         $this->assertDatabaseHas('users', ['email' => $staff->email]);

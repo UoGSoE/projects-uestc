@@ -9,6 +9,13 @@
             @endcan
             @can('edit_users')
                 <a href="{!! action('UserController@logInAs', $user->id) !!}" class="btn btn-warning pull-right">Log in as</a>
+                @if(!$user->is_student and $user->usernameIsEmail())
+                    @if($user->hasPasswordReset())
+                        <a style="margin-right:10px" href="#" class="btn btn-outline btn-info pull-right" disabled>User has awaiting password reset email</a>
+                    @else
+                        <a style="margin-right:10px" href="{!! action('StaffController@sendPasswordEmail', $user->id) !!}" class="btn btn-info pull-right">Send Password Reset Email</a>
+                    @endif
+                @endif
             @endcan
         </h2>
         <dl>

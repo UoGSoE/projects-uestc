@@ -13,8 +13,7 @@ class StudentController extends Controller
     public function index()
     {
         $users = User::students()->orderBy('surname')->get();
-        $requiredChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices'));
-        return view('student.index', compact('users', 'requiredChoices'));
+        return view('student.index', compact('users'));
     }
 
     public function create()

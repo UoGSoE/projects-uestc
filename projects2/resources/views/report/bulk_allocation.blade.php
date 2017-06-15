@@ -4,6 +4,7 @@
 
     <h2>
         Bulk Allocation
+        <a href="{!! route('allocations.import') !!}" class="btn btn-default">Import Allocations</a>
         <a action-href="{!! route('admin.get_clear_unsuccessful') !!}" data-confirm="Really remove all un-successful applications" class="btn btn-danger pull-right data-confirm">
             Remove All Unsuccesfull Applications
         </a>

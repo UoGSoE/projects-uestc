@@ -30,9 +30,7 @@ class ImportAllocationsTest extends TestCase
 
         $response = $this->actingAs($student)->get(route('allocations.import'));
 
-        $response->assertStatus(200);
-        $response->assertDontSee('Import Student Allocations');
-        $response->assertDontSee('Submit');
+        $response->assertStatus(403);
     }
 
     /** @test */

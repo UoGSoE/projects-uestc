@@ -71,4 +71,17 @@ class AdminProjectTest extends TestCase
         $response->assertRedirect(route('project.show', $project->id));
         $this->assertTrue($project->fresh()->manually_allocated);
     }
+
+    /** @test */
+    public function get_project_json_via_api () {
+        ProjectConfig::setOption('round', 1);
+        $project = $this->createProject();
+        factory(Project::class, 10)->create();
+
+        $response = $this->get(route('api.projects'));
+
+        $response->assertStatus(200);
+        $response->assertSee($project->title);
+        $response->assertSee($project->description);
+    }
 }

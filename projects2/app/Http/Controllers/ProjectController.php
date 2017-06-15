@@ -197,4 +197,9 @@ class ProjectController extends Controller
         EventLog::log(Auth::user()->id, "Accepted student {$student->fullName()} onto project {$project->title}");
         return redirect()->route('project.show', $project->id)->with('success_message', 'Allocations Saved');
     }
+
+    public function getProjectsJSON()
+    {
+        return response(Project::with('owner')->get()->toJson());
+    }
 }

@@ -15,8 +15,13 @@
             </div>
 
             <div class="form-group">
-                <label for="required_choices">Required number of choices a student must submit</label>
+                <label for="required_choices">Required number of University of Glasgow projects a student must submit</label>
                 <input type="number" id="required_choices" name="required_choices" value="{{ $required_choices }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="uestc_required_choices">Required number of UESTC projects a student must submit</label>
+                <input type="number" id="uestc_required_choices" name="uestc_required_choices" value="{{ $uestc_required_choices }}" class="form-control" required>
             </div>
 
             <div class="form-group">

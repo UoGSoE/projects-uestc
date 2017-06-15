@@ -90,7 +90,7 @@ class StaffProjectTest extends TestCase
         $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
 
         $response = $this->actingAs($this->regularUser)
-                        ->delete(route('project.destroy', $project->id));
+                        ->get(route('project.destroy', $project->id));
 
         $response->assertStatus(302);
         $this->assertDatabaseMissing('projects', ['title' => $project->title]);
@@ -104,7 +104,7 @@ class StaffProjectTest extends TestCase
         $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
 
         $response = $this->actingAs($user2)
-                        ->delete(route('project.destroy', $project->id));
+                        ->get(route('project.destroy', $project->id));
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('projects', ['title' => $project->title]);

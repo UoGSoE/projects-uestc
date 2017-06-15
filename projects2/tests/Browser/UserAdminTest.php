@@ -1,10 +1,12 @@
 <?php
-
+// @codingStandardsIgnoreFile
 namespace Tests\Browser;
 
 use App\User;
-use Tests\DuskTestCase;
+use App\Notifications\StaffPasswordNotification;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Notification;
+use Tests\DuskTestCase;
 
 class UserAdminTest extends DuskTestCase
 {
@@ -92,6 +94,28 @@ class UserAdminTest extends DuskTestCase
                     ->visit(route('user.show', $staffUser->id))
                     ->clickLink('Log in as')
                     ->assertSee("Log Out {$staffUser->fullName()}");
+        });
+    }
+
+    /** @test */
+    public function admin_can_import_staff_via_spreadsheet()
+    {
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+
+        $this->browse(function ($browser) use ($admin, $course) {
+            $browser->loginAs($admin)->visit(route('staff.index'))
+                    ->clickLink('Import Staff')
+                    ->assertSee('Import a list of staff')
+                    ->attach('file', 'tests/data/test_staff_one_user.xlsx')
+                    ->press('Import')
+                    ->assertSee('New Users')
+                    ->assertSee('Qwertyuiop Smith')
+                    ->assertSee('xyz@gmail.com')
+                    ->press('Send Email')
+                    ->pause(2000);
+                    $logFile = file_get_contents(storage_path().'/logs/laravel.log');
+                    $this->assertContains('To: xyz@gmail.com', $logFile);
         });
     }
 }

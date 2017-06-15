@@ -22,7 +22,8 @@ class HomeController extends Controller
         return view(
             'project.student_index',
             ['applicationsEnabled' => Project::applicationsEnabled(),
-             'requiredProjectChoices' => ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3))]
+             'requiredUoGChoices' => ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3)),
+             'requiredUESTCChoices' => ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6))]
         );
     }
 

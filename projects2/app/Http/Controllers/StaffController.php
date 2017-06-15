@@ -20,4 +20,11 @@ class StaffController extends Controller
         $courses = Course::orderBy('title')->get();
         return view('user.create', compact('user', 'courses'));
     }
+
+    public function sendPasswordEmail($id)
+    {
+        $user = User::findOrFail($id);
+        $user->sendPasswordEmail();
+        return redirect()->route('user.edit', $id)->with('success_message', 'Email sent.');
+    }
 }

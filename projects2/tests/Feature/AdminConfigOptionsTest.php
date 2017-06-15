@@ -21,6 +21,7 @@ class AdminConfigOptionsTest extends TestCase
             'applications_allowed' => true,
             'required_choices' => 3,
             'maximum_applications' => 6,
+            'uestc_required_choices' => 6
         ]);
 
         $response->assertStatus(302);

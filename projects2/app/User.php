@@ -4,15 +4,16 @@ namespace App;
 
 use App\Course;
 use App\EventLog;
+use App\Notifications\StaffPasswordNotification;
 use App\PasswordReset;
 use App\ProjectRound;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Notifications\Notifiable;
 use Validator;
 
@@ -102,7 +103,7 @@ class User extends Model implements
     public function projectsArray($index = null)
     {
         $projectArray = [];
-        foreach (range(1, ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3))) as $counter) {
+        foreach (range(1, ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3)) + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'), 6)) as $counter) {
             $projectArray[] = null;
         }
         $projects = $this->projects()->orderBy('title')->get();
@@ -284,29 +285,63 @@ class User extends Model implements
             'institution' => 'required'
         ];
         if (Validator::make(['email' => $email, 'surname' => $surname, 'forenames' => $forenames, 'institution' => $institution], $rules)->fails()) {
-            return false;
+            return;
         }
-        $user = static::where('email', '=', $email)->first();
-        if (!$user) {
+        $userExists = $user = static::where('email', '=', $email)->first();
+        if (!$userExists) {
             $user = new static;
             $user->email = $email;
             $user->username = $email;
-            $user->password = bcrypt(str_random(40));
         }
         $user->surname = $surname;
         $user->forenames = $forenames;
         $user->institution = $institution;
         $user->save();
-        return $user;
+        if (!$userExists) {
+            return $user;
+        }
+    }
+
+    public function sendPasswordEmail()
+    {
+        $token = PasswordReset::create([
+            'user_id' => $this->id,
+            'token' => strtolower(str_random(32)),
+        ]);
+        $this->notify(new StaffPasswordNotification($token));
+        EventLog::log($this->id, 'Generated a password creation email');
+    }
+
+    public function hasPasswordReset()
+    {
+        if ($this->resetToken and !$this->resetToken->hasExpired()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function hasPassword()
+    {
+        return $this->password != null;
+    }
+
+    public function externalHasNoPassword()
+    {
+        return $this->usernameIsEmail() and $this->password == null;
+    }
+
+    public function usernameIsEmail()
+    {
+        if (preg_match('/@/', $this->username)) {
+            return true;
+        }
+        return false;
     }
 
     public static function createFromForm($request)
     {
         $user = new static;
         $user->fill($request->input());
-        if ($request->password) {
-            $user->password = bcrypt($request->password);
-        }
         $user->save();
         if ($user->is_student) {
             $user->updateCourse($request);
@@ -435,7 +470,7 @@ class User extends Model implements
         if ($percent < 10) {
             return '';
         } elseif ($percent < 50) {
-            return 'Somwhat popular';
+            return 'Somewhat popular';
         } elseif ($percent < 70) {
             return 'Very popular';
         } else {

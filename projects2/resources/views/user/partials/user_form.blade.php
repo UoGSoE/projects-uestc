@@ -27,14 +27,6 @@
                         </option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="inputPassword">Password</label>
-                <input type="password" id="inputPassword" name="password" value="" class="form-control">
-                <p class="help-block">
-                    <b>Note:</b> Only fill this in if the user is <em>external</em> to the University. It must
-                    be at least 12 characters long.
-                </p>
-            </div>
             <div class="checkbox">
                 <label>
                     <input type="hidden" name="is_student" value="0">

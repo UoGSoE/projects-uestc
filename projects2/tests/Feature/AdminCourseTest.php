@@ -66,7 +66,7 @@ class AdminCourseTest extends TestCase
         $project = $this->createProject();
         $project->courses()->sync([$course->id, $course2->id]);
 
-        $response = $this->actingAs($admin)->delete(route('course.destroy', $course->id));
+        $response = $this->actingAs($admin)->get(route('course.destroy', $course->id));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('course.index'));
