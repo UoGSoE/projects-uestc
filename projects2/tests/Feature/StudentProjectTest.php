@@ -61,25 +61,25 @@ class StudentProjectTest extends TestCase
         $response->assertDontSee($project->title);
     }
 
-    public function test_student_cant_see_projects_which_the_maximum_number_have_already_applied()
-    {
-        ProjectConfig::setOption('round', 1);
-        $otherStudents = factory(User::class, 6)->states('student')->create();
-        $student = factory(User::class)->states('student')->create();
-        $course = factory(Course::class)->create();
-        $course->students()->save($student);
-        $project = factory(Project::class)->create(['maximum_students' => 1]);
-        $project->courses()->save($course);
-        $project->students()->saveMany($otherStudents);
+    // public function test_student_cant_see_projects_which_the_maximum_number_have_already_applied()
+    // {
+    //     ProjectConfig::setOption('round', 1);
+    //     $otherStudents = factory(User::class, 6)->states('student')->create();
+    //     $student = factory(User::class)->states('student')->create();
+    //     $course = factory(Course::class)->create();
+    //     $course->students()->save($student);
+    //     $project = factory(Project::class)->create(['maximum_students' => 1]);
+    //     $project->courses()->save($course);
+    //     $project->students()->saveMany($otherStudents);
 
-        ProjectConfig::setOption('maximum_applications', 6);
-        $response = $this->actingAs($student)
-                        ->get('/');
+    //     ProjectConfig::setOption('maximum_applications', 6);
+    //     $response = $this->actingAs($student)
+    //                     ->get('/');
 
-        $response->assertStatus(200);
-        $response->assertSee('Available Projects');
-        $response->assertDontSee($project->title);
-    }
+    //     $response->assertStatus(200);
+    //     $response->assertSee('Available Projects');
+    //     $response->assertDontSee($project->title);
+    // }
 
     public function test_a_student_must_apply_for_the_required_number_of_projects()
     {
@@ -183,29 +183,29 @@ class StudentProjectTest extends TestCase
      * so if one has the list of projects open for a while - other students may have filled
      * up their choice in the meantime
      */
-    public function test_a_student_cant_apply_for_projects_which_are_fully_subscribed()
-    {
-        ProjectConfig::setOption('round', 1);
-        ProjectConfig::setOption('uestc_required_choices', 0);
-        $student = factory(User::class)->states('student')->create();
-        $course = factory(Course::class)->create();
-        $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
-        $projects->each(function ($project, $key) use ($course) {
-            $project->courses()->save($course);
-        });
-        $otherStudents = factory(User::class, config('projects.maximumAllowedToApply'))->states('student')->create();
-        $firstProject = Project::first();
-        $firstProject->students()->saveMany($otherStudents);
+    // public function test_a_student_cant_apply_for_projects_which_are_fully_subscribed()
+    // {
+    //     ProjectConfig::setOption('round', 1);
+    //     ProjectConfig::setOption('uestc_required_choices', 0);
+    //     $student = factory(User::class)->states('student')->create();
+    //     $course = factory(Course::class)->create();
+    //     $course->students()->save($student);
+    //     $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+    //     $projects->each(function ($project, $key) use ($course) {
+    //         $project->courses()->save($course);
+    //     });
+    //     $otherStudents = factory(User::class, config('projects.maximumAllowedToApply'))->states('student')->create();
+    //     $firstProject = Project::first();
+    //     $firstProject->students()->saveMany($otherStudents);
 
-        $projectIds = $projects->pluck('id')->toArray();
-        $response = $this->actingAs($student)
-                        ->post(route('choices.update', ['choices' => $projectIds]));
+    //     $projectIds = $projects->pluck('id')->toArray();
+    //     $response = $this->actingAs($student)
+    //                     ->post(route('choices.update', ['choices' => $projectIds]));
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/');
-        $response->assertSessionHasErrors(['oversubscribed']);
-    }
+    //     $response->assertStatus(302);
+    //     $response->assertRedirect('/');
+    //     $response->assertSessionHasErrors(['oversubscribed']);
+    // }
 
     /**
      * Another race condition to check. If the student takes ages to pick their choices, one of them

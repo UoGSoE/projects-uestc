@@ -51,12 +51,6 @@ class StudentChoicesController extends Controller
         }
         $projects = Project::whereIn('id', array_values($choices))->get();
         foreach ($projects as $project) {
-            if ($project->isFullySubscribed()) {
-                return redirect()->back()->withErrors([
-                    'oversubscribed' =>
-                    "Project {$project->title} is now over-subscribed. Please make your choices again."
-                ]);
-            }
             if ($project->isFull()) {
                 return redirect()->back()->withErrors([
                     'full' => "Places on project {$project->title} are all taken. Please make your choices again."

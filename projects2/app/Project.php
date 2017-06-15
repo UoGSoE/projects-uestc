@@ -80,9 +80,6 @@ class Project extends Model
         if (!$this->is_active) {
             return false;
         }
-        if ($this->isFullySubscribed()) {
-            return false;
-        }
         if ($this->isFull()) {
             return false;
         }

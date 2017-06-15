@@ -189,7 +189,7 @@ class User extends Model implements
         });
         $projectArray = [];
         foreach ($available as $project) {
-            $popularityPercent = 100 * ($project->students()->count() / $project->maximum_students);
+            $popularityPercent = 100 * ($project->students()->count() / ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6)));
             $projectArray[] = [
                 'id' => $project->id,
                 'title' => $project->title,

@@ -102,7 +102,7 @@ Vue.component('project-detail', {
                 <div style="height:20px;">
                     <div class="progress" style="float:left; width:50%; background-color:white">
                         <div :class="'progress-bar '+ project.popularity.colour" role="progressbar" :aria-valuenow="project.popularity.percent"
-                          aria-valuemin="0" aria-valuemax="100" :style="'min-width: 2em; width:'+project.popularity.percent+'%'">
+                          aria-valuemin="0" aria-valuemax="100" :style="'min-width: 2em; max-width:100%; width:'+project.popularity.percent+'%'">
                             @{{ project.popularity.caption }}
                         </div>
                     </div>
