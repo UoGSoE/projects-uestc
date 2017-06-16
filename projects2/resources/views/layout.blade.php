@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{!! asset('vendor/datatables/css/dataTables.bootstrap.css') !!}" media="screen" />
     <link rel="stylesheet" href="/css/projects2.css" media="screen" />
     <script src="{!! asset('vendor/jquery.min.js') !!}"></script>
+    <script src="/js/es6-promise.auto.min.js"></script>
     <style>
         .fake-link {
             cursor: pointer;
