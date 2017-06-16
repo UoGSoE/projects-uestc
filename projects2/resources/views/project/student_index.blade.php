@@ -56,6 +56,7 @@ $( document ).ready(function() {
 <script src="/vendor/vuejs_2.1.10.js"></script>
 <script src="/js/student_project_chooser.js"></script>
 <script>
+window.Event = new Vue();
 
 var app = new Vue({
     el: '#vueform',

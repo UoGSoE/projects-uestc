@@ -70,7 +70,6 @@
 /* 0 */
 /***/ (function(module, exports) {
 
-window.Event = new Vue();
 
 Vue.component('project-detail', {
     props: ['project', 'allowselect'],
