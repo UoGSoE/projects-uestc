@@ -68,7 +68,7 @@ var app = new Vue({
     },
     methods: {
         toggleChoice: function(projectId) {
-            let project = this.projects.find((project) => {
+            let project = this.projects.find(function(project) {
                 return project.id == projectId;
             });
             if (project) {
