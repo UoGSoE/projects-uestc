@@ -54,16 +54,64 @@ $( document ).ready(function() {
 });
 </script>
 <script src="/vendor/vuejs_2.1.10.js"></script>
+<script src="/js/student_project_chooser.js"></script>
 <script>
-    global = {
+
+var app = new Vue({
+    el: '#vueform',
+    data: {
         projects: {!! Auth::user()->availableProjectsJson() !!},
         allowSelect: {{ $applicationsEnabled }},
         requiredUoGChoices: {{ $requiredUoGChoices }},
         requiredUESTCChoices: {{ $requiredUESTCChoices }},
-    };
+    },
+    methods: {
+        toggleChoice(projectId) {
+            let project = this.projects.find((project) => {
+                return project.id == projectId;
+            });
+            if (project) {
+                project.chosen = ! project.chosen;
+            }
+        }
+    },
+    computed: {
+        chosenCount: function() {
+            return this.projects.reduce(function(prevVal, project) {
+                return prevVal + project.chosen;
+            }, 0);
+        },
+        invalidChoices: function() {
+            return this.numberOfUoG != this.requiredUoGChoices || this.numberOfUESTC != this.requiredUESTCChoices;
+        },
+        buttonText: function() {
+            if (this.invalidChoices) {
+                return 'You must choose ' + this.requiredUoGChoices + ' UoG projects and ' + this.requiredUESTCChoices + ' UESTC projects.';
+            }
+            return 'Submit your choices';
+        },
+        numberOfUoG: function() {
+            return this.projects.reduce(function(prevVal, project) {
+                if (!project.chosen) {
+                    return prevVal;
+                }
+                return prevVal + (project.institution === 'UoG' ? 1 : 0);
+            }, 0);
+        },
+        numberOfUESTC: function() {
+            return this.projects.reduce(function(prevVal, project) {
+                if (!project.chosen) {
+                    return prevVal;
+                }
+                return prevVal + (project.institution === 'UESTC' ? 1 : 0);
+            }, 0);
+        }
+    },
+    created() {
+        Event.$on('chosen', this.toggleChoice);
+    }
+});
 </script>
-<script src="/js/student_project_chooser.js"></script>
-
 @endif
 
 @endsection

@@ -63,14 +63,14 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-/* WEBPACK VAR INJECTION */(function(global) {window.Event = new Vue();
+window.Event = new Vue();
 
 Vue.component('project-detail', {
     props: ['project', 'allowselect'],
@@ -96,91 +96,8 @@ Vue.component('project-list', {
     template: '\n        <div>\n            <project-detail v-for="project in projects" :project="project" :key="project.id" :allowselect="allowselect" :discipline="project.discipline_css">\n            </project-detail>\n        </div>\n    '
 });
 
-var app = new Vue({
-    el: '#vueform',
-    data: {
-        projects: global.projects,
-        allowSelect: global.applicationsEnabled,
-        requiredUoGChoices: global.requiredUoGChoices,
-        requiredUESTCChoices: global.requiredUESTCChoices
-    },
-    methods: {
-        toggleChoice: function toggleChoice(projectId) {
-            var project = this.projects.find(function (project) {
-                return project.id == projectId;
-            });
-            if (project) {
-                project.chosen = !project.chosen;
-            }
-        }
-    },
-    computed: {
-        chosenCount: function chosenCount() {
-            return this.projects.reduce(function (prevVal, project) {
-                return prevVal + project.chosen;
-            }, 0);
-        },
-        invalidChoices: function invalidChoices() {
-            return this.numberOfUoG != this.requiredUoGChoices || this.numberOfUESTC != this.requiredUESTCChoices;
-        },
-        buttonText: function buttonText() {
-            if (this.invalidChoices) {
-                return 'You must choose ' + this.requiredUoGChoices + ' UoG projects and ' + this.requiredUESTCChoices + ' UESTC projects.';
-            }
-            return 'Submit your choices';
-        },
-        numberOfUoG: function numberOfUoG() {
-            return this.projects.reduce(function (prevVal, project) {
-                if (!project.chosen) {
-                    return prevVal;
-                }
-                return prevVal + (project.institution === 'UoG' ? 1 : 0);
-            }, 0);
-        },
-        numberOfUESTC: function numberOfUESTC() {
-            return this.projects.reduce(function (prevVal, project) {
-                if (!project.chosen) {
-                    return prevVal;
-                }
-                return prevVal + (project.institution === 'UESTC' ? 1 : 0);
-            }, 0);
-        }
-    },
-    created: function created() {
-        Event.$on('chosen', this.toggleChoice);
-    }
-});
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(0);
