@@ -67,7 +67,7 @@ var app = new Vue({
         requiredUESTCChoices: {{ $requiredUESTCChoices }},
     },
     methods: {
-        toggleChoice(projectId) {
+        toggleChoice: function(projectId) {
             let project = this.projects.find((project) => {
                 return project.id == projectId;
             });
@@ -108,7 +108,7 @@ var app = new Vue({
             }, 0);
         }
     },
-    created() {
+    created: function() {
         Event.$on('chosen', this.toggleChoice);
     }
 });
