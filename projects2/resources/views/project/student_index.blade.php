@@ -54,89 +54,56 @@ $( document ).ready(function() {
 });
 </script>
 <script src="/vendor/vuejs_2.1.10.js"></script>
+<script src="/js/student_project_chooser.js"></script>
 <script>
-window.Event = new Vue();
 
-Vue.component('project-detail', {
-    props: ['project', 'allowselect'],
-    data() {
-        return {
-            showDetails: false,
+// https://tc39.github.io/ecma262/#sec-array.prototype.find
+// IE11 polyfill for array.find....
+if (!Array.prototype.find) {
+  Object.defineProperty(Array.prototype, 'find', {
+    value: function(predicate) {
+     // 1. Let O be ? ToObject(this value).
+      if (this == null) {
+        throw new TypeError('"this" is null or not defined');
+      }
+
+      var o = Object(this);
+
+      // 2. Let len be ? ToLength(? Get(O, "length")).
+      var len = o.length >>> 0;
+
+      // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+      if (typeof predicate !== 'function') {
+        throw new TypeError('predicate must be a function');
+      }
+
+      // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+      var thisArg = arguments[1];
+
+      // 5. Let k be 0.
+      var k = 0;
+
+      // 6. Repeat, while k < len
+      while (k < len) {
+        // a. Let Pk be ! ToString(k).
+        // b. Let kValue be ? Get(O, Pk).
+        // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+        // d. If testResult is true, return kValue.
+        var kValue = o[k];
+        if (predicate.call(thisArg, kValue, k, o)) {
+          return kValue;
         }
-    },
-    template: `
-    <div>
-    <div class="panel panel-default">
-        <div class="panel-heading fake-link" :id="'title_' + project.id" @click="toggleDetails">
-            <h3 class="panel-title">
-                @{{ project.title }} (@{{ project.owner }})
-                <span v-if="project.discipline">
-                    (field @{{ project.discipline }})
-                </span>
-                <span style="float:right">
-                    <img :src="'img/'+project.institution+'.png'" :alt="project.institution" height="20" width="30">
-                </span>
-            </h3>
-        </div>
-        <transition name="fade">
-        <div v-if="showDetails">
-            <div class="panel-body" >
-                @{{ project.description }}
-                <div class="help-block">
-                    Prerequisites: @{{ project.prereq }}
-                </div>
-            </div>
-            <ul class="list-group">
-                <li class="list-group-item" v-for="link in project.links">
-                    <a :href="link.url" target="_blank">
-                        @{{ link.url}}
-                    </a>
-                </li>
-                <li class="list-group-item" v-for="file in project.files">
-                    <a :href="'/projectfile/' + file.id">
-                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span> @{{ file.original_filename }}
-                    </a>
-                </li>
-            </ul>
-            <div class="panel-footer" v-if="allowselect">
-                <div style="height:20px;">
-                    <div class="progress" style="float:left; width:50%; background-color:white">
-                        <div :class="'progress-bar '+ project.popularity.colour" role="progressbar" :aria-valuenow="project.popularity.percent"
-                          aria-valuemin="0" aria-valuemax="100" :style="'min-width: 2em; max-width:100%; width:'+project.popularity.percent+'%'">
-                            @{{ project.popularity.caption }}
-                        </div>
-                    </div>
-                    <div class="checkbox" style="float:right; margin-top:0px;">
-                        <label>
-                          <input type="checkbox" :id="'choose_' + project.id" name="choices[]" :value="project.id" @click="updateChoice"> Apply
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </transition>
-    </div>
-    </div>
-    `,
-    methods: {
-        updateChoice: function() {
-            Event.$emit('chosen', this.project.id)
-        },
-        toggleDetails: function() {
-            this.showDetails = !this.showDetails;
-        }
+        // e. Increase k by 1.
+        k++;
+      }
+
+      // 7. Return undefined.
+      return undefined;
     }
-});
+  });
+}
 
-Vue.component('project-list', {
-    props: ['projects', 'allowselect'],
-    template: `
-        <div>
-            <project-detail v-for="project in projects" :project="project" :key="project.id" :allowselect="allowselect" :discipline="project.discipline_css">
-            </project-detail>
-        </div>
-    `,
-});
+window.Event = new Vue();
 
 var app = new Vue({
     el: '#vueform',
@@ -148,8 +115,8 @@ var app = new Vue({
         supervisors: [],
     },
     methods: {
-        toggleChoice(projectId) {
-            let project = this.projects.find((project) => {
+        toggleChoice: function(projectId) {
+            let project = this.projects.find(function(project) {
                 return project.id == projectId;
             });
             if (project) {
@@ -206,12 +173,11 @@ var app = new Vue({
             }, 0);
         }
     },
-    created() {
+    created: function() {
         Event.$on('chosen', this.toggleChoice);
     }
 });
 </script>
-
 @endif
 
 @endsection
