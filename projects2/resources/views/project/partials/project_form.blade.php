@@ -20,7 +20,7 @@
         </div>
         <div class="form-group">
             <label for="inputCourses">Courses</label>
-            <select id="inputCourses" name="courses[]" class="form-control select2" multiple required>
+            <select style="margin:28px !important" id="inputCourses" name="courses[]" class="form-control select2" multiple required>
                 @foreach ($courses as $course)
                     <option value="{{ $course->id }}" @if ($project->hasCourse($course->id)) selected @endif>
                         {{ $course->code }} {{ $course->title }}

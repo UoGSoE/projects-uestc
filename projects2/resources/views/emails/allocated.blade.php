@@ -5,6 +5,6 @@ You have been accepted onto the project '{{ $project->title }}'.  Please get in 
 with the project supervisor at {{ $project->owner->email }}.
 
 Thanks,<br>
-{{ config('app.name') }}
+Final Year Project Glasgow College UESTC
 
 @endcomponent

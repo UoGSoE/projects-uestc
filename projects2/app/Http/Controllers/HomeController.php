@@ -19,6 +19,7 @@ class HomeController extends Controller
 
     public function studentHomepage()
     {
+        //dd(Auth::user()->availableProjectsJson());
         return view(
             'project.student_index',
             ['applicationsEnabled' => Project::applicationsEnabled(),

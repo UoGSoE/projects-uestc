@@ -7,6 +7,7 @@ use App\EventLog;
 use App\Notifications\StaffPasswordNotification;
 use App\PasswordReset;
 use App\ProjectRound;
+use App\projects;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -174,7 +175,9 @@ class User extends Model implements
         if (!$course) {
             return collect([]);
         }
-        return $course->projects()->active()->inRandomOrder()->get();
+
+        return $course->projects()->active()->join('users', 'projects.user_id', '=', 'users.id')
+            ->orderBy('users.surname')->orderBy('projects.title')->get();
     }
 
     /**

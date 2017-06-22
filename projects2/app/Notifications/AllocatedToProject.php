@@ -43,7 +43,7 @@ class AllocatedToProject extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)->subject('UESTC Student Projects')->markdown('emails.allocated', ['project' => $this->project]);
+        return (new MailMessage)->subject('Final Year Project Glasgow College UESTC')->markdown('emails.allocated', ['project' => $this->project]);
     }
 
     /**

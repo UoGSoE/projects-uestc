@@ -145,6 +145,7 @@ var app = new Vue({
         allowSelect: {{ $applicationsEnabled }},
         requiredUoGChoices: {{ $requiredUoGChoices }},
         requiredUESTCChoices: {{ $requiredUESTCChoices }},
+        supervisors: [],
     },
     methods: {
         toggleChoice(projectId) {
@@ -153,6 +154,17 @@ var app = new Vue({
             });
             if (project) {
                 project.chosen = ! project.chosen;
+                if (project.chosen) {
+                    if (this.supervisors.includes(project.user_id)) {
+                        this.supervisors.unique = false;
+                    }
+                    this.supervisors.push(project.user_id);
+                } else {
+                    this.supervisors.pop(project.user_id); //remove the second choice
+                    if (this.supervisors.includes(project.user_id)) {
+                        this.supervisors.unique = this.supervisors.indexOf(project.user_id) == this.supervisors.lastIndexOf(project.user_id);
+                    }
+                }
             }
         }
     },
@@ -165,7 +177,13 @@ var app = new Vue({
         invalidChoices: function() {
             return this.numberOfUoG != this.requiredUoGChoices || this.numberOfUESTC != this.requiredUESTCChoices;
         },
+        duplicateSupervisor: function() {
+            console.log(this.supervisors.unique);
+        },
         buttonText: function() {
+            if (this.duplicateSupervisor) {
+                return 'You cannot choose two projects with the same supervisor.';
+            }
             if (this.invalidChoices) {
                 return 'You must choose ' + this.requiredUoGChoices + ' UoG projects and ' + this.requiredUESTCChoices + ' UESTC projects.';
             }
