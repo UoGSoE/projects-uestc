@@ -2,16 +2,17 @@
 // @codingStandardsIgnoreFile
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\User;
 use App\Course;
+use App\Notifications\AllocatedToProject;
 use App\Project;
 use App\ProjectConfig;
-use App\Notifications\AllocatedToProject;
+use App\User;
+use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Notification;
+use Tests\TestCase;
 
 class StaffProjectTest extends TestCase
 {
@@ -24,6 +25,36 @@ class StaffProjectTest extends TestCase
         $this->regularUser = factory(User::class)->states('staff')->create();
 
         $response = $this->actingAs($this->regularUser)
+                        ->post(route('project.store'), $this->defaultProjectData(['institution' => 'UESTC']));
+
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('projects', ['title' => 'DEFAULTTITLE', 'discipline_id' => 1, 'institution' => 'UESTC']);
+        $project = Project::first();
+        $response->assertRedirect(route('project.show', $project->id));
+    }
+
+    /** @test */
+    public function staff_can_only_create_projects_between_valid_dates () {
+        $this->regularUser = factory(User::class)->states('staff')->create();
+        ProjectConfig::setOption('project_edit_start', Carbon::now()->addDays(7)->format('d/m/Y'));
+        ProjectConfig::setOption('project_edit_end', Carbon::now()->addDays(14)->format('d/m/Y'));
+
+        $response = $this->actingAs($this->regularUser)
+                        ->post(route('project.store'), $this->defaultProjectData(['institution' => 'UESTC']));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('home'));
+        $response->assertSessionHasErrors('dates');
+        $this->assertEquals(0, Project::count());
+    }
+
+    /** @test */
+    public function admin_can_edit_projects_no_matter_what_the_date () {
+        $this->admin = factory(User::class)->states('admin')->create();
+        ProjectConfig::setOption('project_edit_start', Carbon::now()->addDays(7)->format('d/m/Y'));
+        ProjectConfig::setOption('project_edit_end', Carbon::now()->addDays(14)->format('d/m/Y'));
+
+        $response = $this->actingAs($this->admin)
                         ->post(route('project.store'), $this->defaultProjectData(['institution' => 'UESTC']));
 
         $response->assertStatus(302);

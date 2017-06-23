@@ -37,13 +37,13 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <button :disabled="invalidChoices" class="btn">@{{ buttonText }}</button>
+                        <button :disabled="cannotSubmit" class="btn">@{{ buttonText }}</button>
                     </ul>
                 </div>
             </div>
         </div>
         <project-list :projects="projects" :allowselect="allowSelect"></project-list>
-        <button :disabled="invalidChoices">
+        <button :disabled="cannotSubmit">
             @{{ buttonText }}
         </button>
     </form>
@@ -122,15 +122,12 @@ var app = new Vue({
             if (project) {
                 project.chosen = ! project.chosen;
                 if (project.chosen) {
-                    if (this.supervisors.includes(project.user_id)) {
-                        this.supervisors.unique = false;
-                    }
-                    this.supervisors.push(project.user_id);
+                    this.supervisors.push(project.owner);
                 } else {
-                    this.supervisors.pop(project.user_id); //remove the second choice
-                    if (this.supervisors.includes(project.user_id)) {
-                        this.supervisors.unique = this.supervisors.indexOf(project.user_id) == this.supervisors.lastIndexOf(project.user_id);
-                    }
+                    this.supervisors.pop(project.owner); //remove the second choice
+                }
+                if (this.supervisors.includes(project.owner)) {
+                    this.supervisors.unique = this.supervisors.indexOf(project.owner) == this.supervisors.lastIndexOf(project.owner);
                 }
             }
         }
@@ -141,14 +138,17 @@ var app = new Vue({
                 return prevVal + project.chosen;
             }, 0);
         },
+        cannotSubmit: function() {
+            if (this.supervisors.unique == true && !this.invalidChoices) {
+                return false;
+            }
+            return true;
+        },
         invalidChoices: function() {
             return this.numberOfUoG != this.requiredUoGChoices || this.numberOfUESTC != this.requiredUESTCChoices;
         },
-        duplicateSupervisor: function() {
-            console.log(this.supervisors.unique);
-        },
         buttonText: function() {
-            if (this.duplicateSupervisor) {
+            if (this.supervisors.unique == false) {
                 return 'You cannot choose two projects with the same supervisor.';
             }
             if (this.invalidChoices) {

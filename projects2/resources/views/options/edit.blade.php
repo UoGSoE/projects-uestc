@@ -29,6 +29,19 @@
                 <input type="number" id="round" name="round" value="{{ $round }}" class="form-control" required>
             </div>
 
+            <div class="form-group">
+                <label for="project_edit_start">Allow Staff To Edit Project Between (Start - End)</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" id="project_edit_start" name="project_edit_start" value="{{ $project_edit_start }}" class="form-control pikaday" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="project_edit_end" name="project_edit_end" value="{{ $project_edit_end }}" class="form-control pikaday" required>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="checkbox">
                 <label>
                     <input type="hidden" name="logins_allowed" value="0">
@@ -48,4 +61,10 @@
 
         </form>
     </div>
+    <script src="/js/moment.js"></script>
+    <script src="/js/pikaday.js"></script>
+    <script>
+        new Pikaday({ field: document.getElementById('project_edit_start'), format: 'DD/MM/YYYY', });
+        new Pikaday({ field: document.getElementById('project_edit_end'), format: 'DD/MM/YYYY', });
+    </script>
 @stop

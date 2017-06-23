@@ -3,10 +3,11 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class AdminConfigOptionsTest extends TestCase
 {
@@ -21,7 +22,9 @@ class AdminConfigOptionsTest extends TestCase
             'applications_allowed' => true,
             'required_choices' => 3,
             'maximum_applications' => 6,
-            'uestc_required_choices' => 6
+            'uestc_required_choices' => 6,
+            'project_edit_start' => Carbon::now()->format('d/m/Y'),
+            'project_edit_end' => Carbon::now()->addDays(7)->format('d/m/Y'),
         ]);
 
         $response->assertStatus(302);
@@ -30,6 +33,8 @@ class AdminConfigOptionsTest extends TestCase
         $this->assertDatabaseHas('project_configs', ['key' => 'required_choices', 'value' => 3]);
         $this->assertDatabaseHas('project_configs', ['key' => 'maximum_applications', 'value' => 6]);
         $this->assertDatabaseHas('project_configs', ['key' => 'round', 'value' => 1]);
+        $this->assertDatabaseHas('project_configs', ['key' => 'project_edit_start', 'value' => Carbon::now()->format('d/m/Y')]);
+        $this->assertDatabaseHas('project_configs', ['key' => 'project_edit_end', 'value' => Carbon::now()->addDays(7)->format('d/m/Y')]);
         $this->assertDatabaseHas('project_configs', ['key' => 'applications_allowed', 'value' => true]);
     }
 }

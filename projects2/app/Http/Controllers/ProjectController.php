@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use Gate;
-use App\User;
 use App\Course;
-use App\Project;
-use App\EventLog;
 use App\Discipline;
-use App\Http\Requests;
-use Illuminate\Http\Request;
+use App\EventLog;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Project;
+use App\ProjectConfig;
+use App\User;
+use Auth;
+use Carbon\Carbon;
+use Gate;
+use Illuminate\Http\Request;
 
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
@@ -54,6 +56,10 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->projectEditingAllowed()) {
+            return redirect()->route('home')->withErrors(['dates' => 'Project editing currently disabled.']);
+        }
+
         $this->validate($request, [
             'title' => 'required|max:255',
             'description' => 'required',
@@ -201,5 +207,18 @@ class ProjectController extends Controller
     public function getProjectsJSON()
     {
         return response(Project::with('owner')->get()->toJson());
+    }
+
+    public function projectEditingAllowed()
+    {
+        if (Auth::user()->hasRoles()) {
+            return true;
+        }
+        $start = Carbon::createFromFormat('d/m/Y', ProjectConfig::getOption('project_edit_start', Carbon::now()->subDays(1)->format('d/m/Y')));
+        $end = Carbon::createFromFormat('d/m/Y', ProjectConfig::getOption('project_edit_end', Carbon::now()->addDays(1)->format('d/m/Y')));
+        if (!Carbon::now()->between($start, $end)) {
+            return false;
+        }
+        return true;
     }
 }
