@@ -53,8 +53,8 @@ $( document ).ready(function() {
     $(".courses-bar").show();
 });
 </script>
-<script src="/vendor/vuejs_2.1.10.js"></script>
-<script src="/js/student_project_chooser.js"></script>
+<script src="{!! asset('/vendor/vuejs_2.1.10.js') !!}"></script>
+<script src="{!! asset('/js/student_project_chooser.js') !!}"></script>
 <script>
 
 // https://tc39.github.io/ecma262/#sec-array.prototype.find
