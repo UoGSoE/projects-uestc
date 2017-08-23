@@ -54,7 +54,10 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => [
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'name' => env('MAIL_FROM_NAME', 'Example')
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -121,4 +124,12 @@ return [
 
     'pretend' => env('MAIL_PRETEND', false),
 
+
+    'markdown' => [
+        'theme' => 'default',
+
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
+    ],
 ];

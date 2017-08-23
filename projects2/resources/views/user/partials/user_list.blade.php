@@ -11,7 +11,7 @@
             <tbody>
                 @foreach ($users as $user)
                     <tr>
-                        <td><a href="{!! action('UserController@show', $user->id) !!}">{{ $user->username }}</a></td>
+                        <td><a href="{!! action('UserController@show', $user->id) !!}">{{ $user->username }}</a> @if ($user->externalHasNoPassword()) <span class="glyphicon glyphicon-warning-sign" aria-hidden="true" title="User has no password set"></span>@endif</td>
                         <td>{{ $user->surname }}</td>
                         <td>{{ $user->forenames }}</td>
                         <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>

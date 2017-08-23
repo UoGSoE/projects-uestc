@@ -1,7 +1,0 @@
-before_script:
-  - bash gitlab-ci.sh
-test:php7.1:
-  image: bashy/docker-build:php71
-  script:
-  - cd projects2 && php phpunit.phar
-  

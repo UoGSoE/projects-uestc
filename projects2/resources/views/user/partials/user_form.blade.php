@@ -16,13 +16,16 @@
                 <label for="inputEmail">Email</label>
                 <input type="email" id="inputEmail" name="email" value="{{ old('email', $user->email) }}" class="form-control" required>
             </div>
-            <div class="form-group">
-                <label for="inputPassword">Password</label>
-                <input type="password" id="inputPassword" name="password" value="" class="form-control">
-                <p class="help-block">
-                    <b>Note:</b> Only fill this in if the user is <em>external</em> to the University. It must
-                    be at least 12 characters long.
-                </p>
+            <div class="form-group" id="institute_select">
+                <label for="institution">Institution</label>
+                <select id="institution" name="institution" class="form-control">
+                        <option value="UoG" @if ($user->institution == 'UoG') selected @endif>
+                            UoG
+                        </option>
+                        <option value="UESTC" @if ($user->institution == 'UESTC') selected @endif>
+                            UESTC
+                        </option>
+                </select>
             </div>
             <div class="checkbox">
                 <label>
@@ -30,6 +33,19 @@
                     <input type="checkbox" id="is_student" name="is_student" value="1" @if ($user->is_student) checked @endif> Is a student?
                 </label>
             </div>
+            <div class="checkbox">
+                <label>
+                    <input type="hidden" name="is_admin" value="0">
+                    <input type="checkbox" id="is_admin" name="is_admin" value="1" @if ($user->is_admin) checked @endif> Is a site admin?
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="hidden" name="is_convenor" value="0">
+                    <input type="checkbox" id="is_convenor" name="is_convenor" value="1" @if ($user->is_convenor) checked @endif> Is a project convenor?
+                </label>
+            </div>
+
             <div class="form-group" id="course_select" @if (!$user->is_student) style="display:none" @endif>
                 <label for="inputCourse">Course</label>
                 <select id="inputCourse" name="course_id" class="form-control">
@@ -41,19 +57,7 @@
                     @endforeach
                 </select>
             </div>
-            @can('edit_user_roles')
-                <div class="form-group">
-                    <label for="inputRoles">Roles (Optional)</label>
-                    <select id="inputRoles" name="roles[]" class="form-control select2" multiple>
-                        @foreach ($roles as $role)
-                            <option value="{{ $role->id }}" @if ($user->hasRole($role->title)) selected @endif>
-                                {{ $role->label }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            @endcan
-        @if ($user->is_student)
+        @if ($user->is_student and $user->unallocated())
             <div class="form-group">
                 <label for="inputProject">Allocate to project</label>
                 <select id="inputProject" name="project_id" class="form-control">
@@ -61,13 +65,13 @@
                     @foreach($projects as $project)
                         @if ($project->isAvailable())
                             <option value="{{ $project->id }}">
-                                {{ $project->title }} ({{$project->type->title}})
+                                {{ $project->title }} ({{$project->disciplineTitle()}})
                             </option>
                         @endif
                     @endforeach
                 </select>
                 <p class="help-block">
-                    This will allocate them as their first preference and automatically approve them.
+                    This will also automatically approve them on the project.
                 </p>
             </div>
         @endif

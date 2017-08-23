@@ -14,7 +14,9 @@ class CreateUserRequest extends Request
      */
     public function authorize()
     {
-        return Gate::allows('edit_users');
+        return true;
+        return $this->user()->isAdmin();
+        //return Gate::allows('edit_users');
     }
 
     /**

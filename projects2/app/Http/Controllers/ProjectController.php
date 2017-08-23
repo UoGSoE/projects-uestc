@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use Gate;
-use App\User;
 use App\Course;
-use App\Project;
+use App\Discipline;
 use App\EventLog;
-use App\Programme;
-use App\ProjectType;
-use App\Http\Requests;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Project;
+use App\ProjectConfig;
+use App\User;
+use Auth;
+use Carbon\Carbon;
+use Gate;
+use Illuminate\Http\Request;
 
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
@@ -38,14 +39,13 @@ class ProjectController extends Controller
     public function create()
     {
         $project = new Project;
-        $project->is_active = false;
+        $project->is_active = true;
         $project->maximum_students = 1;
         $project->user_id = Auth::user()->id;
-        $types = ProjectType::orderBy('title')->get();
-        $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
+        $disciplines = Discipline::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
-        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff'));
+        return view('project.create', compact('project', 'courses', 'staff', 'disciplines'));
     }
 
     /**
@@ -56,20 +56,27 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->projectEditingAllowed()) {
+            return redirect()->route('home')->withErrors(['dates' => 'Project editing currently disabled.']);
+        }
+
         $this->validate($request, [
             'title' => 'required|max:255',
             'description' => 'required',
             'courses' => 'required|array',
-            'type_id' => 'required|integer',
             'maximum_students' => 'required|integer|min:1',
-            'user_id' => 'required|integer|min:1'
+            'user_id' => 'required|integer',
         ]);
+
         $project = new Project;
         $project->fill($request->input());
         $project->save();
         $project->courses()->sync($request->courses);
-        if ($request->has('programmes')) {
-            $project->programmes()->sync($request->programmes);
+        if ($request->has('links')) {
+            $project->syncLinks($request->links);
+        }
+        if ($request->hasFile('files')) {
+            $project->addFiles($request->file('files'));
         }
         EventLog::log(Auth::user()->id, "Created project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id);
@@ -102,11 +109,10 @@ class ProjectController extends Controller
         if (Gate::denies('edit_this_project', $project)) {
             abort(403);
         }
-        $types = ProjectType::orderBy('title')->get();
-        $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
+        $disciplines = Discipline::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
-        return view('project.edit', compact('project', 'types', 'programmes', 'courses', 'staff'));
+        return view('project.edit', compact('project', 'courses', 'staff', 'disciplines'));
     }
 
     /**
@@ -118,13 +124,17 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!$this->projectEditingAllowed()) {
+            return redirect()->route('home')->withErrors(['dates' => 'Project editing currently disabled.']);
+        }
+
         $this->validate($request, [
             'title' => 'required|max:255',
             'description' => 'required',
             'courses' => 'required|array',
-            'type_id' => 'required|integer',
             'maximum_students' => 'required|integer|min:1',
-            'user_id' => 'required|integer|min:1'
+            'user_id' => 'required|integer',
+            'links.*.url' => 'url',
         ]);
         $project = Project::findOrFail($id);
         if (Gate::denies('edit_this_project', $project)) {
@@ -132,8 +142,19 @@ class ProjectController extends Controller
         }
         $project->fill($request->input());
         $project->save();
+        if ($request->has('student_id')) {
+            $project->preAllocate($request->student_id);
+        }
+        if ($request->has('links')) {
+            $project->syncLinks($request->links);
+        }
+        if ($request->hasFile('files')) {
+            $project->addFiles($request->file('files'));
+        }
+        if ($request->has('deletefiles')) {
+            $project->deleteFiles($request->deletefiles);
+        }
         $project->courses()->sync($request->courses);
-        //$project->programmes()->sync($request->programmes);
         EventLog::log(Auth::user()->id, "Updated project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id);
     }
@@ -147,6 +168,9 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         $project = Project::findOrFail($id);
+        if (Gate::denies('edit_this_project', $project)) {
+            abort(403);
+        }
         EventLog::log(Auth::user()->id, "Deleted project {$project->title}");
         $project->delete();
         return redirect()->to('/')->with('success_message', 'Project deleted');
@@ -159,128 +183,46 @@ class ProjectController extends Controller
      * @param  integer $id Project ID
      * @return Response
      */
-    public function duplicate($id)
+    public function copy($id)
     {
         $project = Project::findOrFail($id)->replicate();
-        $types = ProjectType::orderBy('title')->get();
-        $programmes = Programme::orderBy('title')->get();
         $courses = Course::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
+        $disciplines = Discipline::orderBy('title')->get();
         EventLog::log(Auth::user()->id, "Copied project {$project->title}");
-        return view('project.create', compact('project', 'types', 'programmes', 'courses', 'staff'));
+        return view('project.create', compact('project', 'courses', 'staff', 'disciplines'));
     }
 
-    /**
-     * Accept (or un-accept) students onto projects
-     * @param  Request $request
-     * @param  integer  $id      The project ID
-     * @return Response
-     */
-    public function acceptStudents(Request $request, $id)
+    public function acceptStudent(Request $request, $id)
     {
         $project = Project::findOrFail($id);
-        if (!$request->has('accepted')) {
-            return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'No changes');
+        if (!$project->canAcceptAStudent()) {
+            return redirect()->route('project.show', $id)->withErrors(['full' => 'This project cannot accept students']);
         }
-        $studentList = $this->buildListOfStudents($request, $id);
-        $this->setThisAsOnlyChoiceForAcceptedStudents($studentList, $id);
-        $project->students()->sync($studentList);
-        EventLog::log(Auth::user()->id, "Accepted students onto project {$project->title}");
-        return redirect()->action('ProjectController@show', $project->id)->with('success_message', 'Allocations Saved');
+        $student = User::findOrFail($request->accepted);
+        if ($student->isAllocated()) {
+            return redirect()->route('project.show', $id)->withErrors(['already_allocated' => 'That student has been accepted on a project already']);
+        }
+        $project->acceptStudent($student);
+        EventLog::log(Auth::user()->id, "Accepted student {$student->fullName()} onto project {$project->title}");
+        return redirect()->route('project.show', $project->id)->with('success_message', 'Allocations Saved');
     }
 
-    /**
-     * Builds an array suitable for ->sync() on projects based on the 'accepted[]' request input
-     * @param  Request $request   The form $request object
-     * @param  integer $projectId The project->id
-     * @return array            Array of data as $data[student_id] => ['accepted' => boolean]
-     */
-    private function buildListOfStudents($request, $projectId)
+    public function getProjectsJSON()
     {
-        $data = [];
-        foreach ($request->accepted as $studentId => $accepted) {
-            $data[$studentId] = $this->acceptedPivotFlag($accepted);
-        }
-        return $data;
+        return response(Project::with('owner')->get()->toJson());
     }
 
-    /**
-     * Readable helper to build the sync() suitable pivot data
-     * @param  boolean $accepted Whether or not a student was accepted
-     * @return array
-     */
-    private function acceptedPivotFlag($accepted)
+    public function projectEditingAllowed()
     {
-        return [ 'accepted' => $accepted ];
-    }
-
-    /**
-     * Loops over all the students passed and removes any other projects if they've been accepted onto this one
-     * @param array $studentList Array of students from buildListOfStudents()
-     * @param integer $projectId   ID of the project we're working with
-     */
-    private function setThisAsOnlyChoiceForAcceptedStudents($studentList, $projectId)
-    {
-        foreach ($studentList as $studentId => $accepted) {
-            $this->updateStudentProjectsWhereAccepted($studentId, $projectId, $accepted['accepted']);
+        if (Auth::user()->hasRoles()) {
+            return true;
         }
-    }
-
-    /**
-     * If the student was accepted onto the project - remove all other choices they've made via sync()
-     * @param  integer $studentId
-     * @param  integer $projectId
-     * @param  boolean $accepted
-     */
-    private function updateStudentProjectsWhereAccepted($studentId, $projectId, $accepted)
-    {
-        if ($accepted) {
-            $student = User::findOrFail($studentId);
-            $student->projects()->sync([$projectId]);
+        $start = Carbon::createFromFormat('d/m/Y', ProjectConfig::getOption('project_edit_start', Carbon::now()->subDays(1)->format('d/m/Y')));
+        $end = Carbon::createFromFormat('d/m/Y', ProjectConfig::getOption('project_edit_end', Carbon::now()->addDays(1)->format('d/m/Y')));
+        if (!Carbon::now()->between($start, $end)) {
+            return false;
         }
-    }
-
-    /**
-     * Bulk allocate students to projects
-     * @param  Request $request
-     * @return redirect
-     */
-    public function bulkAllocate(Request $request)
-    {
-        if (!$request->has('student')) {
-            return redirect()->back();
-        }
-        foreach ($request->student as $student_id => $project_id) {
-            $student = User::findOrFail($student_id);
-            $data[$project_id] = [ 'accepted' => true ];
-            $student->projects()->sync($data);
-        }
-        return redirect()->action('ReportController@bulkAllocate')->with('success_message', 'Allocations saved');
-    }
-
-    /**
-     * Show the form to let admins bulk-edit whether projects are active or not
-     * @return view
-     */
-    public function bulkEditActive()
-    {
-        $projects = Project::orderBy('title')->get();
-        return view('project.bulk_active', compact('projects'));
-    }
-
-    /**
-     * Bulk save whether projects are active or not
-     * @param  Request $request
-     * @return redirect
-     */
-    public function bulkSaveActive(Request $request)
-    {
-        if (! $request->has('statuses')) {
-            return redirect()->action('ProjectController@bulkEditActive')->with('success_message', 'No changes made');
-        }
-        foreach ($request->statuses as $projectId => $status) {
-            Project::findOrFail($projectId)->update(['is_active' => $status]);
-        }
-        return redirect()->action('ProjectController@bulkEditActive')->with('success_message', 'Changes saved');
+        return true;
     }
 }

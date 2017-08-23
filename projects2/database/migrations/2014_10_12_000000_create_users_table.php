@@ -19,8 +19,13 @@ class CreateUsersTable extends Migration
             $table->string('password', 60)->nullable()->default(null);
             $table->string('surname', 255);
             $table->string('forenames', 255);
+            $table->boolean('is_convenor')->default(false);
             $table->boolean('is_student')->default(false);
+            $table->boolean('is_admin')->default(false);
             $table->datetime('last_login')->nullable()->default(null);
+            $table->text('bio')->nullable();
+            $table->string('cv_file')->nullable();
+            $table->string('institution')->default('UoG');
             $table->rememberToken();
             $table->timestamps();
         });

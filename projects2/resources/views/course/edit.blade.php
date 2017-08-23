@@ -4,7 +4,7 @@
     <div class="container">
         <h2>
             Edit Course {{ $course->code }}
-            <a action-href="{!! action('CourseController@destroy', $course->id) !!}" data-confirm="Really delete this course?" class="btn btn-danger pull-right data-confirm">
+            <a href="{!! route('course.destroy', $course->id) !!}" class="btn btn-danger pull-right">
                 Delete
             </a>
         </h2>

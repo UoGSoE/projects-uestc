@@ -31,34 +31,61 @@ class AuthController extends Controller
         $username = trim(strtolower($request->input('username')));
         $password = $request->input('password');
 
-        if ($this->isAStudent($username) and config("projects.studentsDisabled") == true) {
-            return redirect()->refresh()->withErrors(['errors' => 'Student logins are currently disabled']);
+        if ($this->studentLoginsDisabled($username)) {
+            return redirect()->refresh()->withErrors(['invalid' => 'Student logins are currently disabled']);
         }
 
-        Log::info($this->isAStudent($username));
-        // handle local users first
+        $user = $this->localLoginByUsername($username, $password);
+        if ($user) {
+            return $this->redirectUrl();
+        }
+
+        $user = $this->localLoginByEmail($username, $password);
+        if ($user) {
+            return $this->redirectUrl();
+        }
+
+        $user = $this->ldapLogin($username, $password);
+        if ($user) {
+            return $this->redirectUrl();
+        }
+
+        return redirect()->refresh()->withErrors(['invalid' => 'Username and/or password are incorrect.']);
+    }
+
+    public function redirectUrl()
+    {
+        return redirect()->intended('/');
+    }
+
+    public function localLoginByUsername($username, $password)
+    {
         if (User::where('username', '=', $username)->whereNotNull('password')->count() == 1) {
             if (Auth::attempt(['username' => $username, 'password' => $password])) {
                 Auth::user()->last_login = \Carbon\Carbon::now();
                 Auth::user()->save();
                 EventLog::log(Auth::user()->id, 'Logged in');
-                return redirect()->intended('/');
+                return Auth::user();
             }
-            return redirect()->refresh()->withErrors(['errors' => 'Username and/or password are incorrect.']);
         }
+        return null;
+    }
 
-        // if the username is an email address, try and find them
-        if (preg_match('/\@/', $username)) {
-            if (Auth::attempt(['email' => $username, 'password' => $password])) {
+    public function localLoginByEmail($email, $password)
+    {
+        if (preg_match('/\@/', $email)) {
+            if (Auth::attempt(['email' => $email, 'password' => $password])) {
                 Auth::user()->last_login = \Carbon\Carbon::now();
                 Auth::user()->save();
                 EventLog::log(Auth::user()->id, 'Logged in');
-                return redirect()->intended('/');
+                return Auth::user();
             }
-            return redirect()->refresh()->withErrors(['errors' => 'Username and/or password are incorrect.']);
         }
+        return null;
+    }
 
-        // try and LDAP auth
+    public function ldapLogin($username, $password)
+    {
         $result = $this->ldap->authenticate($username, $password);
         if ($result) {
             $username = $result['username'];
@@ -85,11 +112,9 @@ class AuthController extends Controller
             Auth::user()->last_login = \Carbon\Carbon::now();
             Auth::user()->save();
             EventLog::log(Auth::user()->id, 'Logged in');
-
-            return redirect()->intended('/');
+            return Auth::user();
         }
-
-        return redirect()->refresh()->withErrors(['errors' => 'Username and/or password are incorrect.']);
+        return null;
     }
 
     public function logout()
@@ -102,7 +127,6 @@ class AuthController extends Controller
         }
 
         return redirect('auth/login');
-
     }
 
     public function generateResetLink(Request $request)
@@ -141,16 +165,16 @@ class AuthController extends Controller
     {
         $resetToken = PasswordReset::where('token', '=', $token)->first();
         if (!$resetToken) {
-            return redirect()->back()->withErrors(['errors' => 'Invalid token']);
+            return redirect()->back()->withErrors(['token_invalid' => 'Invalid token']);
         }
         if ($resetToken->hasExpired()) {
-            return redirect()->back()->withErrors(['errors' => 'Token has expired']);
+            return redirect()->back()->withErrors(['token_expired' => 'Token has expired']);
         }
         if ($request->password1 != $request->password2) {
-            return redirect()->back()->withErrors(['errors' => 'Passwords did not match']);
+            return redirect()->back()->withErrors(['password_mismatch' => 'Passwords did not match']);
         }
         if (strlen($request->password1) < 12) {
-            return redirect()->back()->withErrors(['errors' => 'Password was too short']);
+            return redirect()->back()->withErrors(['password_length' => 'Password was too short']);
         }
         $user = $resetToken->user;
         if (!$user) {
@@ -170,5 +194,10 @@ class AuthController extends Controller
             return true;
         }
         return false;
+    }
+
+    public function studentLoginsDisabled($username)
+    {
+        return ($this->isAStudent($username) and ProjectConfig::getOption('logins_allowed', config("projects.studentsDisabled")) == true);
     }
 }

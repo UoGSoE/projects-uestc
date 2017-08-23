@@ -6,7 +6,7 @@
             New User
         </h2>
 
-        <form method="POST" action="{!! action('UserController@store') !!}">
+        <form method="POST" action="{!! route('user.store') !!}">
 
             @include ('user.partials.user_form')
 

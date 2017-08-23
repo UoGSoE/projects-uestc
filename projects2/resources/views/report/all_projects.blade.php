@@ -2,7 +2,13 @@
 
 @section('content')
 
-    <h2>Projects</h2>
+    <h2>
+        Projects
+        <a href="{!! route('export.allocations') !!}" class="btn btn-default" title="Export as Excel">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+        </a>
+        <a href="{!! route('options.edit') !!}" class="btn btn-default pull-right">Options</a>
+    </h2>
     <p>
         Filters :
         <label class="checkbox-inline">
@@ -17,54 +23,13 @@
         <a href="{!! action('ReportController@allProjects') !!}">
             All
         </a>
-        @foreach ($types as $type)
-            <a href="{!! action('ReportController@allProjectsOfType', $type->id) !!}">
-                {{ $type->title }}
+        @foreach ($disciplines as $discipline)
+            <a href="{!! action('ReportController@allProjectsOfDiscipline', $discipline->id) !!}">
+                {{ $discipline->title }}
             </a>
         @endforeach
     </p>
-    <table class="table table-striped table-hover datatable">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Owner</th>
-                <th>Type</th>
-                <th title="Max, Applied, Accepted">Students</th>
-                <th>Created</th>
-                <th>Updated</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($projects as $project)
-                <tr class="active_{{ $project->is_active }}">
-                    <td>
-                        @if (!$project->is_active) <del title="Not running"> @endif
-                        <a href="{!! action('ProjectController@show', $project->id) !!}">
-                            {{ $project->title }}
-                        </a>
-                        @if (!$project->is_active) </del> @endif
-                    </td>
-                    <td>
-                        <a href="{!! action('UserController@show', $project->owner->id) !!}">
-                            {{ $project->owner->fullName() }}
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{!! action('ReportController@allProjectsOfType', $project->type->id) !!}">
-                            {{ $project->type->title }}
-                        </a>
-                    </td>
-                    <td>
-                        {{ $project->maximum_students }},
-                        {{ $project->students->count() }},
-                        {{ $project->acceptedStudents->count() }}
-                    </td>
-                    <td>{{ $project->created_at->format('d/m/Y') }}</td>
-                    <td>{{ $project->updated_at->format('d/m/Y') }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    @include('report.partials.project_list')
 @include('partials.datatables')
 <script>
     $(document).ready(function() {

@@ -17,7 +17,6 @@ class CreateProjectStudentTable extends Migration
             $table->integer('project_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->integer('choice');
             $table->boolean('accepted')->default(false);
             $table->timestamps();
         });

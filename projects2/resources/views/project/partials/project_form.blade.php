@@ -20,7 +20,7 @@
         </div>
         <div class="form-group">
             <label for="inputCourses">Courses</label>
-            <select id="inputCourses" name="courses[]" class="form-control select2" multiple required>
+            <select style="margin:28px !important" id="inputCourses" name="courses[]" class="form-control select2" multiple required>
                 @foreach ($courses as $course)
                     <option value="{{ $course->id }}" @if ($project->hasCourse($course->id)) selected @endif>
                         {{ $course->code }} {{ $course->title }}
@@ -29,19 +29,27 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="inputType">Type</label>
-            <select id="inputType" name="type_id" class="form-control" required>
-                @foreach ($types as $type)
-                    <option value="{{ $type->id }}" @if ($project->type_id == $type->id) selected @endif>
-                        {{ $type->title }}
+            <label for="inputCourses">Discipline</label>
+            <select id="inputCourses" name="discipline_id" class="form-control select2">
+                @foreach ($disciplines as $discipline)
+                    <option value="{{ $discipline->id }}" @if ($project->discipline_id == $discipline->id) selected @endif>
+                        {{ $discipline->title }}
                     </option>
                 @endforeach
             </select>
         </div>
-        <div class="form-group">
-            <label for="inputMaximumStudents">Maximum Students</label>
-            <input type="number" id="inputMaximumStudents" name="maximum_students" value="{{ old('maximum_students', $project->maximum_students) }}" class="form-control" required min="1">
+        <div class="form-group" id="institute_select">
+            <label for="institution">Institution</label>
+            <select id="institution" name="institution" class="{{$project->getInstitution()}} form-control">
+                    <option value="UoG" @if ($project->getInstitution() == 'UoG') selected @endif>
+                        UoG
+                    </option>
+                    <option value="UESTC" @if ($project->getInstitution() == 'UESTC') selected @endif>
+                        UESTC
+                    </option>
+            </select>
         </div>
+        <input type="hidden" name="maximum_students" value="1">
         @can('edit_projects')
             <div class="form-group">
                 <label for="inputOwner">Run By</label>
@@ -56,3 +64,40 @@
         @else
             <input type="hidden" name="user_id" value="{{ $project->user_id or Auth::user()->id }}">
         @endcan
+        @if ($project->files()->count() > 0)
+            @foreach ($project->files as $file)
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="deletefiles[{{$file->id}}]" value="{{ $file->id }}"> Remove file <a href="{!! route('projectfile.download', $file->id) !!}">{{ $file->original_filename }}</a>?
+                    </label>
+                </div>
+            @endforeach
+        @endif
+        <div class="form-group">
+            <label>Add new files</label>
+        </div>
+        @foreach (range(1, 3) as $counter)
+            <div class="form-group">
+                <input type="file" name="files[]" multiple>
+            </div>
+        @endforeach
+
+        @if ($project->links()->count() > 0)
+            @foreach ($project->links as $link)
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="deletelinks[{{$link->id}}]" value="{{ $link->id }}"> Remove link to <a href="{{ $link->url }}" target="_blank">{{ $link->url }}</a>?
+                    </label>
+                </div>
+            @endforeach
+        @endif
+        <div class="form-group">
+            <label>Add new links</label>
+        </div>
+        @foreach (range(1, 3) as $counter)
+            <div class="form-group">
+                <input class="form-control" type="input" name="links[][url]" multiple>
+            </div>
+        @endforeach
+
+                         

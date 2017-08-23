@@ -4,7 +4,10 @@ namespace App;
 
 use App\Course;
 use App\EventLog;
+use App\Notifications\StaffPasswordNotification;
 use App\PasswordReset;
+use App\ProjectRound;
+use App\projects;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -12,13 +15,15 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Notifications\Notifiable;
 use Validator;
 
-class User extends Model implements AuthenticatableContract,
-                                    AuthorizableContract,
-                                    CanResetPasswordContract
+class User extends Model implements
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword;
+    use Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     /**
      * The database table used by the model.
@@ -32,7 +37,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['username', 'email', 'surname', 'forenames', 'is_student'];
+    protected $fillable = ['username', 'email', 'surname', 'forenames', 'is_student', 'is_admin', 'is_convenor', 'institution'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -41,9 +46,22 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $hidden = ['password', 'remember_token'];
 
-    public function roles()
+    public static function boot()
     {
-        return $this->belongsToMany(Role::class);
+        parent::boot();
+
+        User::deleting(function ($user) {
+            foreach ($user->rounds as $round) {
+                $round->delete();
+            }
+            if ($user->isStudent()) {
+                $user->projects()->detach();
+            } else {
+                foreach ($user->projects as $project) {
+                    $project->delete();
+                }
+            }
+        });
     }
 
     public function scopeStudents($query)
@@ -56,10 +74,15 @@ class User extends Model implements AuthenticatableContract,
         return $query->where('is_student', '=', 0);
     }
 
+    public function rounds()
+    {
+        return $this->hasMany(ProjectRound::class);
+    }
+
     public function projects()
     {
         if ($this->is_student) {
-            return $this->belongsToMany(Project::class, 'project_student')->withPivot('choice', 'accepted');
+            return $this->belongsToMany(Project::class, 'project_student')->withPivot('accepted');
         }
         return $this->hasMany(Project::class)->with('students', 'acceptedStudents');
     }
@@ -71,7 +94,29 @@ class User extends Model implements AuthenticatableContract,
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_student');
+        return $this->belongsToMany(Course::class, 'course_student', 'user_id');
+    }
+
+    /**
+        This returns an array of fixed length (the number of required project choices)
+        for use in HTML tables (most in the admin/convenor reports)
+    */
+    public function projectsArray($index = null)
+    {
+        $projectArray = [];
+        foreach (range(1, ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3)) + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'), 6)) as $counter) {
+            $projectArray[] = null;
+        }
+        $projects = $this->projects()->orderBy('title')->get();
+        $offset = 0;
+        while ($project = $projects->shift()) {
+            $projectArray[$offset] = $project;
+            $offset = $offset + 1;
+        }
+        if (! is_null($index)) {
+            return $projectArray[$index];
+        }
+        return $projectArray;
     }
 
     public function totalStudents()
@@ -128,42 +173,42 @@ class User extends Model implements AuthenticatableContract,
     {
         $course = $this->course();
         if (!$course) {
-            return [];
+            return collect([]);
         }
-        return $course->projects()->active()->orderBy('title')->get();
+
+        return $course->projects()->active()->join('users', 'projects.user_id', '=', 'users.id')
+            ->orderBy('users.surname')->orderBy('projects.title')->get();
     }
 
     /**
-     * Assign a role to this user
-     * @param  Role   $role
-     */
-    public function assignRole(Role $role)
+        Returns a JSON encoded map of the projects available to this student.
+        For use in the Vue.js code where students can pick projects.
+    */
+    public function availableProjectsJson()
     {
-        if ($this->hasRole($role->title)) {
-            return false;
+        $projects = $this->availableProjects();
+        $available = $projects->filter(function ($project, $key) {
+            return $project->isAvailable();
+        });
+        $projectArray = [];
+        foreach ($available as $project) {
+            $popularityPercent = 100 * ($project->students()->count() / ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6)));
+            $projectArray[] = [
+                'id' => $project->id,
+                'title' => $project->title,
+                'description' => $project->description,
+                'prereq' => $project->prereq,
+                'chosen' => false,
+                'discipline' => $project->disciplineTitle(),
+                'institution' => $project->institution,
+                'discipline_css' => str_slug($project->disciplineTitle()),
+                'owner' => $project->owner->fullName(),
+                'links' => $project->links->toArray(),
+                'files' => $project->files->toArray(),
+                'popularity' => $this->getPopularity($popularityPercent),
+            ];
         }
-        $this->roles()->save($role);
-    }
-
-    /**
-     * Check if this user has a given role(s).
-     * @param  Mixed  $roles Either a string role name, or a Role:: collection
-     * @return boolean
-     */
-    public function hasRole($roles)
-    {
-        if (is_string($roles)) {
-            return $this->roles->contains('title', $roles);
-        }
-        foreach ($roles as $role) {
-            if ($this->hasRole($role->title)) {
-                return true;
-            }
-        }
-        return false;
-        // the line below is from the laracasts tutorial on authorisation but doesn't seem to be working, hence
-        // the nasty foreach loop above
-        return !! $this->roles->intersect($roles)->count();
+        return json_encode($projectArray);
     }
 
     public function fullName()
@@ -179,45 +224,50 @@ class User extends Model implements AuthenticatableContract,
         return preg_replace('/[^0-9]+/', '', $this->username);
     }
 
+    public function isStudent()
+    {
+        return $this->is_student;
+    }
+
     public function isStaff()
     {
         return ! $this->is_student;
     }
 
-    /**
-     * Get the project where it is the students $choice option
-     * @param  integer $choice Which choice to find (ie, 1, 2, 3 etc)
-     * @return App\Project
-     */
-    public function projectChoice($choice = 1)
+    public function hasRoles()
     {
-        return $this->projects()->wherePivot('choice', '=', $choice)->first();
+        if ($this->isAdmin()) {
+            return true;
+        }
+        if ($this->isConvenor()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
+
+    public function isConvenor()
+    {
+        return $this->is_convenor;
     }
 
     public function unallocated()
     {
-        return $this->projects()->wherePivot('accepted', '=', true)->count() == 0;
+        return $this->projects()->where('accepted', '=', true)->count() == 0;
     }
 
-    /**
-     * Nasty brute-force of a unique username - used when importing a spreadsheet of staff
-     * as they login with their email address rather than a username - but we still need a username
-     * for db/null reasons (as per original (doomed) spec)
-     * @param  string $initialName The initial name to try and munge into a username
-     * @return string              A unique username
-     */
-    public static function generateUsername($initialName)
+    public function isAllocated()
     {
-        $newName = preg_replace('/\s+/', '', $initialName);
-        $suffix = 1;
-        while (static::where('username', '=', $newName)->first()) {
-            $newName = $newName . $suffix;
-            $suffix = $suffix + 1;
-            if ($suffix > 100) {    // give up after 100 tries - something is clearly up!
-                abort(500);
-            }
-        }
-        return $newName;
+        return ! $this->unallocated();
+    }
+
+    public function allocatedProject()
+    {
+        return $this->projects()->where('accepted', '=', true)->first();
     }
 
     /**
@@ -230,40 +280,72 @@ class User extends Model implements AuthenticatableContract,
         $email = strtolower(trim($row[0]));
         $surname = trim($row[1]);
         $forenames = trim($row[2]);
+        $institution = trim($row[3]);
         $rules = [
             'email' => 'required|email',
             'surname' => 'required',
-            'forenames' => 'required'
+            'forenames' => 'required',
+            'institution' => 'required'
         ];
-        if (Validator::make(['email' => $email, 'surname' => $surname, 'forenames' => $forenames], $rules)->fails()) {
-            return false;
+        if (Validator::make(['email' => $email, 'surname' => $surname, 'forenames' => $forenames, 'institution' => $institution], $rules)->fails()) {
+            return;
         }
-        $user = static::where('email', '=', $email)->first();
-        if (!$user) {
+        $userExists = $user = static::where('email', '=', $email)->first();
+        if (!$userExists) {
             $user = new static;
             $user->email = $email;
-            // $user->username = static::generateUsername($surname . $forenames);
             $user->username = $email;
-            $user->password = bcrypt(str_random(40));
         }
         $user->surname = $surname;
         $user->forenames = $forenames;
+        $user->institution = $institution;
         $user->save();
-        return $user;
+        if (!$userExists) {
+            return $user;
+        }
+    }
+
+    public function sendPasswordEmail()
+    {
+        $token = PasswordReset::create([
+            'user_id' => $this->id,
+            'token' => strtolower(str_random(32)),
+        ]);
+        $this->notify(new StaffPasswordNotification($token));
+        EventLog::log($this->id, 'Generated a password creation email');
+    }
+
+    public function hasPasswordReset()
+    {
+        if ($this->resetToken and !$this->resetToken->hasExpired()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function hasPassword()
+    {
+        return $this->password != null;
+    }
+
+    public function externalHasNoPassword()
+    {
+        return $this->usernameIsEmail() and $this->password == null;
+    }
+
+    public function usernameIsEmail()
+    {
+        if (preg_match('/@/', $this->username)) {
+            return true;
+        }
+        return false;
     }
 
     public static function createFromForm($request)
     {
         $user = new static;
         $user->fill($request->input());
-        if ($request->password) {
-            $user->password = bcrypt($request->password);
-        }
         $user->save();
-        $user->roles()->detach();
-        if ($request->roles) {
-            $user->roles()->sync(array_filter($request->roles));
-        }
         if ($user->is_student) {
             $user->updateCourse($request);
         }
@@ -280,16 +362,10 @@ class User extends Model implements AuthenticatableContract,
         }
         if ($request->project_id) {
             $project = Project::findOrFail($request->project_id);
-            $choices = [ $request->project_id => ["choice" => 1, "accepted" => true] ];
+            $project->preAllocate($user);
             EventLog::log($request->user()->id, "Allocated student {$user->username} to project {$project->title}");
-            $user->allocateToProjects($choices);
         }
         $user->save();
-        if ($request->roles) {
-            $user->roles()->sync(array_filter($request->roles));
-        } else {
-            $user->roles()->detach();
-        }
         if ($user->is_student) {
             $user->updateCourse($request);
         }
@@ -297,15 +373,111 @@ class User extends Model implements AuthenticatableContract,
         return $user;
     }
 
-    /**
-     * Syncs the students project choices
-     * @param  array $choices Array of choices (see chooseProjects for instance)
-     * @return true
-     */
+    public function hasCV()
+    {
+        return $this->cv_file;
+    }
+
+    public function storeCV($cv)
+    {
+        $ext = $cv->guessClientExtension();
+        if (!$ext) {
+            $ext = $cv->getClientOriginalExtension();
+        }
+        $filename = $this->id . '_cv.' . $ext;
+        $cv->storeAs('cvs', $filename);
+        $this->cv_file = $filename;
+        $this->save();
+    }
+
+    public function deleteCV()
+    {
+        if (!$this->hasCV()) {
+            return true;
+        }
+        \Storage::delete("cvs/{$this->cv_file}");
+        $this->cv_file = null;
+        $this->save();
+    }
+
+    public function cvPath()
+    {
+        return storage_path("app/cvs/{$this->cv_file}");
+    }
+
     public function allocateToProjects($choices)
     {
         $this->projects()->detach();
         $this->projects()->sync($choices);
+        $this->addRoundsInfo($choices);
         return true;
+    }
+
+    protected function addRoundsInfo($choices)
+    {
+        $currentRound = ProjectConfig::getOption('round');
+        $rounds = $this->rounds()->where('round', '=', $currentRound)->get();
+        foreach ($rounds as $round) {
+            $round->delete();
+        }
+        foreach ($choices as $choice) {
+            $this->rounds()->create(['project_id' => $choice, 'round' => $currentRound]);
+        }
+    }
+
+    public function roundAccept($projectId)
+    {
+        $currentRound = ProjectConfig::getOption('round');
+        $round = $this->rounds()->where('round', '=', $currentRound)->where('project_id', '=', $projectId)->first();
+        if (!$round) {
+            $round = new ProjectRound;
+            $round->project_id = $projectId;
+            $round->user_id = $this->id;
+            $round->round = $currentRound;
+        }
+        $round->accepted = true;
+        $round->save();
+    }
+
+    public function acceptedOnRound($round)
+    {
+        $round = ProjectRound::where('user_id', '=', $this->id)->where('accepted', '=', true)->where('round', '=', $round)->first();
+        if ($round) {
+            return true;
+        }
+        return 0; // this is because blade template echo's false as an empty string (possibly a new bug)
+    }
+
+    public function getPopularity($percent)
+    {
+        return [
+            'percent' => $percent,
+            'colour' => $this->getProgressColour($percent),
+            'caption' => $this->getProgressCaption($percent),
+        ];
+    }
+
+    public function getProgressColour($percent)
+    {
+        if ($percent < 50) {
+            return 'progress-bar-success';
+        } elseif ($percent < 70) {
+            return 'progress-bar-warning';
+        } else {
+            return 'progress-bar-danger';
+        }
+    }
+
+    public function getProgressCaption($percent)
+    {
+        if ($percent < 10) {
+            return '';
+        } elseif ($percent < 50) {
+            return 'Somewhat popular';
+        } elseif ($percent < 70) {
+            return 'Very popular';
+        } else {
+            return 'Extremely popular';
+        }
     }
 }

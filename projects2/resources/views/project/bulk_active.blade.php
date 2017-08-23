@@ -5,7 +5,7 @@
     <h2>
         Projects - Bulk Inactive/Active 
     </h2>
-    <form class="form-inline" method="POST" action="{!! action('ProjectController@bulkSaveActive') !!}">
+    <form class="form-inline" method="POST" action="{!! route('bulkactive.update') !!}">
     {!! csrf_field() !!}
     <table class="table table-striped">
         <thead>
@@ -19,7 +19,7 @@
             @foreach ($projects as $project)
                 <tr>
                     <td>
-                        <a href="{!! action('ProjectController@show', $project->id) !!}">
+                        <a href="{!! route('project.show', $project->id) !!}">
                             {{ $project->title }}
                         </a>
                     </td>

@@ -1,87 +1,183 @@
+@extends('layout')
+
+@section('content')
 <div class="page-header">
     <h1>
-        <i>{{ $helloWords[array_rand($helloWords)] }}</i>
+        <i>Hello</i>
         {{ Auth::user()->fullName() }}
     </h1>
+    <a href="{!! route('student.profile_edit') !!}" class="btn btn-default">Edit my profile</a>
 </div>
-<h2>Available Projects</h2>
-<p>
-    Please choose five projects in order of preference.
-</p>
-<form method="POST" action="{!! action('UserController@chooseProjects') !!}" id="vueform">
-{{ csrf_field() }}
-@foreach (Auth::user()->availableProjects() as $project)
-    @if ($project->isAvailable())
-    <div class="panel panel-default anyprogramme @foreach($project->programmes as $programme) {{md5($programme->title)}} @endforeach">
-        <div class="panel-heading fake-link">
-            <h3 class="panel-title">
-                {{ $project->title }} ({{ $project->owner->fullName() }})
-            </h3>
-        </div>
-        <div class="panel-body" style="display: none">
-            {{ $project->description }}
-            <div class="help-block">
-                Prerequisites: {{ $project->prereq or 'None' }}
+@if (Auth::user()->isAllocated())
+    <p>
+        You are allocated to the project "{{ Auth::user()->allocatedProject()->title }}".
+        @include('project.partials.panel', ['project' => Auth::user()->allocatedProject()])
+    </p>
+@elseif (Auth::user()->projects()->count() > 0)
+    <h2>Your choices</h2>
+    @foreach (Auth::user()->projects as $project)
+        @include('project.partials.panel', ['project' => $project])
+    @endforeach
+@else
+    <h2>Available Projects</h2>
+    <p>
+        Please choose {{ $requiredUoGChoices }} UoG projects and {{ $requiredUESTCChoices }} UESTC projects.
+    </p>
+    <form method="POST" action="{!! route('choices.update') !!}" id="vueform">
+        {{ csrf_field() }}
+        <div style="margin-top:50px" class="navbar navbar-default navbar-fixed-top courses-bar" hidden>
+            <div class="container">
+                <div class="navbar-header" style="font-size:18px">
+                    <div style="float:left; margin-right: 40px">
+                        <img :src="'img/UoG.png'" alt="UoG" height="30" width="55"> @{{ numberOfUoG }}/@{{ requiredUoGChoices }}
+                    </div>
+                    <div style="display:inline-block;">
+                        <img :src="'img/UESTC.png'" alt="UESTC" height="30" width="55"> @{{ numberOfUESTC }}/@{{ requiredUESTCChoices }}
+                    </div>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <button :disabled="cannotSubmit" class="btn">@{{ buttonText }}</button>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="panel-footer" style="display: none">
-            Preference :
-            <label class="radio-inline">
-                <input type="radio" id="project{{ $project->id }}_1" name="choice[1]" v-model="first" value="{{ $project->id }}"> 1
-            </label>
-            <label class="radio-inline">
-                <input type="radio" id="project{{ $project->id }}_2" name="choice[2]" v-model="second" value="{{ $project->id }}"> 2
-            </label>
-            <label class="radio-inline">
-                <input type="radio" id="project{{ $project->id }}_3" name="choice[3]" v-model="third" value="{{ $project->id }}"> 3
-            </label>
-            <label class="radio-inline">
-                <input type="radio" id="project{{ $project->id }}_4" name="choice[4]" v-model="fourth" value="{{ $project->id }}"> 4
-            </label>
-            <label class="radio-inline">
-                <input type="radio" id="project{{ $project->id }}_5" name="choice[5]" v-model="fifth" value="{{ $project->id }}"> 5
-            </label>
-        </div>
-    </div>
-    @endif
-@endforeach
-<button type="submit" id="submit" class="btn btn-primary" :disabled="!choicesAreOk">
-    <span v-if="choicesAreOk">Submit Choices</span>
-    <span v-else>Choose 5 Different Choices</span>
-</button>
-</form>
-<script src="vendor/vue.min.js"></script>
+        <project-list :projects="projects" :allowselect="allowSelect"></project-list>
+        <button :disabled="cannotSubmit">
+            @{{ buttonText }}
+        </button>
+    </form>
+
 <script>
-    $(document).ready(function() {
-        $('.panel-title').click(function() {
-            var parent = $(this).parent();
-            parent.siblings().toggle();
-        });
-        $('#inputProgramme').change(function() {
-            var value = $(this).val();
-            $('.panel, .' + value).show();
-            $('.panel').not('.' + value).hide();
-        });
-    });
-    new Vue({
-        el: '#vueform',
-        data: {
-            first: null,
-            second: null,
-            third: null,
-            fourth: null,
-            fifth: null
-        },
-        computed: {
-            chosenFive: function() {
-                return this.first && this.second;
-            },
-            allDifferent: function() {
-                return this.first != this.second;
-            },
-            choicesAreOk: function() {
-                return this.chosenFive && this.allDifferent;
+$( document ).ready(function() {
+    $(".courses-bar").show();
+});
+</script>
+<script src="/vendor/vuejs_2.1.10.js"></script>
+<script src="/js/student_project_chooser.js"></script>
+<script>
+
+// https://tc39.github.io/ecma262/#sec-array.prototype.find
+// IE11 polyfill for array.find....
+if (!Array.prototype.find) {
+  Object.defineProperty(Array.prototype, 'find', {
+    value: function(predicate) {
+     // 1. Let O be ? ToObject(this value).
+      if (this == null) {
+        throw new TypeError('"this" is null or not defined');
+      }
+
+      var o = Object(this);
+
+      // 2. Let len be ? ToLength(? Get(O, "length")).
+      var len = o.length >>> 0;
+
+      // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+      if (typeof predicate !== 'function') {
+        throw new TypeError('predicate must be a function');
+      }
+
+      // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+      var thisArg = arguments[1];
+
+      // 5. Let k be 0.
+      var k = 0;
+
+      // 6. Repeat, while k < len
+      while (k < len) {
+        // a. Let Pk be ! ToString(k).
+        // b. Let kValue be ? Get(O, Pk).
+        // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+        // d. If testResult is true, return kValue.
+        var kValue = o[k];
+        if (predicate.call(thisArg, kValue, k, o)) {
+          return kValue;
+        }
+        // e. Increase k by 1.
+        k++;
+      }
+
+      // 7. Return undefined.
+      return undefined;
+    }
+  });
+}
+
+window.Event = new Vue();
+
+var app = new Vue({
+    el: '#vueform',
+    data: {
+        projects: {!! Auth::user()->availableProjectsJson() !!},
+        allowSelect: {{ $applicationsEnabled }},
+        requiredUoGChoices: {{ $requiredUoGChoices }},
+        requiredUESTCChoices: {{ $requiredUESTCChoices }},
+        supervisors: [],
+    },
+    methods: {
+        toggleChoice: function(projectId) {
+            let project = this.projects.find(function(project) {
+                return project.id == projectId;
+            });
+            if (project) {
+                project.chosen = ! project.chosen;
+                if (project.chosen) {
+                    this.supervisors.push(project.owner);
+                } else {
+                    this.supervisors.pop(project.owner); //remove the second choice
+                }
+                if (this.supervisors.includes(project.owner)) {
+                    this.supervisors.unique = this.supervisors.indexOf(project.owner) == this.supervisors.lastIndexOf(project.owner);
+                }
             }
         }
-    });
+    },
+    computed: {
+        chosenCount: function() {
+            return this.projects.reduce(function(prevVal, project) {
+                return prevVal + project.chosen;
+            }, 0);
+        },
+        cannotSubmit: function() {
+            if (this.supervisors.unique == true && !this.invalidChoices) {
+                return false;
+            }
+            return true;
+        },
+        invalidChoices: function() {
+            return this.numberOfUoG != this.requiredUoGChoices || this.numberOfUESTC != this.requiredUESTCChoices;
+        },
+        buttonText: function() {
+            if (this.supervisors.unique == false) {
+                return 'You cannot choose two projects with the same supervisor.';
+            }
+            if (this.invalidChoices) {
+                return 'You must choose ' + this.requiredUoGChoices + ' UoG projects and ' + this.requiredUESTCChoices + ' UESTC projects.';
+            }
+            return 'Submit your choices';
+        },
+        numberOfUoG: function() {
+            return this.projects.reduce(function(prevVal, project) {
+                if (!project.chosen) {
+                    return prevVal;
+                }
+                return prevVal + (project.institution === 'UoG' ? 1 : 0);
+            }, 0);
+        },
+        numberOfUESTC: function() {
+            return this.projects.reduce(function(prevVal, project) {
+                if (!project.chosen) {
+                    return prevVal;
+                }
+                return prevVal + (project.institution === 'UESTC' ? 1 : 0);
+            }, 0);
+        }
+    },
+    created: function() {
+        Event.$on('chosen', this.toggleChoice);
+    }
+});
 </script>
+@endif
+
+@endsection

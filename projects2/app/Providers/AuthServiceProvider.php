@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Permission;
-use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -23,42 +23,37 @@ class AuthServiceProvider extends ServiceProvider
      * @param  \Illuminate\Contracts\Auth\Access\Gate  $gate
      * @return void
      */
-    public function boot(GateContract $gate)
+    public function boot()
     {
-        $this->registerPolicies($gate);
+        $this->registerPolicies();
 
-        foreach ($this->getPermissions() as $permission) {
-            $gate->define($permission->title, function ($user) use ($permission) {
-                return $user->hasRole($permission->roles);
-            });
-        }
-
-        $gate->define('edit_this_project', function ($user, $project) {
-            if ($user->hasRole('teaching_office')) {
-                return true;
-            }
-            if ($user->hasRole('site_admin')) {
+        Gate::define('edit_users', function ($user) {
+            return $user->isAdmin();
+        });
+        
+        Gate::define('edit_this_project', function ($user, $project) {
+            if ($user->isAdmin()) {
                 return true;
             }
             return $user->id == $project->user_id;
         });
 
-        $gate->define('view_this_project', function ($user, $project) {
-            if ($user->hasRole('teaching_office')) {
-                return true;
-            }
-            if ($user->hasRole('site_admin')) {
-                return true;
-            }
-            if ($user->hasRole('convenor')) {
+        Gate::define('view_this_project', function ($user, $project) {
+            if ($user->isAdmin()) {
                 return true;
             }
             return $user->id == $project->user_id;
         });
-    }
 
-    protected function getPermissions()
-    {
-        return Permission::with('roles')->get();
+        Gate::define('view_reports', function ($user) {
+            if ($user->isAdmin()) {
+                return true;
+            }
+            if ($user->isConvenor()) {
+                return true;
+            }
+            return false;
+        });
+
     }
 }

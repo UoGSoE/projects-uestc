@@ -51,6 +51,16 @@ return [
             'database' => database_path('database.sqlite'),
             'prefix'   => '',
         ],
+        'sqlite_testing' => [
+            'driver'   => 'sqlite',
+            'database' => database_path('dusk_test.sqlite'),
+            'prefix'   => '',
+        ],
+        'testing' => [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ],
 
         'mysql' => [
             'driver'    => 'mysql',
