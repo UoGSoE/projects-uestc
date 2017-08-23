@@ -59,12 +59,14 @@
             @endif
         </dl>
         <h2>Current Projects
-            @if ($user->allocatedProject())
-                <form class="pull-right" method="POST" action="{{ route('student.unallocate', $user->id) }}">
-                    {{ csrf_field() }}
-                    <button class="btn btn-danger">Remove from allocated project</button>
-                </form>
-            @endif
+            @can('edit_users')
+                @if ($user->is_student and $user->allocatedProject() and )
+                    <form class="pull-right" method="POST" action="{{ route('student.unallocate', $user->id) }}">
+                        {{ csrf_field() }}
+                        <button class="btn btn-danger">Remove from allocated project</button>
+                    </form>
+                @endif
+            @endcan
         </h2>
         @if ($user->projects->count() == 0)
             None
