@@ -270,6 +270,17 @@ class User extends Model implements
         return $this->projects()->where('accepted', '=', true)->first();
     }
 
+    public function removeFromAcceptedProject()
+    {
+        $project = $this->allocatedProject();
+        if (!$project) {
+            return;
+        }
+        $project->students()->sync([$this->id => ['accepted' => false]], false);
+        $project->manually_allocated = false;
+        $project->save();
+    }
+
     /**
      * Create or update an existing user based on data from a spreadsheet row (see UserController->updateStaff())
      * @param  array $row A row of data from the spreadsheet

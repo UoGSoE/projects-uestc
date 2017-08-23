@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/user/{id}', 'UserController@update')->name('user.update');
         Route::get('/user/{id}/delete', 'UserController@destroy')->name('user.destroy');
         Route::get('/user/{id}/loginas', 'UserController@logInAs')->name('user.impersonate');
+        Route::post('/student/{id}/unallocate', 'StudentChoicesController@destroy')->name('student.unallocate');
 
         Route::get('/course', 'CourseController@index')->name('course.index');
         Route::get('/course/create', 'CourseController@create')->name('course.create');

@@ -4,11 +4,12 @@
 namespace Tests\Feature;
 
 use App\Project;
-use Tests\TestCase;
 use App\ProjectConfig;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Notification;
+use Tests\TestCase;
 
 class AdminProjectTest extends TestCase
 {
@@ -70,6 +71,28 @@ class AdminProjectTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('project.show', $project->id));
         $this->assertTrue($project->fresh()->manually_allocated);
+    }
+
+    /** @test */
+    public function student_can_be_manually_removed_from_a_project () {
+        Notification::fake();
+        ProjectConfig::setOption('round', 1);
+        $project = $this->createProject();
+        $student = $this->createStudent();
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+
+        $project->preAllocate($student);
+
+        $this->assertTrue($project->fresh()->manually_allocated);
+        $this->assertEquals(1, $project->numberAccepted());
+
+        $response = $this->actingAs($admin)->post(route('student.unallocate', $student->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('user.show', $student->id));
+        $this->assertFalse($project->fresh()->manually_allocated);
+        $this->assertEquals(0, $project->numberAccepted());
     }
 
     /** @test */

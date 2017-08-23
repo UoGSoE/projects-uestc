@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\EventLog;
 use App\Project;
 use App\ProjectConfig;
+use App\User;
+use Illuminate\Http\Request;
 
 class StudentChoicesController extends Controller
 {
@@ -98,5 +99,12 @@ class StudentChoicesController extends Controller
                     and {$requiredUESTCChoices} UESTC projects."]);
         }
         return true;
+    }
+
+    public function destroy($id)
+    {
+        $student = User::findOrFail($id);
+        $student->removeFromAcceptedProject();
+        return redirect()->route('user.show', $id);
     }
 }

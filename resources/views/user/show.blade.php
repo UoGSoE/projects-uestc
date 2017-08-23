@@ -8,14 +8,17 @@
                 <a href="{!! action('UserController@edit', $user->id) !!}" class="btn btn-default">Edit</a>
             @endcan
             @can('edit_users')
-                <a href="{!! action('UserController@logInAs', $user->id) !!}" class="btn btn-warning pull-right">Log in as</a>
+                <div class="btn-group pull-right">
+
+                <a href="{!! action('UserController@logInAs', $user->id) !!}" class="btn btn-warning">Log in as</a>
                 @if(!$user->is_student and $user->usernameIsEmail())
                     @if($user->hasPasswordReset())
-                        <a style="margin-right:10px" href="#" class="btn btn-outline btn-info pull-right" disabled>User has awaiting password reset email</a>
+                        <a style="margin-right:10px" href="#" class="btn btn-outline btn-info" disabled>User has awaiting password reset email</a>
                     @else
-                        <a style="margin-right:10px" href="{!! action('StaffController@sendPasswordEmail', $user->id) !!}" class="btn btn-info pull-right">Send Password Reset Email</a>
+                        <a style="margin-right:10px" href="{!! action('StaffController@sendPasswordEmail', $user->id) !!}" class="btn btn-info">Send Password Reset Email</a>
                     @endif
                 @endif
+                </div>
             @endcan
         </h2>
         <dl>
@@ -55,7 +58,14 @@
                 @endif
             @endif
         </dl>
-        <h2>Current Projects</h2>
+        <h2>Current Projects
+            @if ($user->allocatedProject())
+                <form class="pull-right" method="POST" action="{{ route('student.unallocate', $user->id) }}">
+                    {{ csrf_field() }}
+                    <button class="btn btn-danger">Remove from allocated project</button>
+                </form>
+            @endif
+        </h2>
         @if ($user->projects->count() == 0)
             None
         @else
@@ -65,6 +75,7 @@
                         {{ $project->title }}
                     </a> ({{ $project->students->count() }} Students)
                     (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})
+                </li>
             @endforeach
         @endif
     </div>
