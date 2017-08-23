@@ -60,7 +60,7 @@
         </dl>
         <h2>Current Projects
             @can('edit_users')
-                @if ($user->is_student and $user->allocatedProject() and )
+                @if ($user->is_student and $user->allocatedProject())
                     <form class="pull-right" method="POST" action="{{ route('student.unallocate', $user->id) }}">
                         {{ csrf_field() }}
                         <button class="btn btn-danger">Remove from allocated project</button>
