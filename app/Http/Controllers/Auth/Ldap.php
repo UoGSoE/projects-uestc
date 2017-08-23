@@ -13,7 +13,7 @@ class Ldap
     public static function authenticate($username, $password)
     {
 
-	if (!getenv('LDAP_SERVER', false)) {
+	if (!config('ldap.server', false)) {
 		return false;
 	}
 
@@ -22,11 +22,11 @@ class Ldap
             Log::error('Error binding to LDAP: username or password empty');
             return false;
         }
-        $ldapconn = static::connectToServer(getenv('LDAP_SERVER'));
+        $ldapconn = static::connectToServer(config('ldap.server'));
         if (!$ldapconn) {
             return false;
         }
-        $ldapOrg = "O=" . getenv("LDAP_OU");
+        $ldapOrg = "O=" . config("ldap.ou");
         $user = static::findUser($username, $password, $ldapOrg, $ldapconn);
         if (!$user) {
             return false;
