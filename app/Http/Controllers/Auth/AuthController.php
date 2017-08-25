@@ -1,20 +1,21 @@
 <?php namespace App\Http\Controllers\Auth;
 
-use Log;
-use DB;
-use Auth;
-use Mail;
-use App\User;
 use App\EventLog;
-use App\Location;
-use App\UserType;
-use App\UserGroup;
-use Carbon\Carbon;
 use App\FundingType;
-use App\PasswordReset;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\Ldap;
 use App\Http\Controllers\Controller;
+use App\Location;
+use App\PasswordReset;
+use App\ProjectConfig;
+use App\User;
+use App\UserGroup;
+use App\UserType;
+use Auth;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Http\Request;
+use Log;
+use Mail;
 
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
@@ -198,6 +199,9 @@ class AuthController extends Controller
 
     public function studentLoginsDisabled($username)
     {
-        return ($this->isAStudent($username) and ProjectConfig::getOption('logins_allowed', config("projects.studentsDisabled")) == true);
+        if (!$this->isAStudent($username) or ProjectConfig::getOption('logins_allowed', config("projects.logins_allowed")) == true) {
+            return false;
+        }
+        return true;
     }
 }

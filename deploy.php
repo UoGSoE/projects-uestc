@@ -37,3 +37,7 @@ after('deploy:failed', 'deploy:unlock');
 // Migrate database before symlink new release.
 
 before('deploy:symlink', 'artisan:migrate');
+
+after('deploy:update_code', 'artisan:view:clear');
+
+after('deploy:update_code', 'artisan:queue:restart');

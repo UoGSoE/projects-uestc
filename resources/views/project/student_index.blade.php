@@ -109,7 +109,7 @@ var app = new Vue({
     el: '#vueform',
     data: {
         projects: {!! Auth::user()->availableProjectsJson() !!},
-        allowSelect: {{ $applicationsEnabled }},
+        allowSelect: {{ $applicationsEnabled ? 1 : 0}},
         requiredUoGChoices: {{ $requiredUoGChoices }},
         requiredUESTCChoices: {{ $requiredUESTCChoices }},
         supervisors: [],
