@@ -38,6 +38,4 @@ after('deploy:failed', 'deploy:unlock');
 
 before('deploy:symlink', 'artisan:migrate');
 
-after('deploy:update_code', 'artisan:view:clear');
-
-after('deploy:update_code', 'artisan:queue:restart');
+//after('deploy:update_code', 'artisan:queue:restart');
