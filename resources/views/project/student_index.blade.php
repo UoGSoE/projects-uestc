@@ -43,7 +43,7 @@
             </div>
         </div>
         <project-list :projects="projects" :allowselect="allowSelect"></project-list>
-        <button :disabled="cannotSubmit">
+        <button style="display:none" :disabled="cannotSubmit">
             @{{ buttonText }}
         </button>
     </form>

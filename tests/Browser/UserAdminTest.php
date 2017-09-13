@@ -106,7 +106,7 @@ class UserAdminTest extends DuskTestCase
         $this->browse(function ($browser) use ($admin, $course) {
             $browser->loginAs($admin)->visit(route('staff.index'))
                     ->clickLink('Import Staff')
-                    ->assertSee('Import a list of staff')
+                    ->assertSee('Import a list of EXTERNAL staff.')
                     ->attach('file', 'tests/data/test_staff_one_user.xlsx')
                     ->press('Import')
                     ->assertSee('New Users')
