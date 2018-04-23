@@ -21,7 +21,8 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'last_login' => $faker->dateTimeThisYear(),
         'is_admin' => false,
         'remember_token' => str_random(10),
-        'institution' => 'UoG'
+        'institution' => 'UoG',
+        'degree_type' => $faker->randomElement(['Single', 'Dual']),
     ];
 });
 $factory->state(App\User::class, 'admin', function ($faker) {

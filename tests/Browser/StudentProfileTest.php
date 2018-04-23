@@ -4,13 +4,11 @@
 namespace Tests\Browser;
 
 use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\ProjectConfig;
+
 
 class StudentProfileTest extends DuskTestCase
 {
-    use DatabaseMigrations;
-
     /** @test */
     public function students_can_edit_their_profile()
     {
@@ -20,14 +18,22 @@ class StudentProfileTest extends DuskTestCase
             $browser->loginAs($student)
                     ->visit('/')
                     ->clickLink('Edit my profile')
-                    ->assertSee('Your Profile')
+                    ->waitForText('Your Profile')
                     ->type('bio', 'MY THRILLING BIO')
+                    ->select('degree_type', 'Dual')
                     ->attach('cv', 'tests/data/test_cv.pdf')
                     ->press('Update')
                     ->assertPathIs('/')
                     ->assertSee('Profile Updated')
                     ->clickLink('Edit my profile')
-                    ->assertSee('MY THRILLING BIO');
+                    ->assertSee('MY THRILLING BIO')
+                    ->assertSelected('degree_type', 'Dual')
+                    ->select('degree_type', 'Single')
+                    ->press('Update')
+                    ->assertPathIs('/')
+                    ->assertSee('Profile Updated')
+                    ->clickLink('Edit my profile')
+                    ->assertSelected('degree_type', 'Single');
         });
     }
 

@@ -43,6 +43,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('profile', 'StudentProfileController@edit')->name('student.profile_edit');
         Route::post('profile', 'StudentProfileController@update')->name('student.profile_update');
+        Route::post('degree', 'StudentProfileController@updateDegree')->name('student.profile_update_degree');
     });
 
 

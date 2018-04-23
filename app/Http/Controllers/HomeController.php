@@ -19,6 +19,9 @@ class HomeController extends Controller
 
     public function studentHomepage()
     {
+        if (!Auth::user()->degree_type) {
+            return view('profile.edit_degree');
+        }
         return view(
             'project.student_index',
             ['applicationsEnabled' => Project::applicationsEnabled(),

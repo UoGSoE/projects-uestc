@@ -63,6 +63,17 @@ class StudentProfileTest extends TestCase
         $response->assertSee('Download their CV');
     }
 
+    public function test_student_can_set_their_degree_type()
+    {
+        $student = $this->createStudent();
+        $response = $this->actingAs($student)->post(route('student.profile_update'), ['degree_type' => 'Single']);
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHas('success_message');
+        $this->assertDatabaseHas('users', ['id' => $student->id, 'degree_type' => 'Single']);
+    }
+
     // public function test_staff_can_download_a_students_cv()
     // {
     //     $student = $this->createStudent();

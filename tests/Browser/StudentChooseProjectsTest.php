@@ -8,6 +8,18 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class StudentChooseProjectsTest extends DuskTestCase
 {
+
+    /** @test */
+    public function if_student_hasnt_selected_degree_type_then_redirect_them_to_choose ()
+    {
+        $student = $this->createStudent(['degree_type' => null]);
+        $this->browse(function ($browser) use ($student) {
+            $browser->loginAs($student)
+                    ->visit('/')
+                    ->assertDontSee('Available Projects')
+                    ->assertSee('Degree Type');
+        });
+    }
     /** @test */
     public function a_student_can_see_available_projects()
     {
@@ -142,7 +154,7 @@ class StudentChooseProjectsTest extends DuskTestCase
         $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
         $files = [$file];
         $project->addFiles($files);
-        
+
         $this->browse(function ($browser) use ($student, $project) {
             $browser->loginAs($student)
                     ->visit('/')

@@ -25,8 +25,17 @@ class StudentProfileController extends Controller
             $user->storeCV($request->cv);
         }
         $user->bio = $request->bio;
+        $user->degree_type = $request->degree_type;
         $user->save();
         return redirect('/')->with('success_message', 'Profile Updated');
+    }
+
+    public function updateDegree(Request $request)
+    {
+        $user = $request->user();
+        $user->degree_type = $request->degree_type;
+        $user->save();
+        return redirect('/')->with('success_message', 'Degree Updated');
     }
 
     public function downloadCV($id)
