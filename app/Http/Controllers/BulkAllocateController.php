@@ -19,7 +19,7 @@ class BulkAllocateController extends Controller
 
     public function update(Request $request)
     {
-        if (!$request->has('student')) {
+        if (!$request->filled('student')) {
             return redirect()->back();
         }
         foreach ($request->student as $student_id => $project_id) {

@@ -41,7 +41,7 @@ class AdminDisciplineTest extends TestCase
         $admin = $this->createAdmin();
         $discipline = $this->createDiscipline();
 
-        $response = $this->actingAs($admin)->from(route('discipline.create'))
+        $response = $this->actingAs($admin)->fromUrl(route('discipline.create'))
                         ->post(route('discipline.store'), ['title' => $discipline->title]);
 
         $response->assertStatus(302);
@@ -54,7 +54,7 @@ class AdminDisciplineTest extends TestCase
         $admin = $this->createAdmin();
         $discipline = $this->createDiscipline();
 
-        $response = $this->actingAs($admin)->from(route('discipline.edit', $discipline->id))
+        $response = $this->actingAs($admin)->fromUrl(route('discipline.edit', $discipline->id))
                         ->post(route('discipline.update', $discipline->id), ['title' => 'WHATEVAH']);
         $response->assertStatus(302);
         $response->assertRedirect(route('discipline.index'));
@@ -73,7 +73,7 @@ class AdminDisciplineTest extends TestCase
         $discipline1 = $this->createDiscipline();
         $discipline2 = $this->createDiscipline();
 
-        $response = $this->actingAs($admin)->from(route('discipline.edit', $discipline1->id))
+        $response = $this->actingAs($admin)->fromUrl(route('discipline.edit', $discipline1->id))
                         ->post(route('discipline.update', $discipline1->id), ['title' => $discipline2->title]);
 
         $response->assertStatus(302);

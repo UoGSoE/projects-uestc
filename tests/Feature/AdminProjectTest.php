@@ -42,7 +42,7 @@ class AdminProjectTest extends TestCase
         $project2->addStudent($student2);
         $project2->acceptStudent($student2);
 
-        $response = $this->actingAs($admin)->from(route('report.projects'))->post(route('admin.clear_unsuccessful'));
+        $response = $this->actingAs($admin)->fromUrl(route('report.projects'))->post(route('admin.clear_unsuccessful'));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('report.projects'));

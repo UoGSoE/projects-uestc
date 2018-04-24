@@ -257,7 +257,7 @@ class StaffProjectTest extends TestCase
     //     $project2 = factory(Project::class)->create(['user_id' => $staff2->id]);
     //     $project2->acceptStudent($student);
 
-    //     $response = $this->actingAs($staff1)->from(route('project.show', $project1->id))
+    //     $response = $this->actingAs($staff1)->fromUrl(route('project.show', $project1->id))
     //                     ->post(route('project.enrol', $project1->id), ['accepted' => $student->id]);
 
     //     $response->assertStatus(302);

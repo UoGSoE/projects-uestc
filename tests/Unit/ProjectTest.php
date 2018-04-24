@@ -44,6 +44,7 @@ class ProjectTest extends TestCase
         try {
             $project->addStudent($student2);
         } catch (ProjectOversubscribedException $e) {
+            $this->assertTrue(true);
             return;
         }
 

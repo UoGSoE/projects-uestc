@@ -13,7 +13,7 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
     use DatabaseMigrations;
 
-    public function from($url = '')
+    public function fromUrl($url = '')
     {
         $this->app['session']->setPreviousUrl($url);
         return $this;
@@ -63,12 +63,12 @@ abstract class TestCase extends BaseTestCase
     {
         $this->app->instance(ExceptionHandler::class, new class extends Handler {
             public function __construct() {}
-            
+
             public function report(Exception $e)
             {
                 // no-op
             }
-            
+
             public function render($request, Exception $e) {
                 throw $e;
             }

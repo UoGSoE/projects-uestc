@@ -24,7 +24,7 @@ class BulkActiveController extends Controller
      */
     public function update(Request $request)
     {
-        if (! $request->has('statuses')) {
+        if (! $request->filled('statuses')) {
             return redirect()->route('bulkactive.edit')->with('success_message', 'No changes made');
         }
         foreach ($request->statuses as $projectId => $status) {

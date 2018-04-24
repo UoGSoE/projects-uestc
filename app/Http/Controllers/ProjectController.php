@@ -73,7 +73,7 @@ class ProjectController extends Controller
         $project->save();
         $project->courses()->sync($request->courses);
         $project->disciplines()->sync($request->disciplines);
-        if ($request->has('links')) {
+        if ($request->filled('links')) {
             $project->syncLinks($request->links);
         }
         if ($request->hasFile('files')) {
@@ -144,16 +144,16 @@ class ProjectController extends Controller
         $project->fill($request->input());
         $project->discipline_id = null;
         $project->save();
-        if ($request->has('student_id')) {
+        if ($request->filled('student_id')) {
             $project->preAllocate($request->student_id);
         }
-        if ($request->has('links')) {
+        if ($request->filled('links')) {
             $project->syncLinks($request->links);
         }
         if ($request->hasFile('files')) {
             $project->addFiles($request->file('files'));
         }
-        if ($request->has('deletefiles')) {
+        if ($request->filled('deletefiles')) {
             $project->deleteFiles($request->deletefiles);
         }
         $project->courses()->sync($request->courses);

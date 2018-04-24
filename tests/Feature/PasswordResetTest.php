@@ -32,7 +32,7 @@ class PasswordResetTest extends TestCase
         $token = $this->createToken(['user_id' => $user->id]);
         $password = str_random(2);
 
-        $response = $this->from(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
+        $response = $this->fromUrl(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
             'password1' => $password,
             'password2' => $password
         ]);
@@ -48,7 +48,7 @@ class PasswordResetTest extends TestCase
         $token = $this->createToken(['user_id' => $user->id]);
         $password = str_random(2);
 
-        $response = $this->from(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
+        $response = $this->fromUrl(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
             'password1' => $password,
             'password2' => "NOT" . $password
         ]);
@@ -64,7 +64,7 @@ class PasswordResetTest extends TestCase
         $token = $this->createToken(['user_id' => $user->id, 'created_at' => \Carbon\Carbon::now()->subDays(100)]);
         $password = str_random(20);
 
-        $response = $this->from(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
+        $response = $this->fromUrl(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
             'password1' => $password,
             'password2' => $password
         ]);
@@ -79,7 +79,7 @@ class PasswordResetTest extends TestCase
         $user = $this->createStaff();
         $password = str_random(20);
 
-        $response = $this->from(route('password.reset', 'NOTATOKEN'))->post(route('password.do_reset', 'NOTATOKEN'), [
+        $response = $this->fromUrl(route('password.reset', 'NOTATOKEN'))->post(route('password.do_reset', 'NOTATOKEN'), [
             'password1' => $password,
             'password2' => $password
         ]);

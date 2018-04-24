@@ -160,7 +160,7 @@ class User extends Model implements
     public function updateCourse($request)
     {
         $this->courses()->detach();
-        if ($request->has('course_id') and $request->course_id) {
+        if ($request->filled('course_id') and $request->course_id) {
             $this->courses()->sync([$request->course_id]);
         }
     }
