@@ -2,17 +2,18 @@
 // @codingStandardsIgnoreFile
 namespace Tests\Feature;
 
-use App\Course;
-use App\Notifications\AllocatedToProject;
-use App\Project;
-use App\ProjectConfig;
 use App\User;
+use App\Course;
+use App\Project;
 use Carbon\Carbon;
+use App\Discipline;
+use Tests\TestCase;
+use App\ProjectConfig;
+use App\Notifications\AllocatedToProject;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Support\Facades\Notification;
-use Tests\TestCase;
 
 class StaffProjectTest extends TestCase
 {
@@ -28,9 +29,56 @@ class StaffProjectTest extends TestCase
                         ->post(route('project.store'), $this->defaultProjectData(['institution' => 'UESTC']));
 
         $response->assertStatus(302);
-        $this->assertDatabaseHas('projects', ['title' => 'DEFAULTTITLE', 'discipline_id' => 1, 'institution' => 'UESTC']);
+        $this->assertDatabaseHas('projects', ['title' => 'DEFAULTTITLE',  'institution' => 'UESTC']);
         $project = Project::first();
         $response->assertRedirect(route('project.show', $project->id));
+    }
+
+    /** @test */
+    public function staff_can_add_multiple_disciplines_to_a_project ()
+    {
+        $staff = factory(User::class)->states('staff')->create();
+        $courses = factory(Course::class, 2)->create();
+        $disciplines = factory(Discipline::class, 3)->create();
+
+        $response = $this->actingAs($staff)->post(route('project.store'), [
+            'title' => 'Project Title',
+            'description' => 'Project description',
+            'prereq' => 'Project prerequisite skills',
+            'is_active' => 1,
+            'courses' => [
+                $courses[0]->id
+            ],
+            'disciplines' => [
+                $disciplines[0]->id,
+                $disciplines[1]->id
+            ],
+            'institution' => 'UESTC',
+            'maximum_students' => 1,
+            'user_id' => $staff->id
+        ]);
+
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('projects', [
+            'title' => 'Project Title',
+            'description' => 'Project description',
+            'prereq' => 'Project prerequisite skills',
+            'is_active' => 1,
+            'institution' => 'UESTC',
+            'user_id' => $staff->id
+        ]);
+        $this->assertDatabaseHas('course_project', [
+            'project_id' => Project::first()->id,
+            'course_id' => $courses[0]->id
+        ]);
+        $this->assertDatabaseHas('project_disciplines', [
+            'project_id' => Project::first()->id,
+            'discipline_id' => $disciplines[0]->id
+        ]);
+        $this->assertDatabaseHas('project_disciplines', [
+            'project_id' => Project::first()->id,
+            'discipline_id' => $disciplines[1]->id
+        ]);
     }
 
     /** @test */
@@ -58,7 +106,7 @@ class StaffProjectTest extends TestCase
                         ->post(route('project.store'), $this->defaultProjectData(['institution' => 'UESTC']));
 
         $response->assertStatus(302);
-        $this->assertDatabaseHas('projects', ['title' => 'DEFAULTTITLE', 'discipline_id' => 1, 'institution' => 'UESTC']);
+        $this->assertDatabaseHas('projects', ['title' => 'DEFAULTTITLE', 'institution' => 'UESTC']);
         $project = Project::first();
         $response->assertRedirect(route('project.show', $project->id));
     }
@@ -196,7 +244,7 @@ class StaffProjectTest extends TestCase
        same student has applied for - and both decide to accept them, then make sure the student
        doesn't get accepted twice.  For instance, first staff member opens the page then takes
        a phone call - in the meantime the other member of staff has accepted the student - when
-       the call ends and they accept the same student it could get quite confusing for the 
+       the call ends and they accept the same student it could get quite confusing for the
        student (and possibly DB)
     */
     // public function staff_cant_accept_a_student_onto_a_project_if_they_are_already_accepted_onto_one()
@@ -241,7 +289,7 @@ class StaffProjectTest extends TestCase
         $response = $this->actingAs($staff)
                         ->post(route('project.update', $project->id), $this->defaultProjectData([
                             'links' => [
-                                ['url' => 'http://www.example.com'], 
+                                ['url' => 'http://www.example.com'],
                                 ['url' => 'http://www.another.com']
                             ]
                         ]));
@@ -262,7 +310,7 @@ class StaffProjectTest extends TestCase
         $response = $this->actingAs($staff)
                         ->post(route('project.update', $project->id), $this->defaultProjectData([
                             'links' => [
-                                ['url' => 'http://site1.com'], 
+                                ['url' => 'http://site1.com'],
                             ]
                         ]));
 

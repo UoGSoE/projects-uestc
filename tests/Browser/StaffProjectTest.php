@@ -29,7 +29,8 @@ class StaffProjectTest extends DuskTestCase
                     ->type('prereq', 'AMAZING PREREQS')
                     ->check('is_active')
                     ->select('#inputCourses', "$course->id")
-                    ->select('discipline_id', "{$disciplines->first()->id}")
+                    ->select('#inputDisc', "{$disciplines->first()->id}")
+                    ->select('#inputDisc', "{$disciplines->get(1)->id}")
                     ->attach('files[]', 'tests/data/test_cv.pdf')
                     ->press('Create')
                     ->assertSee('Project Details')
@@ -37,6 +38,7 @@ class StaffProjectTest extends DuskTestCase
                     ->assertSee('AN AMAZING DESCRIPTION')
                     ->assertSee('AMAZING PREREQS')
                     ->assertSee($disciplines->first()->title)
+                    ->assertSee($disciplines->get(1)->title)
                     ->assertSee($course->title)
                     ->assertSee('test_cv.pdf');
         });
@@ -120,7 +122,7 @@ class StaffProjectTest extends DuskTestCase
     // }
 
     /** @test */
-    /*. 
+    /*.
         Not needed at present as form input changed from checkboxes (when staff could
         allocate more than one student to a project) to a radio so only one is ever (ha)
         possible to submit.

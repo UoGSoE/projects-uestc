@@ -10,7 +10,7 @@
             <tr>
                 <th>Title</th>
                 <th>Students</th>
-                <th>Discipline</th>
+                <th>Disciplines</th>
             </tr>
         </thead>
         <tbody>
@@ -26,7 +26,21 @@
                         </a>
                     </td>
                     <td>{{ $project->students->count() }} applied, {{ $project->numberAccepted() }} accepted</td>
-                    <td>{{ $project->disciplineTitle() }}</td>
+                    <td>
+                        @if ($project->discipline_id)
+                            {{ $project->disciplineTitle() }}
+                        @elseif ($project->disciplines->count())
+                            <ul class="list-inline">
+                                @foreach ($project->disciplines as $discipline)
+                                    <li>
+                                        {{ $discipline->title }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            N/A
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>

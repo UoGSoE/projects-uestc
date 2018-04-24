@@ -47,8 +47,22 @@
                 @endforeach
             </ul>
         </dd>
-        <dt>Discipline</dt>
-        <dd>{{ $project->disciplineTitle() }}</dd>
+        <dt>Disciplines</dt>
+        <dd>
+            @if ($project->discipline_id)
+                {{ $project->disciplineTitle() }}
+            @elseif ($project->disciplines->count())
+                <ul class="list-inline">
+                    @foreach ($project->disciplines as $discipline)
+                        <li>
+                            {{ $discipline->title }}
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                N/A
+            @endif
+        </dd>
     </dl>
     @if ($project->files()->count() > 0)
         <h3>Attached Files</h3>

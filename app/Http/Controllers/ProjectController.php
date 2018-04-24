@@ -72,6 +72,7 @@ class ProjectController extends Controller
         $project->fill($request->input());
         $project->save();
         $project->courses()->sync($request->courses);
+        $project->disciplines()->sync($request->disciplines);
         if ($request->has('links')) {
             $project->syncLinks($request->links);
         }
@@ -141,6 +142,7 @@ class ProjectController extends Controller
             abort(403);
         }
         $project->fill($request->input());
+        $project->discipline_id = null;
         $project->save();
         if ($request->has('student_id')) {
             $project->preAllocate($request->student_id);
@@ -155,6 +157,7 @@ class ProjectController extends Controller
             $project->deleteFiles($request->deletefiles);
         }
         $project->courses()->sync($request->courses);
+        $project->disciplines()->sync($request->disciplines);
         EventLog::log(Auth::user()->id, "Updated project {$project->title}");
         return redirect()->action('ProjectController@show', $project->id);
     }

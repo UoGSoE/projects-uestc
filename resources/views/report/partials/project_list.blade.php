@@ -4,7 +4,7 @@
                 <th>Project Title</th>
                 <th>Owner</th>
                 <th>University</th>
-                <th>Discipline</th>
+                <th>Disciplines</th>
                 <th>1st round choices</th>
                 @if (isset($excel))
                     <th>
@@ -33,12 +33,22 @@
                         {{ $project->institution }}
                     </td>
                     <td>
-                        @if ($project->discipline)
-                            <a href="{!! action('ReportController@allProjectsOfDiscipline', $project->discipline->id) !!}">
-                                {{ $project->disciplineTitle() }}
+                        @if ($project->discipline_id)
+                            <a href="{!! action('ReportController@allProjectsOfDiscipline', $project->discipline_id) !!}">
+                                {{ $project->discipline->title }}
                             </a>
+                        @elseif ($project->disciplines->count())
+                            <ul class="list-inline">
+                                @foreach ($project->disciplines as $discipline)
+                                    <li>
+                                        <a href="{!! action('ReportController@allProjectsOfDiscipline', $discipline->id) !!}">
+                                            {{ $discipline->title }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
                         @else
-                            {{ $project->disciplineTitle() }}
+                            N/A
                         @endif
                     </td>
                     <td applicants="round1-applicants-{{ $project->roundStudentCount(1) }}">

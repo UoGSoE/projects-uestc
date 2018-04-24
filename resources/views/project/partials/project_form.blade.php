@@ -29,10 +29,10 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="inputCourses">Discipline</label>
-            <select id="inputCourses" name="discipline_id" class="form-control select2">
+            <label for="inputDisc">Disciplines</label>
+            <select style="margin:28px !important" id="inputDisc" name="disciplines[]" class="form-control select2" multiple>
                 @foreach ($disciplines as $discipline)
-                    <option value="{{ $discipline->id }}" @if ($project->discipline_id == $discipline->id) selected @endif>
+                    <option value="{{ $discipline->id }}" @if ($project->discipline_id == $discipline->id || $project->disciplines->contains('id', $discipline->id)) selected @endif>
                         {{ $discipline->title }}
                     </option>
                 @endforeach
@@ -99,5 +99,3 @@
                 <input class="form-control" type="input" name="links[][url]" multiple>
             </div>
         @endforeach
-
-                         

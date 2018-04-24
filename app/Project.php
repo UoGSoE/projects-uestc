@@ -15,7 +15,7 @@ class Project extends Model
 {
     protected $fillable = [
         'title', 'description', 'prereq', 'is_active', 'user_id', 'type_id',
-        'maximum_students', 'discipline_id', 'institution'
+        'maximum_students', 'institution'
     ];
 
     protected $casts = [
@@ -60,6 +60,11 @@ class Project extends Model
     public function discipline()
     {
         return $this->belongsTo(Discipline::class);
+    }
+
+    public function disciplines()
+    {
+        return $this->belongsToMany(Discipline::class, 'project_disciplines');
     }
 
     public function disciplineTitle()

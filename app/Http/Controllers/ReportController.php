@@ -24,7 +24,10 @@ class ReportController extends Controller
     {
         $applicationsEnabled = Project::applicationsEnabled();
         $projects = Project::where('discipline_id', '=', $disciplineId)
-                    ->with('owner', 'students', 'acceptedStudents', 'discipline')
+                    ->orWhereHas('disciplines', function ($query) use ($disciplineId) {
+                        $query->where('disciplines.id', $disciplineId);
+                    })
+                    ->with('owner', 'students', 'acceptedStudents', 'discipline', 'disciplines')
                     ->orderBy('title')
                     ->get();
         $disciplines = Discipline::orderBy('title')->get();
