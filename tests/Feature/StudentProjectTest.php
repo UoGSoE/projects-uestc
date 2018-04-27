@@ -173,7 +173,7 @@ class StudentProjectTest extends TestCase
     {
         ProjectConfig::setOption('round', 1);
         ProjectConfig::setOption('uestc_required_choices', 0);
-        $student = factory(User::class)->states('student')->create();
+        $student = factory(User::class)->states('student')->create(['degree_type' => 'Single']);
         $course = factory(Course::class)->create();
         $course->students()->save($student);
         $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);

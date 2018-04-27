@@ -47,137 +47,137 @@
             @{{ buttonText }}
         </button>
     </form>
+    @section('scripts')
+        <script src="{!! asset('/js/student_project_chooser.js') !!}"></script>
+        <script>
+        $( document ).ready(function() {
+            $(".courses-bar").show();
+        });
+        </script>
 
-<script>
-$( document ).ready(function() {
-    $(".courses-bar").show();
-});
-</script>
-<script src="{!! asset('/vendor/vuejs_2.1.10.js') !!}"></script>
-<script src="{!! asset('/js/student_project_chooser.js') !!}"></script>
-<script>
+        <script>
+            // https://tc39.github.io/ecma262/#sec-array.prototype.find
+            // IE11 polyfill for array.find....
+            if (!Array.prototype.find) {
+            Object.defineProperty(Array.prototype, 'find', {
+                value: function(predicate) {
+                // 1. Let O be ? ToObject(this value).
+                if (this == null) {
+                    throw new TypeError('"this" is null or not defined');
+                }
 
-// https://tc39.github.io/ecma262/#sec-array.prototype.find
-// IE11 polyfill for array.find....
-if (!Array.prototype.find) {
-  Object.defineProperty(Array.prototype, 'find', {
-    value: function(predicate) {
-     // 1. Let O be ? ToObject(this value).
-      if (this == null) {
-        throw new TypeError('"this" is null or not defined');
-      }
+                var o = Object(this);
 
-      var o = Object(this);
+                // 2. Let len be ? ToLength(? Get(O, "length")).
+                var len = o.length >>> 0;
 
-      // 2. Let len be ? ToLength(? Get(O, "length")).
-      var len = o.length >>> 0;
+                // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+                if (typeof predicate !== 'function') {
+                    throw new TypeError('predicate must be a function');
+                }
 
-      // 3. If IsCallable(predicate) is false, throw a TypeError exception.
-      if (typeof predicate !== 'function') {
-        throw new TypeError('predicate must be a function');
-      }
+                // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+                var thisArg = arguments[1];
 
-      // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-      var thisArg = arguments[1];
+                // 5. Let k be 0.
+                var k = 0;
 
-      // 5. Let k be 0.
-      var k = 0;
+                // 6. Repeat, while k < len
+                while (k < len) {
+                    // a. Let Pk be ! ToString(k).
+                    // b. Let kValue be ? Get(O, Pk).
+                    // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+                    // d. If testResult is true, return kValue.
+                    var kValue = o[k];
+                    if (predicate.call(thisArg, kValue, k, o)) {
+                    return kValue;
+                    }
+                    // e. Increase k by 1.
+                    k++;
+                }
 
-      // 6. Repeat, while k < len
-      while (k < len) {
-        // a. Let Pk be ! ToString(k).
-        // b. Let kValue be ? Get(O, Pk).
-        // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-        // d. If testResult is true, return kValue.
-        var kValue = o[k];
-        if (predicate.call(thisArg, kValue, k, o)) {
-          return kValue;
-        }
-        // e. Increase k by 1.
-        k++;
-      }
-
-      // 7. Return undefined.
-      return undefined;
-    }
-  });
-}
-
-window.Event = new Vue();
-
-var app = new Vue({
-    el: '#vueform',
-    data: {
-        projects: {!! Auth::user()->availableProjectsJson() !!},
-        allowSelect: {{ $applicationsEnabled ? 1 : 0}},
-        requiredUoGChoices: {{ $requiredUoGChoices }},
-        requiredUESTCChoices: {{ $requiredUESTCChoices }},
-        supervisors: [],
-    },
-    methods: {
-        toggleChoice: function(projectId) {
-            let project = this.projects.find(function(project) {
-                return project.id == projectId;
+                // 7. Return undefined.
+                return undefined;
+                }
             });
-            if (project) {
-                project.chosen = ! project.chosen;
-                if (project.chosen) {
-                    this.supervisors.push(project.owner);
-                } else {
-                    this.supervisors.pop(project.owner); //remove the second choice
-                }
-                if (this.supervisors.includes(project.owner)) {
-                    this.supervisors.unique = this.supervisors.indexOf(project.owner) == this.supervisors.lastIndexOf(project.owner);
-                }
             }
-        }
-    },
-    computed: {
-        chosenCount: function() {
-            return this.projects.reduce(function(prevVal, project) {
-                return prevVal + project.chosen;
-            }, 0);
-        },
-        cannotSubmit: function() {
-            if (this.supervisors.unique == true && !this.invalidChoices) {
-                return false;
-            }
-            return true;
-        },
-        invalidChoices: function() {
-            return this.numberOfUoG != this.requiredUoGChoices || this.numberOfUESTC != this.requiredUESTCChoices;
-        },
-        buttonText: function() {
-            if (this.supervisors.unique == false) {
-                return 'You cannot choose two projects with the same supervisor.';
-            }
-            if (this.invalidChoices) {
-                return 'You must choose ' + this.requiredUoGChoices + ' UoG projects and ' + this.requiredUESTCChoices + ' UESTC projects.';
-            }
-            return 'Submit your choices';
-        },
-        numberOfUoG: function() {
-            return this.projects.reduce(function(prevVal, project) {
-                if (!project.chosen) {
-                    return prevVal;
+
+            window.Event = new Vue();
+
+            var app = new Vue({
+                el: '#vueform',
+                data: {
+                    projects: {!! Auth::user()->availableProjectsJson() !!},
+                    allowSelect: {{ $applicationsEnabled ? 1 : 0}},
+                    requiredUoGChoices: {{ $requiredUoGChoices }},
+                    requiredUESTCChoices: {{ $requiredUESTCChoices }},
+                    supervisors: [],
+                },
+                methods: {
+                    toggleChoice: function(projectId) {
+                        let project = this.projects.find(function(project) {
+                            return project.id == projectId;
+                        });
+                        if (project) {
+                            project.chosen = ! project.chosen;
+                            if (project.chosen) {
+                                this.supervisors.push(project.owner);
+                            } else {
+                                this.supervisors.pop(project.owner); //remove the second choice
+                            }
+                            if (this.supervisors.includes(project.owner)) {
+                                this.supervisors.unique = this.supervisors.indexOf(project.owner) == this.supervisors.lastIndexOf(project.owner);
+                            }
+                        }
+                    }
+                },
+                computed: {
+                    chosenCount: function() {
+                        return this.projects.reduce(function(prevVal, project) {
+                            return prevVal + project.chosen;
+                        }, 0);
+                    },
+                    cannotSubmit: function() {
+                        if (this.supervisors.unique == true && !this.invalidChoices) {
+                            return false;
+                        }
+                        return true;
+                    },
+                    invalidChoices: function() {
+                        return this.numberOfUoG != this.requiredUoGChoices || this.numberOfUESTC != this.requiredUESTCChoices;
+                    },
+                    buttonText: function() {
+                        if (this.supervisors.unique == false) {
+                            return 'You cannot choose two projects with the same supervisor.';
+                        }
+                        if (this.invalidChoices) {
+                            return 'You must choose ' + this.requiredUoGChoices + ' UoG projects and ' + this.requiredUESTCChoices + ' UESTC projects.';
+                        }
+                        return 'Submit your choices';
+                    },
+                    numberOfUoG: function() {
+                        return this.projects.reduce(function(prevVal, project) {
+                            if (!project.chosen) {
+                                return prevVal;
+                            }
+                            return prevVal + (project.institution === 'UoG' ? 1 : 0);
+                        }, 0);
+                    },
+                    numberOfUESTC: function() {
+                        return this.projects.reduce(function(prevVal, project) {
+                            if (!project.chosen) {
+                                return prevVal;
+                            }
+                            return prevVal + (project.institution === 'UESTC' ? 1 : 0);
+                        }, 0);
+                    }
+                },
+                created: function() {
+                    Event.$on('chosen', this.toggleChoice);
                 }
-                return prevVal + (project.institution === 'UoG' ? 1 : 0);
-            }, 0);
-        },
-        numberOfUESTC: function() {
-            return this.projects.reduce(function(prevVal, project) {
-                if (!project.chosen) {
-                    return prevVal;
-                }
-                return prevVal + (project.institution === 'UESTC' ? 1 : 0);
-            }, 0);
-        }
-    },
-    created: function() {
-        Event.$on('chosen', this.toggleChoice);
-    }
-});
-</script>
+            });
+        </script>
+    @endsection
 @endif
 
 @endsection

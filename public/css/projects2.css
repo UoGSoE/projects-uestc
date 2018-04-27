@@ -14,3 +14,11 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.btn-group.btn-group-full {
+    display: flex;
+}
+
+.btn-group-full .btn {
+  flex: 1
+}

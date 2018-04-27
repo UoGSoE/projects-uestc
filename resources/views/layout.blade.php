@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Student Projects - {{{ $page_title or '' }}}</title>
     <link rel="stylesheet" href="{!! asset('vendor/bootstrap/css/bootstrap.min.css') !!}" media="print,screen" />
     <link rel="stylesheet" href="{!! asset('vendor/select2/dist/css/select2.min.css') !!}" media="screen" />
@@ -45,6 +46,7 @@
 
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{!! asset('vendor/select2/dist/js/select2.full.min.js') !!}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
     <script>
     	$( document ).ready(function() {
 			$('a[data-confirm]').click(function(ev) {
@@ -59,5 +61,6 @@
 			});
 		});
     </script>
+    @yield('scripts')
 </body>
 </html>

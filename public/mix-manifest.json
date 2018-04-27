@@ -1,3 +1,5 @@
 {
-  "/js/student_project_chooser.js": "/js/student_project_chooser.js"
+    "/js/app.js": "/js/app.js",
+    "/js/student_project_chooser.js": "/js/student_project_chooser.js",
+    "/css/app.css": "/css/app.css"
 }
