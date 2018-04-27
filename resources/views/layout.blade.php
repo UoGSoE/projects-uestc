@@ -44,9 +44,8 @@
       </div>
     </div>
 
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{!! asset('vendor/select2/dist/js/select2.full.min.js') !!}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{!! asset('vendor/select2/dist/js/select2.full.min.js') !!}"></script>
     <script>
     	$( document ).ready(function() {
 			$('a[data-confirm]').click(function(ev) {

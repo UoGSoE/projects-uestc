@@ -989,6 +989,8 @@ window.Vue = __webpack_require__(38);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.component('project-lista', __webpack_require__(55));
+
 /***/ }),
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -43062,6 +43064,915 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(4)))
+
+/***/ }),
+/* 41 */,
+/* 42 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(42)
+/* script */
+var __vue_script__ = __webpack_require__(56)
+/* template */
+var __vue_template__ = __webpack_require__(57)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ProjectList.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7551a920", Component.options)
+  } else {
+    hotAPI.reload("data-v-7551a920", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['projects', 'allowselect', 'requireduestc', 'requireduog'],
+
+    data: function data() {
+        return {
+            showConfirmation: false,
+            openProjects: [],
+            submitButtonText: 'Submit my choices',
+            submissionError: false,
+            uestcChoices: [],
+            uogChoices: [],
+            supervisors: [],
+            choiceError: '',
+            uniqueSupervisors: true
+        };
+    },
+
+
+    computed: {
+        anyProjectsChosen: function anyProjectsChosen() {
+            return this.uestcChoices.length > 0 || this.uogChoices.length > 0;
+        },
+
+        numberOfUoG: function numberOfUoG() {
+            var total = 0;
+            for (var key in this.uogChoices) {
+                if (this.uogChoices.hasOwnProperty(key)) {
+                    if (this.uogChoices[key] != null) {
+                        total++;
+                    }
+                }
+            }
+            return total;
+        },
+        numberOfUESTC: function numberOfUESTC() {
+            var total = 0;
+            for (var key in this.uestcChoices) {
+                if (this.uestcChoices.hasOwnProperty(key)) {
+                    if (this.uestcChoices[key] != null) {
+                        total++;
+                    }
+                }
+            }
+            return total;
+        },
+        allChosen: function allChosen() {
+            if (this.numberOfUoG == this.requireduog && this.numberOfUESTC == this.requireduestc) {
+                return true;
+            }
+            return false;
+        },
+        invalidChoices: function invalidChoices() {
+            if (this.uniqueSupervisors == false) {
+                this.choiceError = 'You cannot choose two projects with the same supervisor';
+                return true;
+            }
+            if (this.numberOfUoG > this.requireduog || this.numberOfUESTC > this.requireduestc) {
+                this.choiceError = 'You must choose ' + this.requireduestc + ' UESTC projects and ' + this.requireduog + ' UOG projects.';
+                return true;
+            }
+            return false;
+        },
+        validChoices: function validChoices() {
+            if (this.invalidChoices) {
+                return false;
+            }
+            if (!this.allChosen) {
+                return false;
+            }
+            return true;
+        },
+        panelHeading: function panelHeading() {
+            if (this.invalidChoices) {
+                return this.choiceError;
+            } else if (!this.allChosen) {
+                return 'Not chosen all.';
+            }
+            return 'You have chosen all projects - you can now submit your choices.';
+        }
+    },
+
+    methods: {
+        isExpanded: function isExpanded(projectId) {
+            if (this.openProjects.indexOf(projectId) != -1) {
+                return true;
+            }
+            return false;
+        },
+
+        expandProject: function expandProject(projectId) {
+            if (this.isExpanded(projectId)) {
+                var index = this.openProjects.indexOf(projectId);
+                this.openProjects.splice(index, 1);
+                return;
+            }
+            this.openProjects.push(projectId);
+        },
+
+        choose: function choose(project) {
+            project.chosen = !project.chosen;
+            if (project.chosen) {
+                this.supervisors.push(project.owner);
+                if (project.institution == 'UESTC') {
+                    this.uestcChoices.push(project);
+                } else {
+                    this.uogChoices.push(project);
+                }
+            } else {
+                this.supervisors.splice(this.supervisors.indexOf(project.owner), 1);
+                if (project.institution == 'UESTC') {
+                    this.uestcChoices.splice(this.uestcChoices.indexOf(project), 1);
+                } else {
+                    this.uogChoices.splice(this.uogChoices.indexOf(project), 1);
+                }
+            }
+            if (this.supervisors.includes(project.owner)) {
+                this.uniqueSupervisors = this.supervisors.indexOf(project.owner) == this.supervisors.lastIndexOf(project.owner);
+            }
+        },
+
+        submitChoices: function submitChoices() {
+            // var choices = {
+            //     "1": this.choices.first,
+            //     "2": this.choices.second,
+            //     "3": this.choices.third,
+            //     "4": this.choices.fourth,
+            //     "5": this.choices.fifth,
+            // };
+            // console.log(choices);
+            // axios.post(route('projects.choose'), {choices: choices})
+            //      .then(response => {
+            //         window.location = route('thank_you');
+            //      })
+            //      .catch(error => {
+            //         this.submitButtonText = 'Error submitting choices - sorry';
+            //         this.submissionError = true;
+            //         console.log(error);
+            //      });
+        }
+    }
+});
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _vm._l(_vm.projects, function(project) {
+        return _c(
+          "div",
+          { key: project.id, staticClass: "panel panel-default" },
+          [
+            _c(
+              "div",
+              {
+                staticClass: "panel-heading fake-link",
+                attrs: { id: "title_" + project.id },
+                on: {
+                  click: function($event) {
+                    _vm.expandProject(project.id)
+                  }
+                }
+              },
+              [
+                _c("h3", { staticClass: "panel-title" }, [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(project.title) +
+                      " (" +
+                      _vm._s(project.owner) +
+                      ")\n                "
+                  ),
+                  project.discipline
+                    ? _c("span", [
+                        _vm._v(
+                          "\n                    (field " +
+                            _vm._s(project.discipline) +
+                            ")\n                "
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("span", { staticStyle: { float: "right" } }, [
+                    _c("img", {
+                      attrs: {
+                        src: "img/" + project.institution + ".png",
+                        alt: project.institution,
+                        height: "20",
+                        width: "30"
+                      }
+                    })
+                  ])
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _vm.isExpanded(project.id)
+              ? _c("div", [
+                  _c("div", { staticClass: "panel-body" }, [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(project.description) +
+                        "\n                "
+                    ),
+                    project.prereq
+                      ? _c("div", { staticClass: "help-block" }, [
+                          _vm._v(
+                            "\n                    Prerequisites: " +
+                              _vm._s(project.prereq) +
+                              "\n                "
+                          )
+                        ])
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "ul",
+                    { staticClass: "list-group" },
+                    [
+                      _vm._l(project.links, function(link) {
+                        return _c(
+                          "li",
+                          { key: link, staticClass: "list-group-item" },
+                          [
+                            _c(
+                              "a",
+                              { attrs: { href: link.url, target: "_blank" } },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(link.url) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _vm._l(project.files, function(file) {
+                        return _c(
+                          "li",
+                          { key: _vm.link, staticClass: "list-group-item" },
+                          [
+                            _c(
+                              "a",
+                              { attrs: { href: "/projectfile/" + file.id } },
+                              [
+                                _c("span", {
+                                  staticClass: "glyphicon glyphicon-download",
+                                  attrs: { "aria-hidden": "true" }
+                                }),
+                                _vm._v(
+                                  " " +
+                                    _vm._s(file.original_filename) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      })
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _vm.allowselect
+                    ? _c("div", { staticClass: "panel-footer" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-sm",
+                            class: {
+                              "btn-success": !project.chosen,
+                              "btn-danger": project.chosen
+                            },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                _vm.choose(project)
+                              }
+                            }
+                          },
+                          [
+                            !project.chosen
+                              ? _c("span", [_vm._v("Add")])
+                              : _c("span", [_vm._v("Remove")])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticStyle: {
+                              float: "right",
+                              width: "60%",
+                              "margin-top": "5px"
+                            }
+                          },
+                          [
+                            _c(
+                              "div",
+                              { staticStyle: { float: "left", width: "10%" } },
+                              [
+                                _vm._v(
+                                  "\n                        Popularity\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass: "progress",
+                                staticStyle: {
+                                  "background-color": "white",
+                                  float: "right",
+                                  width: "90%"
+                                }
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    class:
+                                      "progress-bar " +
+                                      project.popularity.colour,
+                                    style:
+                                      "min-width: 2em; max-width:100%; width:" +
+                                      project.popularity.percent +
+                                      "%",
+                                    attrs: {
+                                      role: "progressbar",
+                                      "aria-valuenow":
+                                        project.popularity.percent,
+                                      "aria-valuemin": "0",
+                                      "aria-valuemax": "100"
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                            " +
+                                        _vm._s(project.popularity.caption) +
+                                        "\n                        "
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ])
+                    : _vm._e()
+                ])
+              : _vm._e()
+          ]
+        )
+      }),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "fade" } }, [
+        _vm.anyProjectsChosen
+          ? _c("div", [
+              _c(
+                "div",
+                {
+                  staticClass: "panel panel-success",
+                  class: {
+                    "panel-danger": _vm.invalidChoices,
+                    "panel-info": !_vm.allChosen
+                  },
+                  attrs: { id: "infobox" }
+                },
+                [
+                  _c("div", { staticClass: "panel-heading" }, [
+                    _vm._v(_vm._s(_vm.panelHeading))
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "panel-body" },
+                    [
+                      _c("h5", [
+                        _vm._v("UESTC Projects "),
+                        _c(
+                          "span",
+                          {
+                            staticClass: "label label-default",
+                            class: {
+                              "label-success":
+                                _vm.uestcChoices.length == _vm.requireduestc,
+                              "label-danger":
+                                _vm.uestcChoices.length > _vm.requireduestc
+                            }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(_vm.uestcChoices.length) +
+                                "/" +
+                                _vm._s(_vm.requireduestc)
+                            )
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.uestcChoices, function(project) {
+                        return _c(
+                          "div",
+                          {
+                            key: project.id,
+                            staticClass: "panel panel-default panel-choices",
+                            class: { movable: _vm.validChoices }
+                          },
+                          [
+                            _c(
+                              "div",
+                              { staticClass: "panel-body container-fluid" },
+                              [
+                                _c("div", { staticClass: "row" }, [
+                                  _c("div", { staticClass: "col-md-1" }, [
+                                    _c("img", {
+                                      attrs: {
+                                        src:
+                                          "img/" + project.institution + ".png",
+                                        alt: project.institution,
+                                        height: "20",
+                                        width: "30"
+                                      }
+                                    })
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "col-md-5" }, [
+                                    _vm._v(
+                                      "\n                                    " +
+                                        _vm._s(project.title) +
+                                        "\n                                "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "col-md-4" }, [
+                                    _vm._v(
+                                      "\n                                    " +
+                                        _vm._s(project.owner) +
+                                        "\n                                "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "col-md-1" }, [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass: "btn btn-xs btn-danger",
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            _vm.choose(project)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                        Remove\n                                "
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ]
+                            )
+                          ]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _c("h5", [
+                        _vm._v("UoG Projects "),
+                        _c(
+                          "span",
+                          {
+                            staticClass: "label label-default",
+                            class: {
+                              "label-success":
+                                _vm.uogChoices.length == _vm.requireduog,
+                              "label-danger":
+                                _vm.uogChoices.length > _vm.requireduog
+                            }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(_vm.uogChoices.length) +
+                                "/" +
+                                _vm._s(_vm.requireduog)
+                            )
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.uogChoices, function(project) {
+                        return _c(
+                          "div",
+                          {
+                            key: project.id,
+                            staticClass: "panel panel-default panel-choices",
+                            class: { movable: _vm.validChoices }
+                          },
+                          [
+                            _c(
+                              "div",
+                              { staticClass: "panel-body container-fluid" },
+                              [
+                                _c("div", { staticClass: "row" }, [
+                                  _c("div", { staticClass: "col-md-1" }, [
+                                    _c("img", {
+                                      attrs: {
+                                        src:
+                                          "img/" + project.institution + ".png",
+                                        alt: project.institution,
+                                        height: "20",
+                                        width: "30"
+                                      }
+                                    })
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "col-md-5" }, [
+                                    _vm._v(
+                                      "\n                                    " +
+                                        _vm._s(project.title) +
+                                        "\n                                "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "col-md-4" }, [
+                                    _vm._v(
+                                      "\n                                    " +
+                                        _vm._s(project.owner) +
+                                        "\n                                "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "col-md-1" }, [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass: "btn btn-xs btn-danger",
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            _vm.choose(project)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                        Remove\n                                "
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ]
+                            )
+                          ]
+                        )
+                      })
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _vm.validChoices
+                    ? _c("div", { staticClass: "panel-footer" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button is-info",
+                            class: { "is-danger": _vm.submissionError },
+                            attrs: { disabled: _vm.submissionError },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.submitChoices($event)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.submitButtonText) +
+                                "\n                    "
+                            )
+                          ]
+                        )
+                      ])
+                    : _vm._e()
+                ]
+              )
+            ])
+          : _vm._e()
+      ])
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7551a920", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

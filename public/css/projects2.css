@@ -22,3 +22,50 @@ body {
 .btn-group-full .btn {
   flex: 1
 }
+
+#infobox {
+  min-width:40%;
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  background: white;
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  z-index: 9;
+}
+
+.fadeWidth-enter-active,
+.fadeWidth-leave-active {
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  max-width: 314px;
+}
+
+.fadeWidth-enter,
+.fadeWidth-leave-to {
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  opacity: 0;
+  max-width: 0px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  -webkit-transition: opacity .5s;
+  transition: opacity .5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.move { cursor: move; }
+
+.panel-choices {
+    margin-bottom:5px;
+}
+
+.panel-choices .panel-body {
+    padding:5px;
+}
