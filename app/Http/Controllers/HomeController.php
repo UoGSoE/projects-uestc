@@ -23,10 +23,13 @@ class HomeController extends Controller
             return view('profile.edit_degree');
         }
         return view(
-            'project.student_index',
-            ['applicationsEnabled' => Project::applicationsEnabled(),
-             'requiredUoGChoices' => ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3)),
-             'requiredUESTCChoices' => ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6))]
+            'project.student_index', [
+                'applicationsEnabled' => Project::applicationsEnabled(),
+                'required' => [
+                    'uestc' => ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6)),
+                    'uog' => ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3))
+                ]
+            ]
         );
     }
 

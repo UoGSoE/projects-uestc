@@ -15,4 +15,5 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('project-lista', require('./components/ProjectList.vue'));
+Vue.component('project-list', require('./components/ProjectList.vue'));
+Vue.component('draggable', require('vuedraggable'));

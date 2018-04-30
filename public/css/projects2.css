@@ -61,6 +61,7 @@ body {
 }
 
 .move { cursor: move; }
+.pointer {cursor: pointer;}
 
 .panel-choices {
     margin-bottom:5px;

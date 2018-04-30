@@ -177,7 +177,7 @@ class User extends Model implements
         }
 
         return $course->projects()->active()->join('users', 'projects.user_id', '=', 'users.id')
-            ->orderBy('users.surname')->orderBy('projects.title')->get();
+            ->orderBy('users.surname')->orderBy('projects.title')->get()->unique();
     }
 
     /**

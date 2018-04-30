@@ -21,11 +21,11 @@
 @else
     <h2>Available Projects</h2>
     <p>
-        Please choose {{ $requiredUoGChoices }} UoG projects and {{ $requiredUESTCChoices }} UESTC projects.
+        Please choose {{ $required['uog'] }} UoG projects and {{ $required['uestc'] }} UESTC projects.
     </p>
     <form method="POST" action="{!! route('choices.update') !!}" id="vueform">
         {{ csrf_field() }}
-        <project-lista :projects="{{ Auth::user()->availableProjectsJson() }}" :allowselect="{{ $applicationsEnabled ? 1 : 0}}" :requireduestc="{{ $requiredUESTCChoices }}" :requireduog="{{ $requiredUoGChoices }}"></project-list>
+        <project-list :projects="{{ Auth::user()->availableProjectsJson() }}" :allowselect="{{ $applicationsEnabled ? 1 : 0}}" :required="{{ json_encode($required) }}"></project-list>
     </form>
 @endif
 @endsection
