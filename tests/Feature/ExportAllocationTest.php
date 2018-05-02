@@ -44,11 +44,16 @@ class ExportAllocationTest extends TestCase
         $project2->preAllocate($student2);
 
         $response = $this->actingAs($admin)->get(route('export.students'));
-
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename="students.xlsx"');
-        // should really try loading the sheet into memory and testing, but it's
-        // Friday afternoon - yolo.
+        $response->assertHeader('content-disposition', 'attachment; filename="all_students.xlsx"');
+
+        $response = $this->actingAs($admin)->get(route('export.students.single'));
+        $response->assertStatus(200);
+        $response->assertHeader('content-disposition', 'attachment; filename="single_degree_students.xlsx"');
+
+        $response = $this->actingAs($admin)->get(route('export.students.dual'));
+        $response->assertStatus(200);
+        $response->assertHeader('content-disposition', 'attachment; filename="dual_degree_students.xlsx"');
     }
 
     public function test_can_export_the_staff_list_as_a_spreadsheet()

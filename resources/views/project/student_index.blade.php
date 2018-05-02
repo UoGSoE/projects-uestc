@@ -35,9 +35,11 @@
     @endif
 @endsection
 @section('scripts')
-<script>
-    const app = new Vue({
-        el: '#vueform',
-    });
-</script>
+    @if (Auth::user()->projects()->count() == 0)
+        <script>
+            const app = new Vue({
+                el: '#vueform',
+            });
+        </script>
+    @endif
 @endsection

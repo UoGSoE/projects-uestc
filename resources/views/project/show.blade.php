@@ -92,6 +92,7 @@
             <tr>
                 <th>Matric</th>
                 <th>Name</th>
+                <th>Preference</th>
             </tr>
         </thead>
         <tbody>
@@ -106,6 +107,11 @@
                         @endif
                     </td>
                     <td>{{ $student->fullName() }}</td>
+                    <td>
+                        @if (!$student->isSingleDegree() && $student->pivot->preference)
+                            Choice {{ $student->pivot->preference }}
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>

@@ -27,6 +27,16 @@ class Project extends Model
         return $query->where('is_active', '=', 1);
     }
 
+    public function scopeUESTC($query)
+    {
+        return $query->where('institution', 'UESTC');
+    }
+
+    public function scopeUoG($query)
+    {
+        return $query->where('institution', 'UoG');
+    }
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -34,7 +44,7 @@ class Project extends Model
 
     public function students()
     {
-        return $this->belongsToMany(User::class, 'project_student')->withPivot('accepted');
+        return $this->belongsToMany(User::class, 'project_student')->withPivot(['accepted', 'preference']);
     }
 
     public function courses()
@@ -144,7 +154,7 @@ class Project extends Model
             throw new StudentAlreadyAllocatedException;
         }
 
-        $this->students()->sync([$student->id => ['accepted' => true]], false);
+        $this->students()->sync([$student->id => ['accepted' => true, 'preference' => null]], false);
         $student->projects()->sync([$this->id]);
         $student->notify((new AllocatedToProject($this))->delay(Carbon::now()->addSeconds(rand(10, 600))));
         $student->roundAccept($this->id);

@@ -16,7 +16,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'username' => preg_replace('/\'/', '-', $faker->userName),
         'surname' => preg_replace('/\'/', '-', $faker->lastName),
         'forenames' => preg_replace('/\'/', '-', $faker->firstName),
-        'email' => $faker->email,
+        'email' => $faker->safeEmail(),
         'is_student' => false,
         'last_login' => $faker->dateTimeThisYear(),
         'is_admin' => false,

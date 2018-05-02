@@ -37,7 +37,16 @@ class User extends Model implements
      *
      * @var array
      */
-    protected $fillable = ['username', 'email', 'surname', 'forenames', 'is_student', 'is_admin', 'is_convenor', 'institution'];
+    protected $fillable = [
+        'username',
+        'email',
+        'surname',
+        'forenames',
+        'is_student',
+        'is_admin',
+        'is_convenor',
+        'institution'
+    ];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -69,6 +78,16 @@ class User extends Model implements
         return $query->where('is_student', '=', 1);
     }
 
+    public function scopeSingleDegree($query)
+    {
+        return $query->where('degree_type', 'Single');
+    }
+
+    public function scopeDualDegree($query)
+    {
+        return $query->where('degree_type', 'Dual');
+    }
+
     public function scopeStaff($query)
     {
         return $query->where('is_student', '=', 0);
@@ -82,7 +101,7 @@ class User extends Model implements
     public function projects()
     {
         if ($this->is_student) {
-            return $this->belongsToMany(Project::class, 'project_student')->withPivot('accepted');
+            return $this->belongsToMany(Project::class, 'project_student')->withPivot(['accepted', 'preference']);
         }
         return $this->hasMany(Project::class)->with('students', 'acceptedStudents');
     }

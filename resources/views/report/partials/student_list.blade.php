@@ -3,15 +3,12 @@
             <tr>
                 <th>GUID</th>
                 <th>Name</th>
-                <th>Choice 1</th>
-                <th>Choice 2</th>
-                <th>Choice 3</th>
-                <th>Choice 4</th>
-                <th>Choice 5</th>
-                <th>Choice 6</th>
-                <th>Choice 7</th>
-                <th>Choice 8</th>
-                <th>Choice 9</th>
+                @for ($i = 1; $i <= $required['uestc']; $i++)
+                    <th>UESTC Choice {{ $i }}</th>
+                @endfor
+                @for ($i = 1; $i <= $required['uog']; $i++)
+                    <th>UoG Choice {{ $i }}</th>
+                @endfor
             </tr>
         </thead>
         <tbody>
@@ -25,12 +22,17 @@
                             {{ $student->fullName() }}
                         </a>
                     </td>
-                    @foreach ($student->projects()->get() as $project)
+                    @foreach ($student->projects()->UESTC()->orderBy('preference')->get() as $project)
                         <td>
                              {{ $project->title }}
                         </td>
                     @endforeach
-                    @for ($i = 9 - $student->projects()->count(); $i > 0; $i--)
+                    @foreach ($student->projects()->UoG()->orderBy('preference')->get() as $project)
+                        <td>
+                             {{ $project->title }}
+                        </td>
+                    @endforeach
+                    @for ($i = ($required['uestc'] + $required['uog']) - $student->projects()->count(); $i > 0; $i--)
                         <td></td>
                     @endfor
                 </tr>

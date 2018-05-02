@@ -41,7 +41,7 @@
                     @if ($user->isConvenor())
                         &middot; Project Convenor
                     @endif
-                @else 
+                @else
                     Regular User
                 @endif
             </dd>
@@ -70,6 +70,42 @@
         </h2>
         @if ($user->projects->count() == 0)
             None
+        @elseif ($user->is_student)
+            @if ($user->projects()->UESTC()->count() > 0)
+                <h5>UESTC Projects</h5>
+                @if (!$user->isSingleDegree())
+                    <ol>
+                @endif
+                @foreach ($user->projects()->UESTC()->orderBy('preference')->get() as $project)
+                    <li>
+                        <a href="{!! action('ProjectController@show', $project->id) !!}">
+                            {{ $project->title }}
+                        </a> ({{ $project->students->count() }} Students)
+                        (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})
+                    </li>
+                @endforeach
+                @if (!$user->isSingleDegree())
+                    </ol>
+                @endif
+            @endif
+
+            @if ($user->projects()->UoG()->count() > 0)
+                <h5>UoG Projects</h5>
+                @if (!$user->isSingleDegree())
+                    <ol>
+                @endif
+                @foreach ($user->projects()->UoG()->orderBy('preference')->get() as $project)
+                    <li>
+                        <a href="{!! action('ProjectController@show', $project->id) !!}">
+                            {{ $project->title }}
+                        </a> ({{ $project->students->count() }} Students)
+                        (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})
+                    </li>
+                @endforeach
+                @if (!$user->isSingleDegree())
+                    </ol>
+                @endif
+            @endif
         @else
             @foreach ($user->projects as $project)
                 <li>
@@ -80,5 +116,6 @@
                 </li>
             @endforeach
         @endif
+
     </div>
 @stop

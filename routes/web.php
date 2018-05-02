@@ -109,7 +109,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/bulkactive', 'BulkActiveController@update')->name('bulkactive.update');
 
         Route::get('/export/allocations', 'ExportController@allocations')->name('export.allocations');
-        Route::get('/export/students', 'ExportController@students')->name('export.students');
+        Route::get('/export/students', 'ExportController@allStudents')->name('export.students');
+        Route::get('/export/students/single', 'ExportController@singleDegreeStudents')->name('export.students.single');
+        Route::get('/export/students/dual', 'ExportController@dualDegreeStudents')->name('export.students.dual');
         Route::get('/export/staff', 'ExportController@staff')->name('export.staff');
 
         Route::post('site/enableapplications', 'ApplicationsController@enable')->name('admin.allow_applications');

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <input type="hidden" name="uestcChoices[]" v-model="uestcChoices">
-        <input type="hidden" name="uogChoices[]" v-model="uogChoices">
+        <input type="hidden" name="uestcChoices" v-model="uestcChoices">
+        <input type="hidden" name="uogChoices" v-model="uogChoices">
         <div class="panel panel-default" v-for="project in projects" :key="project.id">
             <div class="panel-heading fake-link" :id="'title_' + project.id" @click="expandProject(project.id)">
                 <h3 class="panel-title">
@@ -61,6 +61,7 @@
                         <span style="float:right;" class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                     </div>
                     <div class="panel-body">
+                        {{ instructions }}
                         <span v-for="institution in ['uestc', 'uog']" :key="institution">
                             <h5>{{ institution.toUpperCase() }} Projects
                                 <span
@@ -229,16 +230,29 @@
                 if (this.invalidChoices) {
                     return this.choiceError;
                 } else if (!this.allChosen) {
-                    return 'Not chosen all.';
+                    return 'Project choices';
                 }
-                return 'You have chosen all projects - you can now submit your choices.';
+                if (this.singledegree) {
+                    return 'You have chosen all projects - please review before submitting your choices.';
+                }
+                return 'Please arrange your choices into the order of your most preferred.';
+            },
+
+            instructions: function() {
+                if (this.singleDegree) {
+                    return '';
+                }
+                if (!this.invalidChoices && this.allChosen) {
+                    return 'Click and drag to sort your choices in order of preferences (top choice being most preferred).'
+                }
+                return ''
             },
 
             checkboxLabel: function() {
                 if (this.singledegree) {
                     return 'I confirm these are my choices';
                 }
-                return 'I confirm the order of my choices';
+                return 'I confirm the preference order of my choices';
             }
 
         },

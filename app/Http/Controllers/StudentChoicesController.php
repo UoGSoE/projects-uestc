@@ -16,7 +16,6 @@ class StudentChoicesController extends Controller
             return redirect()->to('/')->withErrors(['disabled' => 'Applications are currently disabled']);
         }
         $student = $request->user();
-
         $choices['uestc'] = is_array($request->uestcChoices) ?
             $request->uestcChoices : explode(',', $request->uestcChoices);
         $choices['uog'] = is_array($request->uogChoices) ?

@@ -37,7 +37,9 @@ class ReportController extends Controller
     public function allStudents()
     {
         $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
-        return view('report.all_students', compact('students'));
+        $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
+        $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
+        return view('report.all_students', compact('students', 'required'));
     }
 
     public function allStaff()
@@ -45,5 +47,4 @@ class ReportController extends Controller
         $users = User::staff()->with('projects')->orderBy('surname')->get();
         return view('report.all_staff', compact('users'));
     }
-
 }
