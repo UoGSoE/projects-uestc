@@ -255,6 +255,11 @@ class User extends Model implements
         return $this->is_convenor;
     }
 
+    public function isSingleDegree()
+    {
+        return $this->degree_type == 'Single';
+    }
+
     public function unallocated()
     {
         return $this->projects()->where('accepted', '=', true)->count() == 0;
@@ -419,7 +424,16 @@ class User extends Model implements
     public function allocateToProjects($choices)
     {
         $this->projects()->detach();
-        $this->projects()->sync($choices);
+        foreach ($choices['uestc'] as $key => $project) {
+            $this->projects()->attach($project, [
+                'preference' => $this->isSingleDegree() ? 1 : $key + 1
+            ]);
+        }
+        foreach ($choices['uog'] as $key => $project) {
+            $this->projects()->attach($project, [
+                'preference' => $this->isSingleDegree() ? 1 : $key + 1
+            ]);
+        }
         $this->addRoundsInfo($choices);
         return true;
     }
@@ -431,7 +445,10 @@ class User extends Model implements
         foreach ($rounds as $round) {
             $round->delete();
         }
-        foreach ($choices as $choice) {
+        foreach ($choices['uestc'] as $choice) {
+            $this->rounds()->create(['project_id' => $choice, 'round' => $currentRound]);
+        }
+        foreach ($choices['uog'] as $choice) {
             $this->rounds()->create(['project_id' => $choice, 'round' => $currentRound]);
         }
     }

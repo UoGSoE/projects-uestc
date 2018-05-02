@@ -16,18 +16,23 @@ class StudentChoicesController extends Controller
             return redirect()->to('/')->withErrors(['disabled' => 'Applications are currently disabled']);
         }
         $student = $request->user();
-        $picked = $request->choices;
-        $correctAmountOfChoices = $this->validNumberOfChoices($picked);
+
+        $choices['uestc'] = is_array($request->uestcChoices) ?
+            $request->uestcChoices : explode(',', $request->uestcChoices);
+        $choices['uog'] = is_array($request->uogChoices) ?
+            $request->uogChoices : explode(',', $request->uogChoices);
+        $correctAmountOfChoices = $this->validNumberOfChoices($choices);
         if ($correctAmountOfChoices !== true) {
             return $correctAmountOfChoices;
         }
-        $result = $this->checkChoicesAreOk($picked);
+        $result = $this->checkChoicesAreOk($choices);
         if ($result !== true) {
             return $result;
         }
-        $student->allocateToProjects($picked);
-        $projects = Project::whereIn('id', array_values($picked))->pluck('title')->toArray();
-        EventLog::log($student->id, "Chose projects " . implode(', ', $projects));
+        $student->allocateToProjects($choices);
+        $uestcProjects = Project::whereIn('id', array_values($choices['uestc']))->pluck('title')->toArray();
+        $uogProjects = Project::whereIn('id', array_values($choices['uog']))->pluck('title')->toArray();
+        EventLog::log($student->id, "Chose projects " . implode(', ', array_merge($uestcProjects, $uogProjects)));
         return redirect()->to('/')->with(
             'success_message',
             'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.'
@@ -36,14 +41,17 @@ class StudentChoicesController extends Controller
 
     private function choicesAreAllDifferent($choices)
     {
-        return count($choices) == count(array_unique($choices));
+        return count($choices['uestc']) == count(array_unique($choices['uestc']))
+            && count($choices['uog']) == count(array_unique($choices['uog']));
     }
 
     public function choicesHaveDifferentSupervisors($choices)
     {
-        $supervisorIds = Project::find($choices)->pluck('user_id')->all();
-        $uniqueIds = array_unique($supervisorIds);
-        if ($supervisorIds == $uniqueIds) {
+        $uestcSupervisorIds = Project::find($choices['uestc'])->pluck('user_id')->all();
+        $uogSupervisorIds = Project::find($choices['uog'])->pluck('user_id')->all();
+        $uestcUniqueIds = array_unique($uestcSupervisorIds);
+        $uogUniqueIds = array_unique($uogSupervisorIds);
+        if ($uestcSupervisorIds == $uestcUniqueIds && $uogSupervisorIds == $uogUniqueIds) {
             return true;
         }
         return false;
@@ -53,7 +61,7 @@ class StudentChoicesController extends Controller
     {
         if (!$this->choicesAreAllDifferent($choices)) {
             return redirect()->back()->withErrors([
-                'choice_diff' => "You must pick {$requiredChoices} *different* projects"
+                'choice_diff' => "You must pick *different* projects"
             ]);
         }
         if (!$this->choicesHaveDifferentSupervisors($choices)) {
@@ -61,7 +69,8 @@ class StudentChoicesController extends Controller
                 'supervisor_diff' => "You cannot choose two projects that have the same supervisor"
             ]);
         }
-        $projects = Project::whereIn('id', array_values($choices))->get();
+        $choiceIds = array_merge($choices['uog'], $choices['uestc']);
+        $projects = Project::whereIn('id', $choiceIds)->get();
         foreach ($projects as $project) {
             if ($project->isFull()) {
                 return redirect()->back()->withErrors([
@@ -77,19 +86,8 @@ class StudentChoicesController extends Controller
     {
         $requiredUOGChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
         $requiredUESTCChoices = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
-        $uogCount = 0;
-        $uestcCount = 0;
 
-        $projects = Project::whereIn('id', array_values($choices))->get();
-        foreach ($projects as $project) {
-            if ($project->institution == 'UoG') {
-                $uogCount ++;
-            } else {
-                $uestcCount ++;
-            }
-        }
-
-        if ($uogCount != $requiredUOGChoices or $uestcCount != $requiredUESTCChoices) {
+        if (count($choices['uog']) != $requiredUOGChoices or count($choices['uestc']) != $requiredUESTCChoices) {
             return redirect()->back()->withErrors([
                 'choice_number' => "You must pick {$requiredUOGChoices} University of Glasgow projects
                     and {$requiredUESTCChoices} UESTC projects."]);

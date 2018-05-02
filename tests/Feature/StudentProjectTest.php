@@ -126,7 +126,10 @@ class StudentProjectTest extends TestCase
         $response->assertRedirect('/');
         $response->assertSessionHasErrors(['choice_number']);
 
-        $response = $this->actingAs($student)->post(route('choices.update'), ['choices' => range(1,9)]);
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => range(1, 3),
+            'uestcChoices' => range(4,9),
+        ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
         $response->assertSessionHas(['success_message' => 'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.']);
@@ -143,7 +146,10 @@ class StudentProjectTest extends TestCase
         factory(Project::class)->create();
         factory(Project::class, 6)->create(['institution' => 'UESTC']);
 
-        $response = $this->actingAs($student)->post(route('choices.update'), ['choices' => range(1, 9)]);
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => range(1, 3),
+            'uestcChoices' => range(4, 9),
+        ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
         $response->assertSessionHasErrors(['supervisor_diff']);
@@ -152,17 +158,24 @@ class StudentProjectTest extends TestCase
     public function test_a_student_can_successfully_apply_for_available_projects()
     {
         ProjectConfig::setOption('round', 1);
-        ProjectConfig::setOption('uestc_required_choices', 0);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
         $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $uestcProjects = factory(Project::class, config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
         $projects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
         });
+        $uestcProjects->each(function ($project, $key) use ($course) {
+            $project->courses()->save($course);
+        });
         $projectIds = $projects->pluck('id')->toArray();
+        $uestcProjectIds = $uestcProjects->pluck('id')->toArray();
         $response = $this->actingAs($student)
-                        ->post(route('choices.update', ['choices' => $projectIds]));
+                        ->post(route('choices.update', [
+                            'uogChoices' => $projectIds,
+                            'uestcChoices' => $uestcProjectIds,
+                        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -172,22 +185,29 @@ class StudentProjectTest extends TestCase
     public function test_a_student_can_resubmit_and_change_their_choices()
     {
         ProjectConfig::setOption('round', 1);
-        ProjectConfig::setOption('uestc_required_choices', 0);
         $student = factory(User::class)->states('student')->create(['degree_type' => 'Single']);
         $course = factory(Course::class)->create();
         $course->students()->save($student);
         $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $uestcProjects = factory(Project::class, config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
         $otherProjects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
         $projects->each(function ($project, $key) use ($course, $student) {
             $project->courses()->save($course);
             $project->addStudent($student);
         });
+        $uestcProjects->each(function ($project, $key) use ($course) {
+            $project->courses()->save($course);
+        });
         $otherProjects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
         });
         $projectIds = $otherProjects->pluck('id')->toArray();
+        $uestcProjectIds = $uestcProjects->pluck('id')->toArray();
         $response = $this->actingAs($student)
-                        ->post(route('choices.update', ['choices' => $projectIds]));
+                        ->post(route('choices.update', [
+                            'uogChoices' => $projectIds,
+                            'uestcChoices' => $uestcProjectIds
+                        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -230,12 +250,15 @@ class StudentProjectTest extends TestCase
     public function test_a_student_cant_apply_for_projects_which_are_full()
     {
         ProjectConfig::setOption('round', 1);
-        ProjectConfig::setOption('uestc_required_choices', 0);
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
         $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $uestcProjects = factory(Project::class, config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
         $projects->each(function ($project, $key) use ($course) {
+            $project->courses()->save($course);
+        });
+        $uestcProjects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
         });
         $otherStudent = factory(User::class)->states('student')->create();
@@ -243,8 +266,12 @@ class StudentProjectTest extends TestCase
         $firstProject->acceptStudent($otherStudent);
 
         $projectIds = $projects->pluck('id')->toArray();
+        $uestcProjectIds = $uestcProjects->pluck('id')->toArray();
         $response = $this->actingAs($student)
-                        ->post(route('choices.update', ['choices' => $projectIds]));
+                        ->post(route('choices.update'), [
+                            'uestcChoices' => $uestcProjectIds,
+                            'uogChoices' => $projectIds,
+                        ]);
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -320,5 +347,141 @@ class StudentProjectTest extends TestCase
             $response->assertSee($project->title);
         });
         $response->assertDontSee($project2->title);
+    }
+
+
+
+    /** @test */
+    public function a_student_can_post_their_project_preferences()
+    {
+        $student = $this->createStudent(['degree_type' => 'Dual']);
+        $course = $this->createCourse();
+        $course->students()->sync([$student->id]);
+        list($uogProject1, $uogProject2, $uogProject3) = factory(\App\Project::class, 3)->create(['institution' => 'UoG'])
+            ->each(function ($project) use ($course) {
+                $project->courses()->sync([$course->id]);
+            });
+        list($uestcProject1, $uestcProject2, $uestcProject3, $uestcProject4, $uestcProject5, $uestcProject6) = factory(\App\Project::class, 6)->create(['institution' => 'UESTC'])
+            ->each(function ($project) use ($course) {
+                $project->courses()->sync([$course->id]);
+            });
+
+        $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => [2, 3, 1],
+            'uestcChoices' => [5, 4, 9, 6, 8, 7]
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 1,
+            'preference' => 3
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 2,
+            'preference' => 1
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 3,
+            'preference' => 2
+        ]);
+
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 4,
+            'preference' => 2
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 5,
+            'preference' => 1
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 6,
+            'preference' => 4
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 7,
+            'preference' => 6
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 8,
+            'preference' => 5
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 9,
+            'preference' => 3
+        ]);
+    }
+
+    /** @test */
+    public function a_single_degree_student_can_post_their_projects_without_preference()
+    {
+        $student = $this->createStudent(['degree_type' => 'Single']);
+        $course = $this->createCourse();
+        $course->students()->sync([$student->id]);
+        list($uogProject1, $uogProject2, $uogProject3) = factory(\App\Project::class, 3)->create(['institution' => 'UoG'])
+            ->each(function ($project) use ($course) {
+                $project->courses()->sync([$course->id]);
+            });
+        list($uestcProject1, $uestcProject2, $uestcProject3, $uestcProject4, $uestcProject5, $uestcProject6) = factory(\App\Project::class, 6)->create(['institution' => 'UESTC'])
+            ->each(function ($project) use ($course) {
+                $project->courses()->sync([$course->id]);
+            });
+
+        $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => [2, 3, 1],
+            'uestcChoices' => [5, 4, 9, 6, 8, 7]
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 1,
+            'preference' => 1
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 2,
+            'preference' => 1
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 3,
+            'preference' => 1
+        ]);
+
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 4,
+            'preference' => 1
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 5,
+            'preference' => 1
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 6,
+            'preference' => 1
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 7,
+            'preference' => 1
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 8,
+            'preference' => 1
+        ]);
+        $this->assertDatabaseHas('project_student', [
+            'user_id' => $student->id,
+            'project_id' => 9,
+            'preference' => 1
+        ]);
     }
 }

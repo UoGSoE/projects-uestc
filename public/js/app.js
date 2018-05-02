@@ -43365,9 +43365,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['projects', 'allowselect', 'required'],
+    props: ['projects', 'allowselect', 'required', 'singledegree'],
 
     data: function data() {
         return {
@@ -43389,6 +43390,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     computed: {
+        uestcChoices: function uestcChoices() {
+            return this.choices['uestc'].map(function (element) {
+                return element['id'];
+            });
+        },
+        uogChoices: function uogChoices() {
+            return this.choices['uog'].map(function (element) {
+                return element['id'];
+            });
+        },
         anyProjectsChosen: function anyProjectsChosen() {
             return this.choices['uestc'].length > 0 || this.choices['uog'].length > 0;
         },
@@ -43454,7 +43465,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return 'Not chosen all.';
             }
             return 'You have chosen all projects - you can now submit your choices.';
+        },
+
+        checkboxLabel: function checkboxLabel() {
+            if (this.singledegree) {
+                return 'I confirm these are my choices';
+            }
+            return 'I confirm the order of my choices';
         }
+
     },
 
     methods: {
@@ -43490,26 +43509,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (this.supervisors.includes(project.owner)) {
                 this.uniqueSupervisors = this.supervisors.indexOf(project.owner) == this.supervisors.lastIndexOf(project.owner);
             }
-        },
-
-        submitChoices: function submitChoices() {
-            // var choices = {
-            //     "1": this.choices.first,
-            //     "2": this.choices.second,
-            //     "3": this.choices.third,
-            //     "4": this.choices.fourth,
-            //     "5": this.choices.fifth,
-            // };
-            // console.log(choices);
-            // axios.post(route('projects.choose'), {choices: choices})
-            //      .then(response => {
-            //         window.location = route('thank_you');
-            //      })
-            //      .catch(error => {
-            //         this.submitButtonText = 'Error submitting choices - sorry';
-            //         this.submissionError = true;
-            //         console.log(error);
-            //      });
         }
     }
 });
@@ -43525,6 +43524,48 @@ var render = function() {
   return _c(
     "div",
     [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.uestcChoices,
+            expression: "uestcChoices"
+          }
+        ],
+        attrs: { type: "hidden", name: "uestcChoices[]" },
+        domProps: { value: _vm.uestcChoices },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.uestcChoices = $event.target.value
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.uogChoices,
+            expression: "uogChoices"
+          }
+        ],
+        attrs: { type: "hidden", name: "uogChoices[]" },
+        domProps: { value: _vm.uogChoices },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.uogChoices = $event.target.value
+          }
+        }
+      }),
+      _vm._v(" "),
       _vm._l(_vm.projects, function(project) {
         return _c(
           "div",
@@ -43751,19 +43792,25 @@ var render = function() {
                   attrs: { id: "infobox" }
                 },
                 [
-                  _c("div", { staticClass: "panel-heading" }, [
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(_vm.panelHeading) +
-                        "\n                    "
-                    ),
-                    _c("span", {
-                      staticClass: "pointer glyphicon glyphicon-minus",
-                      staticStyle: { float: "right" },
-                      attrs: { "aria-hidden": "true" },
+                  _c(
+                    "div",
+                    {
+                      staticClass: "pointer panel-heading",
                       on: { click: _vm.expandChoices }
-                    })
-                  ]),
+                    },
+                    [
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(_vm.panelHeading) +
+                          "\n                    "
+                      ),
+                      _c("span", {
+                        staticClass: "glyphicon glyphicon-minus",
+                        staticStyle: { float: "right" },
+                        attrs: { "aria-hidden": "true" }
+                      })
+                    ]
+                  ),
                   _vm._v(" "),
                   _c(
                     "div",
@@ -43809,7 +43856,10 @@ var render = function() {
                             {
                               attrs: {
                                 options: {
-                                  disabled: !_vm.allChosen || !_vm.validChoices
+                                  disabled:
+                                    !_vm.allChosen ||
+                                    !_vm.validChoices ||
+                                    _vm.singledegree
                                 }
                               },
                               on: {
@@ -43840,7 +43890,10 @@ var render = function() {
                                       key: project.id,
                                       staticClass:
                                         "panel panel-default panel-choices",
-                                      class: { move: _vm.validChoices }
+                                      class: {
+                                        move:
+                                          _vm.validChoices && !_vm.singledegree
+                                      }
                                     },
                                     [
                                       _c(
@@ -43993,7 +44046,9 @@ var render = function() {
                                   }
                                 }),
                                 _vm._v(
-                                  " I confirm the order of my choices\n                        "
+                                  " " +
+                                    _vm._s(_vm.checkboxLabel) +
+                                    "\n                        "
                                 )
                               ])
                             ]
@@ -44005,13 +44060,7 @@ var render = function() {
                               staticClass: "btn btn-sm btn-success",
                               class: { "btn-danger": _vm.submissionError },
                               staticStyle: { float: "right" },
-                              attrs: { disabled: !_vm.confirmOrder },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.submitChoices($event)
-                                }
-                              }
+                              attrs: { disabled: !_vm.confirmOrder }
                             },
                             [
                               _vm._v(
@@ -44043,19 +44092,25 @@ var render = function() {
                 attrs: { id: "infobox" }
               },
               [
-                _c("div", { staticClass: "panel-heading" }, [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(_vm.panelHeading) +
-                      "\n                "
-                  ),
-                  _c("span", {
-                    staticClass: "pointer glyphicon glyphicon-plus",
-                    staticStyle: { float: "right" },
-                    attrs: { "aria-hidden": "true" },
+                _c(
+                  "div",
+                  {
+                    staticClass: "pointer panel-heading",
                     on: { click: _vm.expandChoices }
-                  })
-                ])
+                  },
+                  [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.panelHeading) +
+                        "\n                "
+                    ),
+                    _c("span", {
+                      staticClass: "glyphicon glyphicon-plus",
+                      staticStyle: { float: "right" },
+                      attrs: { "aria-hidden": "true" }
+                    })
+                  ]
+                )
               ]
             )
           : _vm._e()

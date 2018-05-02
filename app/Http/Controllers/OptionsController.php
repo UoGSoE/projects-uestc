@@ -23,7 +23,6 @@ class OptionsController extends Controller
 
     public function update(Request $request)
     {
-        //dd('hi');
         $this->validate($request, [
             'logins_allowed' => 'integer',
             'applications_allowed' => 'integer',

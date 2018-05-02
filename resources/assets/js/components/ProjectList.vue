@@ -1,5 +1,7 @@
 <template>
     <div>
+        <input type="hidden" name="uestcChoices[]" v-model="uestcChoices">
+        <input type="hidden" name="uogChoices[]" v-model="uogChoices">
         <div class="panel panel-default" v-for="project in projects" :key="project.id">
             <div class="panel-heading fake-link" :id="'title_' + project.id" @click="expandProject(project.id)">
                 <h3 class="panel-title">
@@ -54,9 +56,9 @@
         <transition name="fade">
             <div v-if="anyProjectsChosen && expandedChoices">
                 <div id="infobox" class="panel panel-success" :class="{'panel-danger': invalidChoices, 'panel-info': !allChosen}">
-                    <div class="panel-heading">
+                    <div @click="expandChoices" class="pointer panel-heading">
                         {{ panelHeading }}
-                        <span @click="expandChoices" style="float:right;" class="pointer glyphicon glyphicon-minus" aria-hidden="true"></span>
+                        <span style="float:right;" class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                     </div>
                     <div class="panel-body">
                         <span v-for="institution in ['uestc', 'uog']" :key="institution">
@@ -71,9 +73,9 @@
                                     {{ choices[institution].length }}/{{ required[institution] }}
                                 </span>
                             </h5>
-                            <draggable v-model="choices[institution]" @start="drag=true" @end="drag=false" :options="{disabled: !allChosen || !validChoices }">
+                            <draggable v-model="choices[institution]" @start="drag=true" @end="drag=false" :options="{disabled: !allChosen || !validChoices || singledegree }">
                                 <transition-group>
-                                    <div v-for="project in choices[institution]" class="panel panel-default panel-choices" :class="{'move' : validChoices}" :key="project.id">
+                                    <div v-for="project in choices[institution]" class="panel panel-default panel-choices" :class="{'move' : validChoices && !singledegree }" :key="project.id">
                                         <div class="panel-body container-fluid">
                                             <div class="row">
                                                 <div class="col-md-1">
@@ -100,15 +102,14 @@
                     <div v-if="validChoices" class="panel-footer" style="min-height:50px">
                         <div style="float:left; margin-top:5px;" class="checkbox">
                             <label>
-                                <input v-model="confirmOrder" type="checkbox"> I confirm the order of my choices
+                                <input v-model="confirmOrder" type="checkbox"> {{ checkboxLabel }}
                             </label>
                         </div>
                         <button
                             style="float:right"
                             class="btn btn-sm btn-success"
                             :class="{'btn-danger': submissionError}"
-                            :disabled="!confirmOrder"
-                            @click.prevent="submitChoices">
+                            :disabled="!confirmOrder">
                             {{ submitButtonText }}
                         </button>
                     </div>
@@ -125,9 +126,9 @@
                     'panel-info': !allChosen
                     }"
                 >
-                <div class="panel-heading">
+                <div @click="expandChoices" class="pointer panel-heading">
                     {{ panelHeading }}
-                    <span @click="expandChoices" style="float:right;" class="pointer glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    <span style="float:right;" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </div>
             </div>
         </transition>
@@ -136,7 +137,7 @@
 
 <script>
     export default {
-        props: ['projects', 'allowselect', 'required'],
+        props: ['projects', 'allowselect', 'required', 'singledegree'],
 
         data() {
             return {
@@ -157,6 +158,16 @@
         },
 
         computed: {
+            uestcChoices() {
+                return this.choices['uestc'].map( function(element) {
+                    return element['id'];
+                });
+            },
+            uogChoices() {
+                return this.choices['uog'].map( function(element) {
+                    return element['id'];
+                });
+            },
             anyProjectsChosen() {
                 return this.choices['uestc'].length > 0 || this.choices['uog'].length > 0;
             },
@@ -221,7 +232,15 @@
                     return 'Not chosen all.';
                 }
                 return 'You have chosen all projects - you can now submit your choices.';
+            },
+
+            checkboxLabel: function() {
+                if (this.singledegree) {
+                    return 'I confirm these are my choices';
+                }
+                return 'I confirm the order of my choices';
             }
+
         },
 
         methods: {
@@ -258,26 +277,6 @@
                     this.uniqueSupervisors = this.supervisors.indexOf(project.owner) == this.supervisors.lastIndexOf(project.owner);
                 }
             },
-
-            submitChoices() {
-                // var choices = {
-                //     "1": this.choices.first,
-                //     "2": this.choices.second,
-                //     "3": this.choices.third,
-                //     "4": this.choices.fourth,
-                //     "5": this.choices.fifth,
-                // };
-                // console.log(choices);
-                // axios.post(route('projects.choose'), {choices: choices})
-                //      .then(response => {
-                //         window.location = route('thank_you');
-                //      })
-                //      .catch(error => {
-                //         this.submitButtonText = 'Error submitting choices - sorry';
-                //         this.submissionError = true;
-                //         console.log(error);
-                //      });
-            }
         }
     }
 </script>
