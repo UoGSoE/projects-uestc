@@ -38,7 +38,7 @@ class ReportController extends Controller
     {
         $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
         $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
-        $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
+        $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
         return view('report.all_students', compact('students', 'required'));
     }
 

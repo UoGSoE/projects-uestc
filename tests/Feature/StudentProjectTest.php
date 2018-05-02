@@ -161,7 +161,7 @@ class StudentProjectTest extends TestCase
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
         $uestcProjects = factory(Project::class, config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
         $projects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
@@ -188,9 +188,9 @@ class StudentProjectTest extends TestCase
         $student = factory(User::class)->states('student')->create(['degree_type' => 'Single']);
         $course = factory(Course::class)->create();
         $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
         $uestcProjects = factory(Project::class, config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
-        $otherProjects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $otherProjects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
         $projects->each(function ($project, $key) use ($course, $student) {
             $project->courses()->save($course);
             $project->addStudent($student);
@@ -226,7 +226,7 @@ class StudentProjectTest extends TestCase
     //     $student = factory(User::class)->states('student')->create();
     //     $course = factory(Course::class)->create();
     //     $course->students()->save($student);
-    //     $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+    //     $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
     //     $projects->each(function ($project, $key) use ($course) {
     //         $project->courses()->save($course);
     //     });
@@ -253,7 +253,7 @@ class StudentProjectTest extends TestCase
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
         $uestcProjects = factory(Project::class, config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
         $projects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
@@ -284,7 +284,7 @@ class StudentProjectTest extends TestCase
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
         $projects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
         });
@@ -329,7 +329,7 @@ class StudentProjectTest extends TestCase
         $student = factory(User::class)->states('student')->create();
         $course = factory(Course::class)->create();
         $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.requiredProjectChoices'))->create(['maximum_students' => 1]);
+        $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
         $projects->each(function ($project, $key) use ($course, $student) {
             $project->courses()->save($course);
             $project->addStudent($student);

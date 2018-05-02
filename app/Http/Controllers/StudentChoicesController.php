@@ -83,7 +83,7 @@ class StudentChoicesController extends Controller
 
     public function validNumberOfChoices($choices)
     {
-        $requiredUOGChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
+        $requiredUOGChoices = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
         $requiredUESTCChoices = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
 
         if (count($choices['uog']) != $requiredUOGChoices or count($choices['uestc']) != $requiredUESTCChoices) {

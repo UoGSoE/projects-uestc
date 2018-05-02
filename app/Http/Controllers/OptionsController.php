@@ -10,7 +10,7 @@ class OptionsController extends Controller
 {
     public function edit()
     {
-        $required_choices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices'));
+        $required_choices = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices'));
         $uestc_required_choices = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'));
         $maximum_applications = ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply'));
         $round = ProjectConfig::getOption('round', 1);

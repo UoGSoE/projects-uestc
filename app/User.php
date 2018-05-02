@@ -123,7 +123,7 @@ class User extends Model implements
     public function projectsArray($index = null)
     {
         $projectArray = [];
-        foreach (range(1, ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3)) + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'), 6)) as $counter) {
+        foreach (range(1, ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3)) + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'), 6)) as $counter) {
             $projectArray[] = null;
         }
         $projects = $this->projects()->orderBy('title')->get();

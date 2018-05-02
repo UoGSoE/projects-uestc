@@ -13,7 +13,7 @@ class BulkAllocateController extends Controller
     public function edit()
     {
         $students = User::students()->orderBy('surname')->get();
-        $requiredChoices = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices')) + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'));
+        $requiredChoices = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices')) + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'));
         return view('report.bulk_allocation', compact('students', 'requiredChoices'));
     }
 

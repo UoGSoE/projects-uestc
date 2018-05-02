@@ -27,7 +27,7 @@ class HomeController extends Controller
                 'singleDegree' => auth()->user()->degree_type == 'Single',
                 'required' => [
                     'uestc' => ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6)),
-                    'uog' => ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3))
+                    'uog' => ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3))
                 ],
             ]
         );

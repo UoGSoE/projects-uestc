@@ -28,7 +28,7 @@ class ExportController extends Controller
             $excel->sheet('Sheet1', function ($sheet) {
                 $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
                 $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
-                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
+                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
                 $excel = true;
                 $sheet->loadView('report.partials.student_list', compact('students', 'required', 'excel'));
             });
@@ -42,7 +42,7 @@ class ExportController extends Controller
             $excel->sheet('Sheet1', function ($sheet) {
                 $students = User::students()->singleDegree()->with('courses', 'projects')->orderBy('surname')->get();
                 $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
-                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
+                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
                 $excel = true;
                 $sheet->loadView('report.partials.student_list', compact('students', 'required', 'excel'));
             });
@@ -56,7 +56,7 @@ class ExportController extends Controller
             $excel->sheet('Sheet1', function ($sheet) {
                 $students = User::students()->dualDegree()->with('courses', 'projects')->orderBy('surname')->get();
                 $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
-                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
+                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
                 $excel = true;
                 $sheet->loadView('report.partials.student_list', compact('students', 'required', 'excel'));
             });

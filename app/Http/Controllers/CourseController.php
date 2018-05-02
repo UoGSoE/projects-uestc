@@ -47,7 +47,7 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($id);
         $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
-        $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.requiredProjectChoices', 3));
+        $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
         return view('course.show', compact('course', 'required'));
     }
 
