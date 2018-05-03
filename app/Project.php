@@ -79,8 +79,15 @@ class Project extends Model
 
     public function disciplineTitle()
     {
+        if ($this->disciplines->count() > 0) {
+            $disciplines = '';
+            foreach ($this->disciplines as $discipline) {
+                $disciplines = $disciplines . $discipline->title . ', ';
+            }
+            return substr($disciplines, 0, -2);
+        }
         if (!$this->discipline_id) {
-            return 'N/A';
+            return null;
         }
         return $this->discipline->title;
     }

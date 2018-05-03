@@ -4,18 +4,18 @@
     <div class="page-header">
         <h1>
             <i>Hello</i>
-            {{ Auth::user()->fullName() }}
+            {{ auth()->user()->fullName() }}
         </h1>
         <a href="{!! route('student.profile_edit') !!}" class="btn btn-default">Edit my profile</a>
     </div>
-    @if (Auth::user()->isAllocated())
+    @if (auth()->user()->isAllocated())
         <p>
-            You are allocated to the project "{{ Auth::user()->allocatedProject()->title }}".
-            @include('project.partials.panel', ['project' => Auth::user()->allocatedProject()])
+            You are allocated to the project "{{ auth()->user()->allocatedProject()->title }}".
+            @include('project.partials.panel', ['project' => auth()->user()->allocatedProject()])
         </p>
-    @elseif (Auth::user()->projects()->count() > 0)
+    @elseif (auth()->user()->projects()->count() > 0)
         <h2>Your choices</h2>
-        @foreach (Auth::user()->projects as $project)
+        @foreach (auth()->user()->projects as $project)
             @include('project.partials.panel', ['project' => $project])
         @endforeach
     @else
@@ -26,7 +26,7 @@
         <form method="POST" action="{!! route('choices.update') !!}" id="vueform">
             {{ csrf_field() }}
             <project-list
-                :projects="{{ Auth::user()->availableProjectsJson() }}"
+                :projects="{{ auth()->user()->availableProjectsJson() }}"
                 :allowselect="{{ $applicationsEnabled ? 1 : 0}}"
                 :required="{{ json_encode($required) }}"
                 :singledegree="{{ $singleDegree ? 1 : 0 }}">
@@ -35,7 +35,7 @@
     @endif
 @endsection
 @section('scripts')
-    @if (Auth::user()->projects()->count() == 0)
+    @if (auth()->user()->projects()->count() == 0)
         <script>
             const app = new Vue({
                 el: '#vueform',

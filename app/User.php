@@ -185,49 +185,55 @@ class User extends Model implements
     }
 
     /**
-     * All available projects associated with the course this student is on
-     * @return Collection
-     */
-    public function availableProjects()
-    {
-        $course = $this->course();
-        if (!$course) {
-            return collect([]);
-        }
-
-        return $course->projects()->active()->join('users', 'projects.user_id', '=', 'users.id')
-            ->orderBy('users.surname')->orderBy('projects.title')->get()->unique();
-    }
-
-    /**
         Returns a JSON encoded map of the projects available to this student.
         For use in the Vue.js code where students can pick projects.
     */
     public function availableProjectsJson()
     {
-        $projects = $this->availableProjects();
-        $available = $projects->filter(function ($project, $key) {
-            return $project->isAvailable();
+        $studentCourses = $this->courses->pluck('id')->toArray(); //94
+        $projects = Project::whereHas('courses', function ($query) use ($studentCourses) {
+            $query->whereIn('course_id', $studentCourses);
+        })->get()->filter(function ($project) {
+            if ($project->isAvailable()) {
+                return true;
+            }
+            return false;
         });
+
         $projectArray = [];
-        foreach ($available as $project) {
-            $popularityPercent = 100 * ($project->students()->count() / ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6)));
-            $projectArray[] = [
-                'id' => $project->id,
-                'title' => $project->title,
-                'description' => $project->description,
-                'prereq' => $project->prereq,
-                'chosen' => false,
-                'discipline' => $project->disciplineTitle(),
-                'institution' => $project->institution,
-                'discipline_css' => str_slug($project->disciplineTitle()),
-                'owner' => $project->owner->fullName(),
-                'links' => $project->links->toArray(),
-                'files' => $project->files->toArray(),
-                'popularity' => $this->getPopularity($popularityPercent),
-            ];
+        if ($projects) {
+            foreach ($projects as $project) {
+                if ($project->discipline) {
+                    $projectArray[$project->discipline->title][] = $this->projectForJSON($project);
+                } elseif ($project->disciplines->count() > 0) {
+                    foreach ($project->disciplines as $discipline) {
+                        $projectArray[$discipline->title][] = $this->projectForJSON($project);
+                    }
+                } else {
+                    $projectArray['No Discipline'][] = $this->projectForJSON($project);
+                }
+            }
         }
-        return json_encode($projectArray);
+        return json_encode(array_sort($projectArray));
+    }
+
+    public function projectForJSON($project)
+    {
+        $popularityPercent = 100 * ($project->students()->count() / ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6)));
+        return [
+            'id' => $project->id,
+            'title' => $project->title,
+            'description' => $project->description,
+            'prereq' => $project->prereq,
+            'chosen' => false,
+            'discipline' => $project->disciplineTitle(),
+            'institution' => $project->institution,
+            'discipline_css' => str_slug($project->disciplineTitle()),
+            'owner' => $project->owner->fullName(),
+            'links' => $project->links->toArray(),
+            'files' => $project->files->toArray(),
+            'popularity' => $this->getPopularity($popularityPercent),
+        ];
     }
 
     public function fullName()

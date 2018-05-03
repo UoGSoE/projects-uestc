@@ -43364,6 +43364,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['projects', 'allowselect', 'required', 'singledegree'],
@@ -43488,20 +43493,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        isExpanded: function isExpanded(projectId) {
-            if (this.openProjects.indexOf(projectId) != -1) {
+        isExpanded: function isExpanded(projectId, discipline) {
+            if (this.openProjects.indexOf(projectId + discipline) != -1) {
                 return true;
             }
             return false;
         },
 
-        expandProject: function expandProject(projectId) {
-            if (this.isExpanded(projectId)) {
-                var index = this.openProjects.indexOf(projectId);
+        expandProject: function expandProject(projectId, discipline) {
+            if (this.isExpanded(projectId, discipline)) {
+                var index = this.openProjects.indexOf(projectId + discipline);
                 this.openProjects.splice(index, 1);
                 return;
             }
-            this.openProjects.push(projectId);
+            this.openProjects.push(projectId + discipline);
         },
 
         expandChoices: function expandChoices() {
@@ -43509,7 +43514,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         choose: function choose(project) {
-            project.chosen = !project.chosen;
+            for (var disciplineKey in this.projects) {
+                var discipline = this.projects[disciplineKey];
+                for (var projectKey in discipline) {
+                    var projectOb = this.projects[disciplineKey][projectKey];
+                    if (projectOb.id == project.id) {
+                        projectOb.chosen = !projectOb.chosen;
+                    }
+                }
+            }
             if (project.chosen) {
                 this.supervisors.push(project.owner);
                 this.choices[project.institution.toLowerCase()].push(project);
@@ -43577,529 +43590,597 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _vm._l(_vm.projects, function(project) {
+      _vm._l(_vm.projects, function(discipline, index) {
         return _c(
           "div",
-          { key: project.id, staticClass: "panel panel-default" },
           [
-            _c(
-              "div",
-              {
-                staticClass: "panel-heading fake-link",
-                attrs: { id: "title_" + project.id },
-                on: {
-                  click: function($event) {
-                    _vm.expandProject(project.id)
-                  }
-                }
-              },
-              [
-                _c("h3", { staticClass: "panel-title" }, [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(project.title) +
-                      " (" +
-                      _vm._s(project.owner) +
-                      ")\n                "
-                  ),
-                  project.discipline
-                    ? _c("span", [
-                        _vm._v(
-                          "\n                    (field " +
-                            _vm._s(project.discipline) +
-                            ")\n                "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("span", { staticStyle: { float: "right" } }, [
-                    _c("img", {
-                      attrs: {
-                        src: "img/" + project.institution + ".png",
-                        alt: project.institution,
-                        height: "20",
-                        width: "30"
-                      }
-                    })
-                  ])
-                ])
-              ]
-            ),
+            _c("h3", [_vm._v(_vm._s(index))]),
             _vm._v(" "),
-            _vm.isExpanded(project.id)
-              ? _c("div", [
-                  _c("div", { staticClass: "panel-body" }, [
-                    _vm._v(
-                      "\n                " +
-                        _vm._s(project.description) +
-                        "\n                "
-                    ),
-                    project.prereq
-                      ? _c("div", { staticClass: "help-block" }, [
-                          _vm._v(
-                            "\n                    Prerequisites: " +
-                              _vm._s(project.prereq) +
-                              "\n                "
-                          )
-                        ])
-                      : _vm._e()
-                  ]),
-                  _vm._v(" "),
+            _vm._l(discipline, function(project) {
+              return _c(
+                "div",
+                { key: project.id, staticClass: "panel panel-default" },
+                [
                   _c(
-                    "ul",
-                    { staticClass: "list-group" },
+                    "div",
+                    {
+                      staticClass: "panel-heading fake-link",
+                      attrs: { id: "title_" + project.id },
+                      on: {
+                        click: function($event) {
+                          _vm.expandProject(project.id, index)
+                        }
+                      }
+                    },
                     [
-                      _vm._l(project.links, function(link) {
-                        return _c(
-                          "li",
-                          { key: link.id, staticClass: "list-group-item" },
-                          [
-                            _c(
-                              "a",
-                              { attrs: { href: link.url, target: "_blank" } },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(link.url) +
-                                    "\n                    "
-                                )
-                              ]
-                            )
-                          ]
-                        )
-                      }),
-                      _vm._v(" "),
-                      _vm._l(project.files, function(file) {
-                        return _c(
-                          "li",
-                          { key: file.id, staticClass: "list-group-item" },
-                          [
-                            _c(
-                              "a",
-                              { attrs: { href: "/projectfile/" + file.id } },
-                              [
-                                _c("span", {
-                                  staticClass: "glyphicon glyphicon-download",
-                                  attrs: { "aria-hidden": "true" }
-                                }),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(file.original_filename) +
-                                    "\n                    "
-                                )
-                              ]
-                            )
-                          ]
-                        )
-                      })
-                    ],
-                    2
+                      _c("h3", { staticClass: "panel-title" }, [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(project.title) +
+                            " (" +
+                            _vm._s(project.owner) +
+                            ")\n                    "
+                        ),
+                        project.discipline
+                          ? _c("span", [
+                              _vm._v(
+                                "\n                        (" +
+                                  _vm._s(project.discipline.trim()) +
+                                  ")\n                    "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("span", { staticStyle: { float: "right" } }, [
+                          _c("img", {
+                            attrs: {
+                              src: "img/" + project.institution + ".png",
+                              alt: project.institution,
+                              height: "20",
+                              width: "30"
+                            }
+                          })
+                        ])
+                      ])
+                    ]
                   ),
                   _vm._v(" "),
-                  _vm.allowselect
-                    ? _c("div", { staticClass: "panel-footer" }, [
+                  _vm.isExpanded(project.id, index)
+                    ? _c("div", [
+                        _c("div", { staticClass: "panel-body" }, [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(project.description) +
+                              "\n                    "
+                          ),
+                          project.prereq
+                            ? _c("div", { staticClass: "help-block" }, [
+                                _vm._v(
+                                  "\n                        Prerequisites: " +
+                                    _vm._s(project.prereq) +
+                                    "\n                    "
+                                )
+                              ])
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
                         _c(
-                          "button",
+                          "ul",
+                          { staticClass: "list-group" },
+                          [
+                            _vm._l(project.links, function(link) {
+                              return _c(
+                                "li",
+                                {
+                                  key: link.id,
+                                  staticClass: "list-group-item"
+                                },
+                                [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href: link.url,
+                                        target: "_blank"
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                            " +
+                                          _vm._s(link.url) +
+                                          "\n                        "
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            }),
+                            _vm._v(" "),
+                            _vm._l(project.files, function(file) {
+                              return _c(
+                                "li",
+                                {
+                                  key: file.id,
+                                  staticClass: "list-group-item"
+                                },
+                                [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: { href: "/projectfile/" + file.id }
+                                    },
+                                    [
+                                      _c("span", {
+                                        staticClass:
+                                          "glyphicon glyphicon-download",
+                                        attrs: { "aria-hidden": "true" }
+                                      }),
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(file.original_filename) +
+                                          "\n                        "
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            })
+                          ],
+                          2
+                        ),
+                        _vm._v(" "),
+                        _vm.allowselect
+                          ? _c("div", { staticClass: "panel-footer" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-sm",
+                                  class: {
+                                    "btn-success": !project.chosen,
+                                    "btn-danger": project.chosen
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      _vm.choose(project)
+                                    }
+                                  }
+                                },
+                                [
+                                  !project.chosen
+                                    ? _c("span", [_vm._v("Add")])
+                                    : _c("span", [_vm._v("Remove")])
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticStyle: {
+                                    float: "right",
+                                    width: "60%",
+                                    "margin-top": "5px"
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "div",
+                                    {
+                                      staticStyle: {
+                                        float: "left",
+                                        width: "10%"
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                            Popularity\n                        "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "progress",
+                                      staticStyle: {
+                                        "background-color": "white",
+                                        float: "right",
+                                        width: "90%"
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          class:
+                                            "progress-bar " +
+                                            project.popularity.colour,
+                                          style:
+                                            "min-width: 2em; max-width:100%; width:" +
+                                            project.popularity.percent +
+                                            "%",
+                                          attrs: {
+                                            role: "progressbar",
+                                            "aria-valuenow":
+                                              project.popularity.percent,
+                                            "aria-valuemin": "0",
+                                            "aria-valuemax": "100"
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                " +
+                                              _vm._s(
+                                                project.popularity.caption
+                                              ) +
+                                              "\n                            "
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    : _vm._e()
+                ]
+              )
+            }),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
+            _c("transition", { attrs: { name: "fade" } }, [
+              _vm.anyProjectsChosen && _vm.expandedChoices
+                ? _c("div", [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "panel panel-success",
+                        class: {
+                          "panel-danger": _vm.invalidChoices,
+                          "panel-info": !_vm.allChosen
+                        },
+                        attrs: { id: "infobox" }
+                      },
+                      [
+                        _c(
+                          "div",
                           {
-                            staticClass: "btn btn-sm",
-                            class: {
-                              "btn-success": !project.chosen,
-                              "btn-danger": project.chosen
-                            },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                _vm.choose(project)
-                              }
-                            }
+                            staticClass: "pointer panel-heading",
+                            on: { click: _vm.expandChoices }
                           },
                           [
-                            !project.chosen
-                              ? _c("span", [_vm._v("Add")])
-                              : _c("span", [_vm._v("Remove")])
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.panelHeading) +
+                                "\n                        "
+                            ),
+                            _c("span", {
+                              staticClass: "glyphicon glyphicon-minus",
+                              staticStyle: { float: "right" },
+                              attrs: { "aria-hidden": "true" }
+                            })
                           ]
                         ),
                         _vm._v(" "),
                         _c(
                           "div",
-                          {
-                            staticStyle: {
-                              float: "right",
-                              width: "60%",
-                              "margin-top": "5px"
-                            }
-                          },
+                          { staticClass: "panel-body" },
                           [
-                            _c(
-                              "div",
-                              { staticStyle: { float: "left", width: "10%" } },
-                              [
-                                _vm._v(
-                                  "\n                        Popularity\n                    "
-                                )
-                              ]
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.instructions) +
+                                "\n                        "
                             ),
-                            _vm._v(" "),
-                            _c(
+                            _vm._l(["uestc", "uog"], function(institution) {
+                              return _c(
+                                "span",
+                                { key: institution },
+                                [
+                                  _c("h5", [
+                                    _vm._v(
+                                      _vm._s(institution.toUpperCase()) +
+                                        " Projects\n                                "
+                                    ),
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass: "label label-default",
+                                        class: {
+                                          "label-success":
+                                            _vm.choices[institution].length ==
+                                            _vm.required[institution],
+                                          "label-danger":
+                                            _vm.choices[institution].length >
+                                              _vm.required[institution] ||
+                                            _vm.invalidChoices
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                    " +
+                                            _vm._s(
+                                              _vm.choices[institution].length
+                                            ) +
+                                            "/" +
+                                            _vm._s(_vm.required[institution]) +
+                                            "\n                                "
+                                        )
+                                      ]
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "draggable",
+                                    {
+                                      attrs: {
+                                        options: {
+                                          disabled:
+                                            !_vm.allChosen ||
+                                            !_vm.validChoices ||
+                                            _vm.singledegree
+                                        }
+                                      },
+                                      on: {
+                                        start: function($event) {
+                                          _vm.drag = true
+                                        },
+                                        end: function($event) {
+                                          _vm.drag = false
+                                        }
+                                      },
+                                      model: {
+                                        value: _vm.choices[institution],
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.choices,
+                                            institution,
+                                            $$v
+                                          )
+                                        },
+                                        expression: "choices[institution]"
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "transition-group",
+                                        _vm._l(
+                                          _vm.choices[institution],
+                                          function(project) {
+                                            return _c(
+                                              "div",
+                                              {
+                                                key: project.id,
+                                                staticClass:
+                                                  "panel panel-default panel-choices",
+                                                class: {
+                                                  move:
+                                                    _vm.validChoices &&
+                                                    !_vm.singledegree
+                                                }
+                                              },
+                                              [
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "panel-body container-fluid"
+                                                  },
+                                                  [
+                                                    _c(
+                                                      "div",
+                                                      { staticClass: "row" },
+                                                      [
+                                                        _c(
+                                                          "div",
+                                                          {
+                                                            staticClass:
+                                                              "col-md-1"
+                                                          },
+                                                          [
+                                                            _c("img", {
+                                                              attrs: {
+                                                                src:
+                                                                  "img/" +
+                                                                  project.institution +
+                                                                  ".png",
+                                                                alt:
+                                                                  project.institution,
+                                                                height: "20",
+                                                                width: "30"
+                                                              }
+                                                            })
+                                                          ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "div",
+                                                          {
+                                                            staticClass:
+                                                              "col-md-5"
+                                                          },
+                                                          [
+                                                            _vm._v(
+                                                              "\n                                                    " +
+                                                                _vm._s(
+                                                                  project.title
+                                                                ) +
+                                                                "\n                                                "
+                                                            )
+                                                          ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "div",
+                                                          {
+                                                            staticClass:
+                                                              "col-md-4"
+                                                          },
+                                                          [
+                                                            _vm._v(
+                                                              "\n                                                    " +
+                                                                _vm._s(
+                                                                  project.owner
+                                                                ) +
+                                                                "\n                                                "
+                                                            )
+                                                          ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "div",
+                                                          {
+                                                            staticClass:
+                                                              "col-md-1"
+                                                          },
+                                                          [
+                                                            _c(
+                                                              "button",
+                                                              {
+                                                                staticClass:
+                                                                  "btn btn-xs btn-danger",
+                                                                on: {
+                                                                  click: function(
+                                                                    $event
+                                                                  ) {
+                                                                    $event.preventDefault()
+                                                                    _vm.choose(
+                                                                      project
+                                                                    )
+                                                                  }
+                                                                }
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  "\n                                                        Remove\n                                                "
+                                                                )
+                                                              ]
+                                                            )
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          }
+                                        )
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            })
+                          ],
+                          2
+                        ),
+                        _vm._v(" "),
+                        _vm.validChoices
+                          ? _c(
                               "div",
                               {
-                                staticClass: "progress",
-                                staticStyle: {
-                                  "background-color": "white",
-                                  float: "right",
-                                  width: "90%"
-                                }
+                                staticClass: "panel-footer",
+                                staticStyle: { "min-height": "50px" }
                               },
                               [
                                 _c(
                                   "div",
                                   {
-                                    class:
-                                      "progress-bar " +
-                                      project.popularity.colour,
-                                    style:
-                                      "min-width: 2em; max-width:100%; width:" +
-                                      project.popularity.percent +
-                                      "%",
-                                    attrs: {
-                                      role: "progressbar",
-                                      "aria-valuenow":
-                                        project.popularity.percent,
-                                      "aria-valuemin": "0",
-                                      "aria-valuemax": "100"
+                                    staticClass: "checkbox",
+                                    staticStyle: {
+                                      float: "left",
+                                      "margin-top": "5px"
                                     }
+                                  },
+                                  [
+                                    _c("label", [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.confirmOrder,
+                                            expression: "confirmOrder"
+                                          }
+                                        ],
+                                        attrs: { type: "checkbox" },
+                                        domProps: {
+                                          checked: Array.isArray(
+                                            _vm.confirmOrder
+                                          )
+                                            ? _vm._i(_vm.confirmOrder, null) >
+                                              -1
+                                            : _vm.confirmOrder
+                                        },
+                                        on: {
+                                          change: function($event) {
+                                            var $$a = _vm.confirmOrder,
+                                              $$el = $event.target,
+                                              $$c = $$el.checked ? true : false
+                                            if (Array.isArray($$a)) {
+                                              var $$v = null,
+                                                $$i = _vm._i($$a, $$v)
+                                              if ($$el.checked) {
+                                                $$i < 0 &&
+                                                  (_vm.confirmOrder = $$a.concat(
+                                                    [$$v]
+                                                  ))
+                                              } else {
+                                                $$i > -1 &&
+                                                  (_vm.confirmOrder = $$a
+                                                    .slice(0, $$i)
+                                                    .concat($$a.slice($$i + 1)))
+                                              }
+                                            } else {
+                                              _vm.confirmOrder = $$c
+                                            }
+                                          }
+                                        }
+                                      }),
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(_vm.checkboxLabel) +
+                                          "\n                            "
+                                      )
+                                    ])
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-sm btn-success",
+                                    class: {
+                                      "btn-danger": _vm.submissionError
+                                    },
+                                    staticStyle: { float: "right" },
+                                    attrs: { disabled: !_vm.confirmOrder }
                                   },
                                   [
                                     _vm._v(
                                       "\n                            " +
-                                        _vm._s(project.popularity.caption) +
+                                        _vm._s(_vm.submitButtonText) +
                                         "\n                        "
                                     )
                                   ]
                                 )
                               ]
                             )
-                          ]
-                        )
-                      ])
-                    : _vm._e()
-                ])
-              : _vm._e()
-          ]
+                          : _vm._e()
+                      ]
+                    )
+                  ])
+                : _vm._e()
+            ])
+          ],
+          2
         )
       }),
-      _vm._v(" "),
-      _c("transition", { attrs: { name: "fade" } }, [
-        _vm.anyProjectsChosen && _vm.expandedChoices
-          ? _c("div", [
-              _c(
-                "div",
-                {
-                  staticClass: "panel panel-success",
-                  class: {
-                    "panel-danger": _vm.invalidChoices,
-                    "panel-info": !_vm.allChosen
-                  },
-                  attrs: { id: "infobox" }
-                },
-                [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "pointer panel-heading",
-                      on: { click: _vm.expandChoices }
-                    },
-                    [
-                      _vm._v(
-                        "\n                    " +
-                          _vm._s(_vm.panelHeading) +
-                          "\n                    "
-                      ),
-                      _c("span", {
-                        staticClass: "glyphicon glyphicon-minus",
-                        staticStyle: { float: "right" },
-                        attrs: { "aria-hidden": "true" }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "panel-body" },
-                    [
-                      _vm._v(
-                        "\n                    " +
-                          _vm._s(_vm.instructions) +
-                          "\n                    "
-                      ),
-                      _vm._l(["uestc", "uog"], function(institution) {
-                        return _c(
-                          "span",
-                          { key: institution },
-                          [
-                            _c("h5", [
-                              _vm._v(
-                                _vm._s(institution.toUpperCase()) +
-                                  " Projects\n                            "
-                              ),
-                              _c(
-                                "span",
-                                {
-                                  staticClass: "label label-default",
-                                  class: {
-                                    "label-success":
-                                      _vm.choices[institution].length ==
-                                      _vm.required[institution],
-                                    "label-danger":
-                                      _vm.choices[institution].length >
-                                        _vm.required[institution] ||
-                                      _vm.invalidChoices
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                " +
-                                      _vm._s(_vm.choices[institution].length) +
-                                      "/" +
-                                      _vm._s(_vm.required[institution]) +
-                                      "\n                            "
-                                  )
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "draggable",
-                              {
-                                attrs: {
-                                  options: {
-                                    disabled:
-                                      !_vm.allChosen ||
-                                      !_vm.validChoices ||
-                                      _vm.singledegree
-                                  }
-                                },
-                                on: {
-                                  start: function($event) {
-                                    _vm.drag = true
-                                  },
-                                  end: function($event) {
-                                    _vm.drag = false
-                                  }
-                                },
-                                model: {
-                                  value: _vm.choices[institution],
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.choices, institution, $$v)
-                                  },
-                                  expression: "choices[institution]"
-                                }
-                              },
-                              [
-                                _c(
-                                  "transition-group",
-                                  _vm._l(_vm.choices[institution], function(
-                                    project
-                                  ) {
-                                    return _c(
-                                      "div",
-                                      {
-                                        key: project.id,
-                                        staticClass:
-                                          "panel panel-default panel-choices",
-                                        class: {
-                                          move:
-                                            _vm.validChoices &&
-                                            !_vm.singledegree
-                                        }
-                                      },
-                                      [
-                                        _c(
-                                          "div",
-                                          {
-                                            staticClass:
-                                              "panel-body container-fluid"
-                                          },
-                                          [
-                                            _c("div", { staticClass: "row" }, [
-                                              _c(
-                                                "div",
-                                                { staticClass: "col-md-1" },
-                                                [
-                                                  _c("img", {
-                                                    attrs: {
-                                                      src:
-                                                        "img/" +
-                                                        project.institution +
-                                                        ".png",
-                                                      alt: project.institution,
-                                                      height: "20",
-                                                      width: "30"
-                                                    }
-                                                  })
-                                                ]
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "div",
-                                                { staticClass: "col-md-5" },
-                                                [
-                                                  _vm._v(
-                                                    "\n                                                " +
-                                                      _vm._s(project.title) +
-                                                      "\n                                            "
-                                                  )
-                                                ]
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "div",
-                                                { staticClass: "col-md-4" },
-                                                [
-                                                  _vm._v(
-                                                    "\n                                                " +
-                                                      _vm._s(project.owner) +
-                                                      "\n                                            "
-                                                  )
-                                                ]
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "div",
-                                                { staticClass: "col-md-1" },
-                                                [
-                                                  _c(
-                                                    "button",
-                                                    {
-                                                      staticClass:
-                                                        "btn btn-xs btn-danger",
-                                                      on: {
-                                                        click: function(
-                                                          $event
-                                                        ) {
-                                                          $event.preventDefault()
-                                                          _vm.choose(project)
-                                                        }
-                                                      }
-                                                    },
-                                                    [
-                                                      _vm._v(
-                                                        "\n                                                    Remove\n                                            "
-                                                      )
-                                                    ]
-                                                  )
-                                                ]
-                                              )
-                                            ])
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  })
-                                )
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        )
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _vm.validChoices
-                    ? _c(
-                        "div",
-                        {
-                          staticClass: "panel-footer",
-                          staticStyle: { "min-height": "50px" }
-                        },
-                        [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "checkbox",
-                              staticStyle: {
-                                float: "left",
-                                "margin-top": "5px"
-                              }
-                            },
-                            [
-                              _c("label", [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.confirmOrder,
-                                      expression: "confirmOrder"
-                                    }
-                                  ],
-                                  attrs: { type: "checkbox" },
-                                  domProps: {
-                                    checked: Array.isArray(_vm.confirmOrder)
-                                      ? _vm._i(_vm.confirmOrder, null) > -1
-                                      : _vm.confirmOrder
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      var $$a = _vm.confirmOrder,
-                                        $$el = $event.target,
-                                        $$c = $$el.checked ? true : false
-                                      if (Array.isArray($$a)) {
-                                        var $$v = null,
-                                          $$i = _vm._i($$a, $$v)
-                                        if ($$el.checked) {
-                                          $$i < 0 &&
-                                            (_vm.confirmOrder = $$a.concat([
-                                              $$v
-                                            ]))
-                                        } else {
-                                          $$i > -1 &&
-                                            (_vm.confirmOrder = $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1)))
-                                        }
-                                      } else {
-                                        _vm.confirmOrder = $$c
-                                      }
-                                    }
-                                  }
-                                }),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(_vm.checkboxLabel) +
-                                    "\n                        "
-                                )
-                              ])
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-sm btn-success",
-                              class: { "btn-danger": _vm.submissionError },
-                              staticStyle: { float: "right" },
-                              attrs: { disabled: !_vm.confirmOrder }
-                            },
-                            [
-                              _vm._v(
-                                "\n                        " +
-                                  _vm._s(_vm.submitButtonText) +
-                                  "\n                    "
-                              )
-                            ]
-                          )
-                        ]
-                      )
-                    : _vm._e()
-                ]
-              )
-            ])
-          : _vm._e()
-      ]),
       _vm._v(" "),
       _c("transition", { attrs: { name: "fade" } }, [
         !_vm.expandedChoices

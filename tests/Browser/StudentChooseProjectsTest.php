@@ -70,7 +70,6 @@ class StudentChooseProjectsTest extends DuskTestCase
                     ->visit('/')
                     ->assertSee('Available Projects')
                     ->assertSee($project1->title)
-                    ->assertSee($project1->disciplineTitle())
                     ->click("#title_{$project1->id}")
                     ->assertSee("Somewhat popular")
                     ->assertSee($project2->title)
