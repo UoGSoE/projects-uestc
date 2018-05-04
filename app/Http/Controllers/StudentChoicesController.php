@@ -16,11 +16,9 @@ class StudentChoicesController extends Controller
             return redirect()->to('/')->withErrors(['disabled' => 'Applications are currently disabled']);
         }
         $student = $request->user();
-        $choices['uestc'] = is_array($request->uestcChoices) ?
-            $request->uestcChoices : explode(',', $request->uestcChoices);
-        $choices['uog'] = is_array($request->uogChoices) ?
-            $request->uogChoices : explode(',', $request->uogChoices);
-        $correctAmountOfChoices = $this->validNumberOfChoices($choices);
+        $choices['uestc'] = $request->uestcChoices ? explode(',', $request->uestcChoices) : [];
+        $choices['uog'] = $request->uogChoices ? explode(',', $request->uogChoices) : [];
+        $correctAmountOfChoices = $this->validNumberOfChoices($choices, $student);
         if ($correctAmountOfChoices !== true) {
             return $correctAmountOfChoices;
         }
@@ -81,10 +79,14 @@ class StudentChoicesController extends Controller
         return true;
     }
 
-    public function validNumberOfChoices($choices)
+    public function validNumberOfChoices($choices, $student)
     {
-        $requiredUOGChoices = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
-        $requiredUESTCChoices = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
+        $requiredUOGChoices = $student->isSingleDegree()
+                            ? ProjectConfig::getOption('single_uog_required_choices', config('projects.single_uog_required_choices'))
+                            : ProjectConfig::getOption('required_choices', config('projects.uog_required_choices'));
+        $requiredUESTCChoices = $student->isSingleDegree()
+                              ? ProjectConfig::getOption('single_uestc_required_choices', config('projects.single_uestc_required_choices', 6))
+                              : ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
 
         if (count($choices['uog']) != $requiredUOGChoices or count($choices['uestc']) != $requiredUESTCChoices) {
             return redirect()->back()->withErrors([

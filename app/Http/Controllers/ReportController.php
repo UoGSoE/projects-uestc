@@ -37,8 +37,11 @@ class ReportController extends Controller
     public function allStudents()
     {
         $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
-        $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
-        $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
+        $singleDegreeReq = ProjectConfig::getOption('single_uog_required_choices', config('projects.single_uog_required_choices'))
+                         + ProjectConfig::getOption('single_uestc_required_choices', config('projects.single_uestc_required_choices'));
+        $dualDegreeReq = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices'))
+                       + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'));
+        $required = $singleDegreeReq >= $dualDegreeReq ? $singleDegreeReq : $dualDegreeReq;
         return view('report.all_students', compact('students', 'required'));
     }
 

@@ -194,10 +194,13 @@ class User extends Model implements
         $projects = Project::whereHas('courses', function ($query) use ($studentCourses) {
             $query->whereIn('course_id', $studentCourses);
         })->get()->filter(function ($project) {
-            if ($project->isAvailable()) {
-                return true;
+            if ($this->isSingleDegree() && $project->institution == 'UoG') {
+                return false;
             }
-            return false;
+            if (!$project->isAvailable()) {
+                return false;
+            }
+            return true;
         });
 
         $projectArray = [];

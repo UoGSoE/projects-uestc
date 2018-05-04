@@ -27,8 +27,11 @@ class ExportController extends Controller
         $sheet = Excel::create('ProjectAllocations', function ($excel) {
             $excel->sheet('Sheet1', function ($sheet) {
                 $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
-                $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
-                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
+                $singleDegreeReq = ProjectConfig::getOption('single_uog_required_choices', config('projects.single_uog_required_choices'))
+                                 + ProjectConfig::getOption('single_uestc_required_choices', config('projects.single_uestc_required_choices'));
+                $dualDegreeReq = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices'))
+                    + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'));
+                $required = $singleDegreeReq >= $dualDegreeReq ? $singleDegreeReq : $dualDegreeReq;
                 $excel = true;
                 $sheet->loadView('report.partials.student_list', compact('students', 'required', 'excel'));
             });
@@ -41,8 +44,8 @@ class ExportController extends Controller
         $sheet = Excel::create('ProjectAllocations', function ($excel) {
             $excel->sheet('Sheet1', function ($sheet) {
                 $students = User::students()->singleDegree()->with('courses', 'projects')->orderBy('surname')->get();
-                $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
-                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
+                $required = ProjectConfig::getOption('single_uestc_required_choices', config('projects.single_uestc_required_choices'))
+                          + ProjectConfig::getOption('single_uog_required_choices', config('projects.single_uog_required_choices'));
                 $excel = true;
                 $sheet->loadView('report.partials.student_list', compact('students', 'required', 'excel'));
             });
@@ -55,10 +58,10 @@ class ExportController extends Controller
         $sheet = Excel::create('ProjectAllocations', function ($excel) {
             $excel->sheet('Sheet1', function ($sheet) {
                 $students = User::students()->dualDegree()->with('courses', 'projects')->orderBy('surname')->get();
-                $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6));
-                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3));
+                $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'));
+                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices'));
                 $excel = true;
-                $sheet->loadView('report.partials.student_list', compact('students', 'required', 'excel'));
+                $sheet->loadView('report.partials.dual_student_list', compact('students', 'required', 'excel'));
             });
         })->store('xlsx', false, true);
         return response()->download($sheet['full'], 'dual_degree_students.xlsx');

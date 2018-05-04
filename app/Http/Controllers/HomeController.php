@@ -24,10 +24,26 @@ class HomeController extends Controller
         return view(
             'project.student_index', [
                 'applicationsEnabled' => Project::applicationsEnabled(),
-                'singleDegree' => auth()->user()->degree_type == 'Single',
+                'singleDegree' => auth()->user()->isSingleDegree(),
                 'required' => [
-                    'uestc' => ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices', 6)),
-                    'uog' => ProjectConfig::getOption('required_choices', config('projects.uog_required_choices', 3))
+                    'uestc' => auth()->user()->isSingleDegree()
+                            ? ProjectConfig::getOption(
+                                'single_uestc_required_choices',
+                                config('projects.single_uestc_required_choices')
+                            )
+                            : ProjectConfig::getOption(
+                                'uestc_required_choices',
+                                config('projects.uestc_required_choices')
+                            ),
+                    'uog' => auth()->user()->isSingleDegree()
+                            ? ProjectConfig::getOption(
+                                'single_uog_required_choices',
+                                config('projects.single_uog_required_choices')
+                            )
+                            : ProjectConfig::getOption(
+                                'required_choices',
+                                config('projects.uog_required_choices')
+                            )
                 ],
             ]
         );

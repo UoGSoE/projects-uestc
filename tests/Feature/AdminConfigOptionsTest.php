@@ -20,9 +20,11 @@ class AdminConfigOptionsTest extends TestCase
             'logins_allowed' => true,
             'round' => 1,
             'applications_allowed' => true,
-            'required_choices' => 3,
+            'single_uog_required_choices' => 0,
+            'single_uestc_required_choices' => 9,
+            'dual_uog_required_choices' => 3,
+            'dual_uestc_required_choices' => 6,
             'maximum_applications' => 6,
-            'uestc_required_choices' => 6,
             'project_edit_start' => Carbon::now()->format('d/m/Y'),
             'project_edit_end' => Carbon::now()->addDays(7)->format('d/m/Y'),
         ]);
@@ -31,6 +33,8 @@ class AdminConfigOptionsTest extends TestCase
         $response->assertRedirect(route('options.edit'));
         $this->assertDatabaseHas('project_configs', ['key' => 'logins_allowed', 'value' => true]);
         $this->assertDatabaseHas('project_configs', ['key' => 'required_choices', 'value' => 3]);
+        $this->assertDatabaseHas('project_configs', ['key' => 'single_uog_required_choices', 'value' => 0]);
+        $this->assertDatabaseHas('project_configs', ['key' => 'single_uestc_required_choices', 'value' => 9]);
         $this->assertDatabaseHas('project_configs', ['key' => 'maximum_applications', 'value' => 6]);
         $this->assertDatabaseHas('project_configs', ['key' => 'round', 'value' => 1]);
         $this->assertDatabaseHas('project_configs', ['key' => 'project_edit_start', 'value' => Carbon::now()->format('d/m/Y')]);

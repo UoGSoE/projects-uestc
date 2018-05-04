@@ -65,9 +65,9 @@
                             <span style="float:right;" class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                         </div>
                         <div class="panel-body">
-                            {{ instructions }}
+                            <span v-if="!singledegree">{{ instructions }}</span>
                             <span v-for="institution in ['uestc', 'uog']" :key="institution">
-                                <h5>{{ institution.toUpperCase() }} Projects
+                                <h5 v-if="required[institution] > 0">{{ institution.toUpperCase() }} Projects
                                     <span
                                     class="label label-default"
                                     :class="{
@@ -165,14 +165,20 @@
 
         computed: {
             uestcChoices() {
-                return this.choices['uestc'].map( function(element) {
-                    return element['id'];
-                });
+                if (this.required['uestc'] > 0) {
+                    return this.choices['uestc'].map( function(element) {
+                        return element['id'];
+                    });
+                }
+                return null;
             },
             uogChoices() {
-                return this.choices['uog'].map( function(element) {
-                    return element['id'];
-                });
+                if (this.required['uog'] > 0) {
+                    return this.choices['uog'].map( function(element) {
+                        return element['id'];
+                    });
+                }
+                return null;
             },
             anyProjectsChosen() {
                 return this.choices['uestc'].length > 0 || this.choices['uog'].length > 0;
@@ -225,7 +231,15 @@
                     return true;
                 }
                 if (this.numberOfUoG > this.required['uog'] || this.numberOfUESTC > this.required['uestc']) {
-                    this.choiceError = 'You must choose ' + this.required['uestc'] + ' UESTC projects and ' + this.required['uog'] + ' UOG projects.';
+                    if (this.required['uestc'] > 0 && this.required['uog'] > 0) {
+                        this.choiceError = 'You must choose ' + this.required['uestc'] + ' UESTC projects and ' + this.required['uog'] + ' UOG projects.';
+                    } else if (this.required['uestc'] > 0 && this.required['uog'] > 0) {
+                        this.choiceError = 'You must choose ' + this.required['uestc'] + ' UESTC projects.';
+                    } else if (this.required['uestc'] <= 0 && this.required['uog'] > 0) {
+                        this.choiceError = 'You must choose ' + this.required['uog'] + ' UOG projects.';
+                    } else {
+                        this.choiceError = 'Error';
+                    }
                     return true;
                 }
                 return false;

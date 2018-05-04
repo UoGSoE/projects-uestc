@@ -43394,14 +43394,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         uestcChoices: function uestcChoices() {
-            return this.choices['uestc'].map(function (element) {
-                return element['id'];
-            });
+            if (this.required['uestc'] > 0) {
+                return this.choices['uestc'].map(function (element) {
+                    return element['id'];
+                });
+            }
+            return null;
         },
         uogChoices: function uogChoices() {
-            return this.choices['uog'].map(function (element) {
-                return element['id'];
-            });
+            if (this.required['uog'] > 0) {
+                return this.choices['uog'].map(function (element) {
+                    return element['id'];
+                });
+            }
+            return null;
         },
         anyProjectsChosen: function anyProjectsChosen() {
             return this.choices['uestc'].length > 0 || this.choices['uog'].length > 0;
@@ -43455,7 +43461,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return true;
             }
             if (this.numberOfUoG > this.required['uog'] || this.numberOfUESTC > this.required['uestc']) {
-                this.choiceError = 'You must choose ' + this.required['uestc'] + ' UESTC projects and ' + this.required['uog'] + ' UOG projects.';
+                if (this.required['uestc'] > 0 && this.required['uog'] > 0) {
+                    this.choiceError = 'You must choose ' + this.required['uestc'] + ' UESTC projects and ' + this.required['uog'] + ' UOG projects.';
+                } else if (this.required['uestc'] > 0 && this.required['uog'] > 0) {
+                    this.choiceError = 'You must choose ' + this.required['uestc'] + ' UESTC projects.';
+                } else if (this.required['uestc'] <= 0 && this.required['uog'] > 0) {
+                    this.choiceError = 'You must choose ' + this.required['uog'] + ' UOG projects.';
+                } else {
+                    this.choiceError = 'Error';
+                }
                 return true;
             }
             return false;
@@ -43869,48 +43883,54 @@ var render = function() {
                           "div",
                           { staticClass: "panel-body" },
                           [
-                            _vm._v(
-                              "\n                        " +
-                                _vm._s(_vm.instructions) +
-                                "\n                        "
-                            ),
+                            !_vm.singledegree
+                              ? _c("span", [_vm._v(_vm._s(_vm.instructions))])
+                              : _vm._e(),
+                            _vm._v(" "),
                             _vm._l(["uestc", "uog"], function(institution) {
                               return _c(
                                 "span",
                                 { key: institution },
                                 [
-                                  _c("h5", [
-                                    _vm._v(
-                                      _vm._s(institution.toUpperCase()) +
-                                        " Projects\n                                "
-                                    ),
-                                    _c(
-                                      "span",
-                                      {
-                                        staticClass: "label label-default",
-                                        class: {
-                                          "label-success":
-                                            _vm.choices[institution].length ==
-                                            _vm.required[institution],
-                                          "label-danger":
-                                            _vm.choices[institution].length >
-                                              _vm.required[institution] ||
-                                            _vm.invalidChoices
-                                        }
-                                      },
-                                      [
+                                  _vm.required[institution] > 0
+                                    ? _c("h5", [
                                         _vm._v(
-                                          "\n                                    " +
-                                            _vm._s(
-                                              _vm.choices[institution].length
-                                            ) +
-                                            "/" +
-                                            _vm._s(_vm.required[institution]) +
-                                            "\n                                "
+                                          _vm._s(institution.toUpperCase()) +
+                                            " Projects\n                                "
+                                        ),
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass: "label label-default",
+                                            class: {
+                                              "label-success":
+                                                _vm.choices[institution]
+                                                  .length ==
+                                                _vm.required[institution],
+                                              "label-danger":
+                                                _vm.choices[institution]
+                                                  .length >
+                                                  _vm.required[institution] ||
+                                                _vm.invalidChoices
+                                            }
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n                                    " +
+                                                _vm._s(
+                                                  _vm.choices[institution]
+                                                    .length
+                                                ) +
+                                                "/" +
+                                                _vm._s(
+                                                  _vm.required[institution]
+                                                ) +
+                                                "\n                                "
+                                            )
+                                          ]
                                         )
-                                      ]
-                                    )
-                                  ]),
+                                      ])
+                                    : _vm._e(),
                                   _vm._v(" "),
                                   _c(
                                     "draggable",

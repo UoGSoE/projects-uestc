@@ -22,7 +22,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'is_admin' => false,
         'remember_token' => str_random(10),
         'institution' => 'UoG',
-        'degree_type' => $faker->randomElement(['Single', 'Dual']),
+        'degree_type' => 'Dual',
     ];
 });
 $factory->state(App\User::class, 'admin', function ($faker) {

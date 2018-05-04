@@ -15,13 +15,23 @@
             </div>
 
             <div class="form-group">
-                <label for="required_choices">Required number of University of Glasgow projects a student must submit</label>
-                <input type="number" id="required_choices" name="required_choices" value="{{ $required_choices }}" class="form-control" required>
+                <label for="required_choices">(Single Degree) Required number of University of Glasgow projects a student must submit</label>
+                <input type="number" id="single_uog_required_choices" name="single_uog_required_choices" value="{{ $single_uog_required_choices }}" class="form-control" required>
             </div>
 
             <div class="form-group">
-                <label for="uestc_required_choices">Required number of UESTC projects a student must submit</label>
-                <input type="number" id="uestc_required_choices" name="uestc_required_choices" value="{{ $uestc_required_choices }}" class="form-control" required>
+                <label for="uestc_required_choices">(Single Degree) Required number of UESTC projects a student must submit</label>
+                <input type="number" id="single_uestc_required_choices" name="single_uestc_required_choices" value="{{ $single_uestc_required_choices }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="required_choices">(Dual Degree) Required number of University of Glasgow projects a student must submit</label>
+                <input type="number" id="dual_uog_required_choices" name="dual_uog_required_choices" value="{{ $dual_uog_required_choices }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="uestc_required_choices">(Dual Degree) Required number of UESTC projects a student must submit</label>
+                <input type="number" id="dual_uestc_required_choices" name="dual_uestc_required_choices" value="{{ $dual_uestc_required_choices }}" class="form-control" required>
             </div>
 
             <div class="form-group">
