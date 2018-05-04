@@ -43371,7 +43371,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['projects', 'allowselect', 'required', 'singledegree'],
+    props: ['projects', 'allowselect', 'required'],
 
     data: function data() {
         return {
@@ -43481,16 +43481,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             } else if (!this.allChosen) {
                 return 'Project choices';
             }
-            if (this.singledegree) {
-                return 'You have chosen all projects - please review before submitting your choices.';
-            }
             return 'Please arrange your choices into the order of your most preferred.';
         },
 
         instructions: function instructions() {
-            if (this.singleDegree) {
-                return '';
-            }
             if (!this.invalidChoices && this.allChosen) {
                 return 'Click and drag to sort your choices in order of preferences (top choice being most preferred).';
             }
@@ -43498,15 +43492,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         checkboxLabel: function checkboxLabel() {
-            if (this.singledegree) {
-                return 'I confirm these are my choices';
-            }
             return 'I confirm the preference order of my choices';
         }
 
     },
 
     methods: {
+        shortTitle: function shortTitle(title) {
+            var maxLength = 30;
+            var ending = '...';
+            if (title.length > maxLength) {
+                return title.substring(0, maxLength - ending.length) + ending;
+            } else {
+                return title;
+            }
+        },
         isExpanded: function isExpanded(projectId, discipline) {
             if (this.openProjects.indexOf(projectId + discipline) != -1) {
                 return true;
@@ -43883,10 +43883,11 @@ var render = function() {
                           "div",
                           { staticClass: "panel-body" },
                           [
-                            !_vm.singledegree
-                              ? _c("span", [_vm._v(_vm._s(_vm.instructions))])
-                              : _vm._e(),
-                            _vm._v(" "),
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.instructions) +
+                                "\n                        "
+                            ),
                             _vm._l(["uestc", "uog"], function(institution) {
                               return _c(
                                 "span",
@@ -43938,9 +43939,7 @@ var render = function() {
                                       attrs: {
                                         options: {
                                           disabled:
-                                            !_vm.allChosen ||
-                                            !_vm.validChoices ||
-                                            _vm.singledegree
+                                            !_vm.allChosen || !_vm.validChoices
                                         }
                                       },
                                       on: {
@@ -43968,7 +43967,7 @@ var render = function() {
                                         "transition-group",
                                         _vm._l(
                                           _vm.choices[institution],
-                                          function(project) {
+                                          function(project, index) {
                                             return _c(
                                               "div",
                                               {
@@ -43976,9 +43975,7 @@ var render = function() {
                                                 staticClass:
                                                   "panel panel-default panel-choices",
                                                 class: {
-                                                  move:
-                                                    _vm.validChoices &&
-                                                    !_vm.singledegree
+                                                  move: _vm.validChoices
                                                 }
                                               },
                                               [
@@ -44025,9 +44022,31 @@ var render = function() {
                                                             _vm._v(
                                                               "\n                                                    " +
                                                                 _vm._s(
-                                                                  project.title
+                                                                  index + 1
                                                                 ) +
-                                                                "\n                                                "
+                                                                ". "
+                                                            ),
+                                                            _c(
+                                                              "abbr",
+                                                              {
+                                                                staticStyle: {
+                                                                  "border-bottom":
+                                                                    "0px"
+                                                                },
+                                                                attrs: {
+                                                                  title:
+                                                                    project.title
+                                                                }
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  _vm._s(
+                                                                    _vm.shortTitle(
+                                                                      project.title
+                                                                    )
+                                                                  )
+                                                                )
+                                                              ]
                                                             )
                                                           ]
                                                         ),

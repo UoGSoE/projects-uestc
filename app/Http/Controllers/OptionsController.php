@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\ProjectConfig;
+use App\User;
 use Carbon\Carbon;
+use App\ProjectConfig;
 use Illuminate\Http\Request;
 
 class OptionsController extends Controller
@@ -48,5 +49,14 @@ class OptionsController extends Controller
         ProjectConfig::setOption('project_edit_start', $request->project_edit_start);
         ProjectConfig::setOption('project_edit_end', $request->project_edit_end);
         return redirect()->route('options.edit')->with('success_message', 'Options Updated');
+    }
+
+    //Deletes all project allocations
+    public function destroy()
+    {
+        User::students()->each(function ($student, $key) {
+            $student->projects->each->delete();
+        });
+        return redirect()->route('options.edit')->with('success_message', 'All allocations deleted');
     }
 }

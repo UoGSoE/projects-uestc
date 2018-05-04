@@ -29,7 +29,7 @@
                 :projects="{{ auth()->user()->availableProjectsJson() }}"
                 :allowselect="{{ $applicationsEnabled ? 1 : 0}}"
                 :required="{{ json_encode($required) }}"
-                :singledegree="{{ $singleDegree ? 1 : 0 }}">
+                >
             </project-list>
         </form>
     @endif

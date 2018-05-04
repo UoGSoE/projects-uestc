@@ -1,9 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading" id="title_{{ $project->id }}">
         <h3 class="panel-title">
-            @if (!auth()->user()->isSingleDegree())
-                {{ $project->pivot->preference }}.
-            @endif
+            {{ $project->pivot->preference }}.
             {{ $project->title }} ({{ $project->owner->fullName() }})
             @if ($project->discipline)
                 (field {{ $project->disciplineTitle() }})

@@ -4,6 +4,9 @@
     <div class="container">
         <h2>
             Site Options
+            <a action-href="{!! route('options.allocations.destroy') !!}" data-confirm="Really remove all allocations? This will delete every allocation (pending or accepted)" class="btn btn-danger pull-right data-confirm">
+                Remove All Project Allocations
+            </a>
         </h2>
 
         <form method="POST" action="{!! route('options.update') !!}">

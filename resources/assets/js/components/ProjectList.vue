@@ -65,7 +65,7 @@
                             <span style="float:right;" class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                         </div>
                         <div class="panel-body">
-                            <span v-if="!singledegree">{{ instructions }}</span>
+                            {{ instructions }}
                             <span v-for="institution in ['uestc', 'uog']" :key="institution">
                                 <h5 v-if="required[institution] > 0">{{ institution.toUpperCase() }} Projects
                                     <span
@@ -78,16 +78,16 @@
                                         {{ choices[institution].length }}/{{ required[institution] }}
                                     </span>
                                 </h5>
-                                <draggable v-model="choices[institution]" @start="drag=true" @end="drag=false" :options="{disabled: !allChosen || !validChoices || singledegree }">
+                                <draggable v-model="choices[institution]" @start="drag=true" @end="drag=false" :options="{disabled: !allChosen || !validChoices }">
                                     <transition-group>
-                                        <div v-for="project in choices[institution]" class="panel panel-default panel-choices" :class="{'move' : validChoices && !singledegree }" :key="project.id">
+                                        <div v-for="(project, index) in choices[institution]" class="panel panel-default panel-choices" :class="{'move' : validChoices }" :key="project.id">
                                             <div class="panel-body container-fluid">
                                                 <div class="row">
                                                     <div class="col-md-1">
                                                         <img :src="'img/'+project.institution+'.png'" :alt="project.institution" height="20" width="30">
                                                     </div>
                                                     <div class="col-md-5">
-                                                        {{ project.title }}
+                                                        {{ index + 1 }}. <abbr style="border-bottom:0px" :title="project.title">{{ shortTitle(project.title) }}</abbr>
                                                     </div>
                                                     <div class="col-md-4">
                                                         {{ project.owner }}
@@ -143,7 +143,7 @@
 
 <script>
     export default {
-        props: ['projects', 'allowselect', 'required', 'singledegree'],
+        props: ['projects', 'allowselect', 'required'],
 
         data() {
             return {
@@ -251,16 +251,10 @@
                 } else if (!this.allChosen) {
                     return 'Project choices';
                 }
-                if (this.singledegree) {
-                    return 'You have chosen all projects - please review before submitting your choices.';
-                }
                 return 'Please arrange your choices into the order of your most preferred.';
             },
 
             instructions: function() {
-                if (this.singleDegree) {
-                    return '';
-                }
                 if (!this.invalidChoices && this.allChosen) {
                     return 'Click and drag to sort your choices in order of preferences (top choice being most preferred).'
                 }
@@ -268,15 +262,21 @@
             },
 
             checkboxLabel: function() {
-                if (this.singledegree) {
-                    return 'I confirm these are my choices';
-                }
                 return 'I confirm the preference order of my choices';
             }
 
         },
 
         methods: {
+            shortTitle: function (title) {
+                var maxLength = 30;
+                var ending = '...'
+                if (title.length > maxLength) {
+                    return title.substring(0, maxLength - ending.length) + ending;
+                } else {
+                    return title;
+                }
+            },
             isExpanded: function (projectId, discipline) {
                 if (this.openProjects.indexOf(projectId + discipline) != -1) {
                     return true;

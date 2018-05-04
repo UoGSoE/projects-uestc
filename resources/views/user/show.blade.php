@@ -73,38 +73,30 @@
         @elseif ($user->is_student)
             @if ($user->projects()->UESTC()->count() > 0)
                 <h5>UESTC Projects</h5>
-                @if (!$user->isSingleDegree())
-                    <ol>
-                @endif
-                @foreach ($user->projects()->UESTC()->orderBy('preference')->get() as $project)
-                    <li>
-                        <a href="{!! action('ProjectController@show', $project->id) !!}">
-                            {{ $project->title }}
-                        </a> ({{ $project->students->count() }} Students)
-                        (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})
-                    </li>
-                @endforeach
-                @if (!$user->isSingleDegree())
-                    </ol>
-                @endif
+                <ol>
+                    @foreach ($user->projects()->UESTC()->orderBy('preference')->get() as $project)
+                        <li>
+                            <a href="{!! action('ProjectController@show', $project->id) !!}">
+                                {{ $project->title }}
+                            </a> ({{ $project->students->count() }} Students)
+                            (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})
+                        </li>
+                    @endforeach
+                </ol>
             @endif
 
             @if ($user->projects()->UoG()->count() > 0)
                 <h5>UoG Projects</h5>
-                @if (!$user->isSingleDegree())
-                    <ol>
-                @endif
-                @foreach ($user->projects()->UoG()->orderBy('preference')->get() as $project)
-                    <li>
-                        <a href="{!! action('ProjectController@show', $project->id) !!}">
-                            {{ $project->title }}
-                        </a> ({{ $project->students->count() }} Students)
-                        (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})
-                    </li>
-                @endforeach
-                @if (!$user->isSingleDegree())
-                    </ol>
-                @endif
+                <ol>
+                    @foreach ($user->projects()->UoG()->orderBy('preference')->get() as $project)
+                        <li>
+                            <a href="{!! action('ProjectController@show', $project->id) !!}">
+                                {{ $project->title }}
+                            </a> ({{ $project->students->count() }} Students)
+                            (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})
+                        </li>
+                    @endforeach
+                </ol>
             @endif
         @else
             @foreach ($user->projects as $project)

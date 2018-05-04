@@ -47,7 +47,7 @@ class ReportController extends Controller
 
     public function allStaff()
     {
-        $users = User::staff()->with('projects')->orderBy('surname')->get();
+        $users = User::staff()->with(['projects', 'activeProjects', 'inactiveProjects'])->orderBy('surname')->get();
         return view('report.all_staff', compact('users'));
     }
 }

@@ -89,6 +89,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('options', 'OptionsController@edit')->name('options.edit');
         Route::post('options', 'OptionsController@update')->name('options.update');
+        Route::get('options/destroy', 'OptionsController@destroy')->name('options.allocations.destroy');
 
         Route::get('allocations', 'ImportAllocationsController@index')->name('allocations.import');
         Route::post('allocations', 'ImportAllocationsController@update')->name('allocations.do_import');

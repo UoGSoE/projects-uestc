@@ -106,6 +106,16 @@ class User extends Model implements
         return $this->hasMany(Project::class)->with('students', 'acceptedStudents');
     }
 
+    public function activeProjects()
+    {
+        return $this->hasMany(Project::class)->active();
+    }
+
+    public function inactiveProjects()
+    {
+        return $this->hasMany(Project::class)->inactive();
+    }
+
     public function resetToken()
     {
         return $this->hasOne(PasswordReset::class);
@@ -454,12 +464,12 @@ class User extends Model implements
         $this->projects()->detach();
         foreach ($choices['uestc'] as $key => $project) {
             $this->projects()->attach($project, [
-                'preference' => $this->isSingleDegree() ? 1 : $key + 1
+                'preference' => $key + 1
             ]);
         }
         foreach ($choices['uog'] as $key => $project) {
             $this->projects()->attach($project, [
-                'preference' => $this->isSingleDegree() ? 1 : $key + 1
+                'preference' => $key + 1
             ]);
         }
         $this->addRoundsInfo($choices);

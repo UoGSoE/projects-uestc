@@ -24,7 +24,6 @@ class HomeController extends Controller
         return view(
             'project.student_index', [
                 'applicationsEnabled' => Project::applicationsEnabled(),
-                'singleDegree' => auth()->user()->isSingleDegree(),
                 'required' => [
                     'uestc' => auth()->user()->isSingleDegree()
                             ? ProjectConfig::getOption(

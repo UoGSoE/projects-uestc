@@ -21,12 +21,12 @@
                     </td>
                     @foreach ($student->projects()->UESTC()->orderBy('preference')->get() as $project)
                         <td>
-                             ({{ $project->institution }}") {{ $project->title }}
+                             ({{ $project->institution }}) {{ $project->title }}
                         </td>
                     @endforeach
                     @foreach ($student->projects()->UoG()->orderBy('preference')->get() as $project)
                         <td>
-                             ({{ $project->institution }}") {{ $project->title }}
+                             ({{ $project->institution }}) {{ $project->title }}
                         </td>
                     @endforeach
                     @for ($i = ($required - $student->projects()->count()); $i > 0; $i--)

@@ -146,6 +146,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         'Maatwebsite\Excel\ExcelServiceProvider',
+        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -196,6 +197,7 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
         'Notify'    => Illuminate\Support\Facades\Notification::class,
         'Excel' => 'Maatwebsite\Excel\Facades\Excel',
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];

@@ -27,6 +27,11 @@ class Project extends Model
         return $query->where('is_active', '=', 1);
     }
 
+    public function scopeInactive($query)
+    {
+        return $query->where('is_active', '!=', 1);
+    }
+
     public function scopeUESTC($query)
     {
         return $query->where('institution', 'UESTC');

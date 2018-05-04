@@ -8,4 +8,5 @@
     </a>
 </h2>
 @include('report.partials.staff_list')
+@include('partials.datatables')
 @stop

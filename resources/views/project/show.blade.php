@@ -107,11 +107,7 @@
                         @endif
                     </td>
                     <td>{{ $student->fullName() }}</td>
-                    <td>
-                        @if (!$student->isSingleDegree() && $student->pivot->preference)
-                            Choice {{ $student->pivot->preference }}
-                        @endif
-                    </td>
+                    <td>Choice {{ $student->pivot->preference }}</td>
                 </tr>
             @endforeach
         </tbody>
