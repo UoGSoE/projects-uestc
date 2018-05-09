@@ -12,6 +12,7 @@
         "doctrine/common": "2.7.2",
         "doctrine/dbal": "2.5.12",
         "doctrine/inflector": "1.1.*",
+        "doctrine/instantiator": "~1.0",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
