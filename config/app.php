@@ -146,7 +146,6 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         'Maatwebsite\Excel\ExcelServiceProvider',
-        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
