@@ -4,10 +4,11 @@
 namespace Tests\Feature;
 
 use Carbon\Carbon;
+use Tests\TestCase;
+use App\ProjectConfig;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Tests\TestCase;
 
 class AdminConfigOptionsTest extends TestCase
 {
@@ -40,5 +41,23 @@ class AdminConfigOptionsTest extends TestCase
         $this->assertDatabaseHas('project_configs', ['key' => 'project_edit_start', 'value' => Carbon::now()->format('d/m/Y')]);
         $this->assertDatabaseHas('project_configs', ['key' => 'project_edit_end', 'value' => Carbon::now()->addDays(7)->format('d/m/Y')]);
         $this->assertDatabaseHas('project_configs', ['key' => 'applications_allowed', 'value' => true]);
+    }
+
+    /** @test */
+    public function admin_can_delete_all_project_allocations ()
+    {
+        ProjectConfig::setOption('round', 1);
+        $admin = $this->createAdmin();
+        $student = $this->createStudent();
+        $project = $this->createProject();
+
+        $project->addStudent($student);
+
+        $this->assertDatabaseHas('project_student', ['user_id' => $student->id, 'project_id' => $project->id]);
+
+        $response = $this->actingAs($admin)->get(route('options.allocations.destroy'));
+
+        $this->assertDatabaseMissing('project_student', ['user_id' => $student->id, 'project_id' => $project->id]);
+        $this->assertDatabaseHas('projects', ['id' => $project->id]);
     }
 }

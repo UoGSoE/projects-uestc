@@ -55,7 +55,7 @@ class OptionsController extends Controller
     public function destroy()
     {
         User::students()->each(function ($student, $key) {
-            $student->projects->each->delete();
+            $student->projects()->sync([]);
         });
         return redirect()->route('options.edit')->with('success_message', 'All allocations deleted');
     }
