@@ -48,10 +48,18 @@ class StudentChoicesController extends Controller
         $uogSupervisorIds = Project::find($choices['uog'])->pluck('user_id')->all();
         $uestcUniqueIds = array_unique($uestcSupervisorIds);
         $uogUniqueIds = array_unique($uogSupervisorIds);
-        if ($uestcSupervisorIds == $uestcUniqueIds && $uogSupervisorIds == $uogUniqueIds) {
-            return true;
+
+        if (config('projects.uestc_unique_supervisors')) {
+            if ($uestcSupervisorIds != $uestcUniqueIds) {
+                return false;
+            }
         }
-        return false;
+        if (config('projects.uog_unique_supervisors')) {
+            if ($uogSupervisorIds != $uogUniqueIds) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private function checkChoicesAreOk($choices)

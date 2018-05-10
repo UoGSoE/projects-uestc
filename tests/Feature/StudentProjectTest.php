@@ -148,7 +148,9 @@ class StudentProjectTest extends TestCase
     /** @test */
     public function a_student_must_apply_for_projects_that_do_not_have_the_same_supervisor () {
         ProjectConfig::setOption('round', 1);
-        $supervisor = factory(User::class)->states('student')->create();
+        config(['projects.uestc_unique_supervisors' => true]);
+        config(['projects.uog_unique_supervisors' => true]);
+        $supervisor = factory(User::class)->states('staff')->create();
         $student = factory(User::class)->states('student')->create();
         $project1 = factory(Project::class)->create(['user_id' => $supervisor->id]);
         $project2 = factory(Project::class)->create(['user_id' => $supervisor->id]);
@@ -162,6 +164,180 @@ class StudentProjectTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect('/');
         $response->assertSessionHasErrors(['supervisor_diff']);
+    }
+
+    /** @test */
+    public function uog_supervisors_must_be_unique_but_uestc_do_not()
+    {
+        ProjectConfig::setOption('round', 1);
+        config(['projects.uestc_unique_supervisors' => false]);
+        config(['projects.uog_unique_supervisors' => true]);
+        $uogSupervisor = factory(User::class)->states('staff')->create();
+        $uestcSupervisor = factory(User::class)->states('staff')->create();
+        $student = factory(User::class)->states('student')->create();
+        $uniqueUogProjects = factory(Project::class, 3)->create(['institution' => 'UoG']);
+        $sameSupUogProjects = factory(Project::class, 3)->create([
+            'user_id' => $uogSupervisor->id,
+            'institution' => 'UoG'
+        ]);
+        $uniqueUestcProjects = factory(Project::class, 6)->create(['institution' => 'UESTC']);
+        $sameSupUestcProjects = factory(Project::class, 6)->create([
+            'user_id' => $uestcSupervisor->id,
+            'institution' => 'UESTC'
+        ]);
+
+        $uniqueUogIds = implode(',', $uniqueUogProjects->pluck('id')->toArray());
+        $sameSupUogIds = implode(',', $sameSupUogProjects->pluck('id')->toArray());
+        $uniqueUestcIds = implode(',', $uniqueUestcProjects->pluck('id')->toArray());
+        $sameSupUestcIds = implode(',', $sameSupUestcProjects->pluck('id')->toArray());
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $sameSupUogIds,
+            'uestcChoices' => $sameSupUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['supervisor_diff']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $sameSupUogIds,
+            'uestcChoices' => $uniqueUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['supervisor_diff']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $uniqueUogIds,
+            'uestcChoices' => $sameSupUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionMissing(['errors']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $uniqueUogIds,
+            'uestcChoices' => $uniqueUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionMissing(['errors']);
+    }
+
+    /** @test */
+    public function uestc_supervisors_must_be_unique_but_uog_do_not()
+    {
+        ProjectConfig::setOption('round', 1);
+        config(['projects.uestc_unique_supervisors' => true]);
+        config(['projects.uog_unique_supervisors' => false]);
+        $uogSupervisor = factory(User::class)->states('staff')->create();
+        $uestcSupervisor = factory(User::class)->states('staff')->create();
+        $student = factory(User::class)->states('student')->create();
+        $uniqueUogProjects = factory(Project::class, 3)->create(['institution' => 'UoG']);
+        $sameSupUogProjects = factory(Project::class, 3)->create([
+            'user_id' => $uogSupervisor->id,
+            'institution' => 'UoG'
+        ]);
+        $uniqueUestcProjects = factory(Project::class, 6)->create(['institution' => 'UESTC']);
+        $sameSupUestcProjects = factory(Project::class, 6)->create([
+            'user_id' => $uestcSupervisor->id,
+            'institution' => 'UESTC'
+        ]);
+
+        $uniqueUogIds = implode(',', $uniqueUogProjects->pluck('id')->toArray());
+        $sameSupUogIds = implode(',', $sameSupUogProjects->pluck('id')->toArray());
+        $uniqueUestcIds = implode(',', $uniqueUestcProjects->pluck('id')->toArray());
+        $sameSupUestcIds = implode(',', $sameSupUestcProjects->pluck('id')->toArray());
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $sameSupUogIds,
+            'uestcChoices' => $sameSupUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['supervisor_diff']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $uniqueUogIds,
+            'uestcChoices' => $sameSupUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionHasErrors(['supervisor_diff']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $sameSupUogIds,
+            'uestcChoices' => $uniqueUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionMissing(['errors']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $uniqueUogIds,
+            'uestcChoices' => $uniqueUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionMissing(['errors']);
+    }
+
+    /** @test */
+    public function supervisors_do_not_have_to_be_unique()
+    {
+        ProjectConfig::setOption('round', 1);
+        config(['projects.uestc_unique_supervisors' => false]);
+        config(['projects.uog_unique_supervisors' => false]);
+        $uogSupervisor = factory(User::class)->states('staff')->create();
+        $uestcSupervisor = factory(User::class)->states('staff')->create();
+        $student = factory(User::class)->states('student')->create();
+        $uniqueUogProjects = factory(Project::class, 3)->create(['institution' => 'UoG']);
+        $sameSupUogProjects = factory(Project::class, 3)->create([
+            'user_id' => $uogSupervisor->id,
+            'institution' => 'UoG'
+        ]);
+        $uniqueUestcProjects = factory(Project::class, 6)->create(['institution' => 'UESTC']);
+        $sameSupUestcProjects = factory(Project::class, 6)->create([
+            'user_id' => $uestcSupervisor->id,
+            'institution' => 'UESTC'
+        ]);
+
+        $uniqueUogIds = implode(',', $uniqueUogProjects->pluck('id')->toArray());
+        $sameSupUogIds = implode(',', $sameSupUogProjects->pluck('id')->toArray());
+        $uniqueUestcIds = implode(',', $uniqueUestcProjects->pluck('id')->toArray());
+        $sameSupUestcIds = implode(',', $sameSupUestcProjects->pluck('id')->toArray());
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $sameSupUogIds,
+            'uestcChoices' => $sameSupUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionMissing(['errors']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $uniqueUogIds,
+            'uestcChoices' => $sameSupUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionMissing(['errors']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $sameSupUogIds,
+            'uestcChoices' => $uniqueUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionMissing(['errors']);
+
+        $response = $this->actingAs($student)->post(route('choices.update'), [
+            'uogChoices' => $uniqueUogIds,
+            'uestcChoices' => $uniqueUestcIds
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $response->assertSessionMissing(['errors']);
     }
 
     public function test_a_student_can_successfully_apply_for_available_projects()

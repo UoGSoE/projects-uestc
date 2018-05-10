@@ -44,6 +44,10 @@ class HomeController extends Controller
                                 config('projects.uog_required_choices')
                             )
                 ],
+                'unique_supervisors' => [
+                    'UESTC' => config('projects.uestc_unique_supervisors'),
+                    'UoG' => config('projects.uog_unique_supervisors')
+                ]
             ]
         );
     }

@@ -29,6 +29,7 @@
                 :projects="{{ auth()->user()->availableProjectsJson() }}"
                 :allowselect="{{ $applicationsEnabled ? 1 : 0}}"
                 :required="{{ json_encode($required) }}"
+                :uniquesupervisorsrules="{{ json_encode($unique_supervisors) }}"
                 >
             </project-list>
         </form>

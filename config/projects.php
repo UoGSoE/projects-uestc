@@ -8,4 +8,6 @@ return [
     'resetTokenExpires' => 7,
     'logins_allowed' => env('ALLOW_STUDENT_LOGINS', true),
     'maximumAllowedToApply' => 6,
+    'uestc_unique_supervisors' => env('UESTC_UNIQUE_SUPERVISORS', true),
+    'uog_unique_supervisors' => env('UOG_UNIQUE_SUPERVISORS', true)
 ];

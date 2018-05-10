@@ -43371,7 +43371,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['projects', 'allowselect', 'required'],
+    props: ['projects', 'allowselect', 'required', 'uniquesupervisorsrules'],
 
     data: function data() {
         return {
@@ -43384,10 +43384,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 uog: []
             },
             choiceError: '',
-            uniqueSupervisors: true,
+            uniqueSupervisors: {
+                UESTC: true,
+                UoG: true
+            },
             expandedChoices: true,
             confirmOrder: false,
-            supervisors: []
+            supervisors: {
+                UESTC: [],
+                UoG: []
+            }
         };
     },
 
@@ -43456,8 +43462,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         invalidChoices: function invalidChoices() {
-            if (this.uniqueSupervisors == false) {
-                this.choiceError = 'You cannot choose two projects with the same supervisor';
+            if (this.uniqueSupervisors['UESTC'] == false) {
+                this.choiceError = 'You cannot choose two UESTC projects with the same supervisor';
+                return true;
+            }
+            if (this.uniqueSupervisors['UoG'] == false) {
+                this.choiceError = 'You cannot choose two UoG projects with the same supervisor';
                 return true;
             }
             if (this.numberOfUoG > this.required['uog'] || this.numberOfUESTC > this.required['uestc']) {
@@ -43537,15 +43547,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 }
             }
+
             if (project.chosen) {
-                this.supervisors.push(project.owner);
+                if (this.supervisors[project.institution].includes(project.owner)) {
+                    if (this.uniquesupervisorsrules[project.institution]) {
+                        this.uniqueSupervisors[project.institution] = false;
+                    }
+                }
+                this.supervisors[project.institution].push(project.owner);
                 this.choices[project.institution.toLowerCase()].push(project);
             } else {
-                this.supervisors.splice(this.supervisors.indexOf(project.owner), 1);
+                this.supervisors[project.institution].splice(this.supervisors[project.institution].indexOf(project.owner), 1);
                 this.choices[project.institution.toLowerCase()].splice(this.choices[project.institution.toLowerCase()].indexOf(project), 1);
-            }
-            if (this.supervisors.includes(project.owner)) {
-                this.uniqueSupervisors = this.supervisors.indexOf(project.owner) == this.supervisors.lastIndexOf(project.owner);
+                if (this.supervisors[project.institution].includes(project.owner)) {
+                    if (this.uniquesupervisorsrules[project.institution]) {
+                        this.uniqueSupervisors[project.institution] = this.supervisors[project.institution].indexOf(project.owner) == this.supervisors[project.institution].lastIndexOf(project.owner);
+                    }
+                }
             }
         }
     }
