@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Carbon\Carbon;
+use App\ProjectRound;
 use App\ProjectConfig;
 use Illuminate\Http\Request;
 
@@ -56,6 +57,9 @@ class OptionsController extends Controller
     {
         User::students()->each(function ($student, $key) {
             $student->projects()->sync([]);
+        });
+        ProjectRound::each(function ($projectRound, $key) {
+            $projectRound->delete();
         });
         return redirect()->route('options.edit')->with('success_message', 'All allocations deleted');
     }

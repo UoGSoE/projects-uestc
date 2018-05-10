@@ -52,12 +52,14 @@ class AdminConfigOptionsTest extends TestCase
         $project = $this->createProject();
 
         $project->addStudent($student);
+        $this->assertDatabaseHas('project_rounds', ['project_id' => $project->id, 'user_id' => $student->id]);
 
         $this->assertDatabaseHas('project_student', ['user_id' => $student->id, 'project_id' => $project->id]);
 
         $response = $this->actingAs($admin)->get(route('options.allocations.destroy'));
 
         $this->assertDatabaseMissing('project_student', ['user_id' => $student->id, 'project_id' => $project->id]);
+        $this->assertDatabaseMissing('project_rounds', ['user_id' => $student->id, 'project_id' => $project->id]);
         $this->assertDatabaseHas('projects', ['id' => $project->id]);
     }
 }
