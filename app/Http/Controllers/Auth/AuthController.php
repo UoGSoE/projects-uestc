@@ -135,7 +135,7 @@ class AuthController extends Controller
         $email = strtolower(trim($request->email));
         $user = User::where('email', '=', $email)->first();
         if (!$user) {
-            return redirect()->refresh()->withErrors(['errors' => 'Could not find that email address']);
+            return redirect()->route('login.show')->withErrors(['errors' => 'Could not find that email address']);
         }
         $token = PasswordReset::create([
             'user_id' => $user->id,
@@ -146,7 +146,7 @@ class AuthController extends Controller
             $m->to($user->email)->subject('[UoG] Student Projects - Password Reset');
         });
         EventLog::log($user->id, 'Generated a password reset email');
-        return redirect()->to('/auth/login')->with('success_message', 'Password reset link has been sent.  Please check your email shortly.');
+        return redirect()->route('login.show')->with('success_message', 'Password reset link has been sent.  Please check your email shortly.');
         //return view('auth.password_reset_message', compact('token', 'user'));
     }
 
