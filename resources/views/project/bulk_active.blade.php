@@ -7,7 +7,7 @@
     </h2>
     <form class="form-inline" method="POST" action="{!! route('bulkactive.update') !!}">
     {!! csrf_field() !!}
-    <table class="table table-striped">
+    <table class="table table-striped datatable">
         <thead>
             <tr>
                 <th>Title</th>
@@ -52,3 +52,4 @@
     <button type="submit" class="btn btn-primary pull-right">Update</button>
     </form>
 @stop
+@include('partials.datatables')
