@@ -56,7 +56,7 @@ class Ldap
     private static function findUser($username, $password, $ldapOrg, $ldapconn)
     {
         if (config('ldap.authentication')) {
-            $ldapbind = @ldap_bind($ldapconn);
+            $ldapbind = @ldap_bind($ldapconn, config('ldap.username'), config('ldap.password'));
             $search = ldap_search($ldapconn, $ldapOrg, "uid={$username}");
             if (ldap_count_entries($ldapconn, $search) != 1) {
                 ldap_unbind($ldapconn);
