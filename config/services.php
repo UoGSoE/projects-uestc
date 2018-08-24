@@ -34,8 +34,4 @@ return [
         'key'    => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
-
-    'slack' => [
-        'notification_url' => env('SLACK_NOTIFICATION_URL'),
-    ],
 ];
