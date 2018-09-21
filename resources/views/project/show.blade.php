@@ -16,7 +16,7 @@
         <dt>Description</dt>
         <dd>{{ $project->description }}</dd>
         <dt>Prerequisits</dt>
-        <dd>{{ $project->prereq or 'None' }}</dd>
+        <dd>{{ $project->prereq ?? 'None' }}</dd>
         <dt>Active?</dt>
         <dd id="is_active">{{ $project->is_active ? 'Yes' : 'No' }}</dd>
         <dt>Run By</dt>

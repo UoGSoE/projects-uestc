@@ -62,7 +62,7 @@
                 </select>
             </div>
         @else
-            <input type="hidden" name="user_id" value="{{ $project->user_id or Auth::user()->id }}">
+            <input type="hidden" name="user_id" value="{{ $project->user_id ?? Auth::user()->id }}">
         @endcan
         @if ($project->files()->count() > 0)
             @foreach ($project->files as $file)

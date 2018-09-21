@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Student Projects - {{{ $page_title or '' }}}</title>
+    <title>Student Projects - {{{ $page_title ?? '' }}}</title>
     <link rel="stylesheet" href="{!! asset('vendor/bootstrap/css/bootstrap.min.css') !!}" media="print,screen" />
     <link rel="stylesheet" href="{!! asset('vendor/select2/dist/css/select2.min.css') !!}" media="screen" />
     <link rel="stylesheet" href="{!! asset('vendor/datatables/css/dataTables.bootstrap.css') !!}" media="screen" />
