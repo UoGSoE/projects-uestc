@@ -135,7 +135,7 @@ class ProjectController extends Controller
             'courses' => 'required|array',
             'maximum_students' => 'required|integer|min:1',
             'user_id' => 'required|integer',
-            'links.*.url' => 'url',
+            'links.*.url' => 'nullable|url',
         ]);
         $project = Project::findOrFail($id);
         if (Gate::denies('edit_this_project', $project)) {

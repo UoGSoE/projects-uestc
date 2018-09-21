@@ -26,7 +26,7 @@ class ExportAllocationTest extends TestCase
         $response = $this->actingAs($admin)->get(route('export.allocations'));
 
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename="allocations.xlsx"');
+        $response->assertHeader('content-disposition', 'attachment; filename=allocations.xlsx');
         // should really try loading the sheet into memory and testing, but it's
         // Friday afternoon - yolo.
     }
@@ -45,15 +45,15 @@ class ExportAllocationTest extends TestCase
 
         $response = $this->actingAs($admin)->get(route('export.students'));
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename="all_students.xlsx"');
+        $response->assertHeader('content-disposition', 'attachment; filename=all_students.xlsx');
 
         $response = $this->actingAs($admin)->get(route('export.students.single'));
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename="single_degree_students.xlsx"');
+        $response->assertHeader('content-disposition', 'attachment; filename=single_degree_students.xlsx');
 
         $response = $this->actingAs($admin)->get(route('export.students.dual'));
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename="dual_degree_students.xlsx"');
+        $response->assertHeader('content-disposition', 'attachment; filename=dual_degree_students.xlsx');
     }
 
     public function test_can_export_the_staff_list_as_a_spreadsheet()
@@ -73,7 +73,7 @@ class ExportAllocationTest extends TestCase
         $response = $this->actingAs($admin)->get(route('export.staff'));
 
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename="staff.xlsx"');
+        $response->assertHeader('content-disposition', 'attachment; filename=staff.xlsx');
         // should really try loading the sheet into memory and testing, but it's
         // Friday afternoon - yolo.
     }
