@@ -79,12 +79,12 @@ class Ldap
             $info[0]['givenname'][0] = 'Forenames';
             $info[0]['mail'][0] = 'test@example.com';
         }
-        $result = array(
+        $result = [
             'username' => $username,
             'surname' => $info[0]['sn'][0],
             'forenames' => $info[0]['givenname'][0],
             'email' => $info[0]['mail'][0],
-        );
+        ];
         return $result;
     }
 }

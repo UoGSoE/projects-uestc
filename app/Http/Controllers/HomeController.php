@@ -22,7 +22,8 @@ class HomeController extends Controller
             return view('profile.edit_degree');
         }
         return view(
-            'project.student_index', [
+            'project.student_index',
+            [
                 'applicationsEnabled' => Project::applicationsEnabled(),
                 'required' => [
                     'uestc' => auth()->user()->isSingleDegree()
