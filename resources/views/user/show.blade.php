@@ -31,7 +31,7 @@
             <dt>Type</dt>
             <dd>{{ $user->password ? 'External' : 'Internal' }} {{ $user->is_student ? 'Student' : 'Staff' }}</dd>
             <dt>Last Login</dt>
-            <dd>{{ $user->last_login or 'Never'}}</dd>
+            <dd>{{ $user->last_login ?? 'Never'}}</dd>
             <dt>Roles</dt>
             <dd>
                 @if ($user->hasRoles())
