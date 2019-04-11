@@ -129,7 +129,7 @@ class User extends Model implements
     /**
         This returns an array of fixed length (the number of required project choices)
         for use in HTML tables (most in the admin/convenor reports)
-    */
+     */
     public function projectsArray($index = null)
     {
         $projectArray = [];
@@ -142,7 +142,7 @@ class User extends Model implements
             $projectArray[$offset] = $project;
             $offset = $offset + 1;
         }
-        if (! is_null($index)) {
+        if (!is_null($index)) {
             return $projectArray[$index];
         }
         return $projectArray;
@@ -197,7 +197,7 @@ class User extends Model implements
     /**
         Returns a JSON encoded map of the projects available to this student.
         For use in the Vue.js code where students can pick projects.
-    */
+     */
     public function availableProjectsJson()
     {
         $studentCourses = $this->courses->pluck('id')->toArray(); //94
@@ -205,6 +205,9 @@ class User extends Model implements
             $query->whereIn('course_id', $studentCourses);
         })->get()->filter(function ($project) {
             if ($this->isSingleDegree() && $project->institution == 'UoG') {
+                return false;
+            }
+            if ($project->isFullySubscribed()) {
                 return false;
             }
             if (!$project->isAvailable()) {
@@ -269,7 +272,7 @@ class User extends Model implements
 
     public function isStaff()
     {
-        return ! $this->is_student;
+        return !$this->is_student;
     }
 
     public function hasRoles()
@@ -305,7 +308,7 @@ class User extends Model implements
 
     public function isAllocated()
     {
-        return ! $this->unallocated();
+        return !$this->unallocated();
     }
 
     public function allocatedProject()

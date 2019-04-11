@@ -31,7 +31,7 @@ class StudentProjectTest extends TestCase
         $projectNotForStudentsCourse = factory(Project::class)->create();
 
         $response = $this->actingAs($student)
-                        ->get('/');
+            ->get('/');
 
         $response->assertStatus(200);
         $response->assertSee('Available Projects');
@@ -54,32 +54,32 @@ class StudentProjectTest extends TestCase
         $project->acceptStudent($student2);
 
         $response = $this->actingAs($student)
-                        ->get('/');
+            ->get('/');
 
         $response->assertStatus(200);
         $response->assertSee('Available Projects');
         $response->assertDontSee($project->title);
     }
 
-    // public function test_student_cant_see_projects_which_the_maximum_number_have_already_applied()
-    // {
-    //     ProjectConfig::setOption('round', 1);
-    //     $otherStudents = factory(User::class, 6)->states('student')->create();
-    //     $student = factory(User::class)->states('student')->create();
-    //     $course = factory(Course::class)->create();
-    //     $course->students()->save($student);
-    //     $project = factory(Project::class)->create(['maximum_students' => 1]);
-    //     $project->courses()->save($course);
-    //     $project->students()->saveMany($otherStudents);
+    public function test_student_cant_see_projects_which_the_maximum_number_have_already_applied()
+    {
+        ProjectConfig::setOption('round', 1);
+        $otherStudents = factory(User::class, 6)->states('student')->create();
+        $student = factory(User::class)->states('student')->create();
+        $course = factory(Course::class)->create();
+        $course->students()->save($student);
+        $project = factory(Project::class)->create(['maximum_students' => 1]);
+        $project->courses()->save($course);
+        $project->students()->saveMany($otherStudents);
 
-    //     ProjectConfig::setOption('maximum_applications', 6);
-    //     $response = $this->actingAs($student)
-    //                     ->get('/');
+        ProjectConfig::setOption('maximum_applications', 6);
+        $response = $this->actingAs($student)
+            ->get('/');
 
-    //     $response->assertStatus(200);
-    //     $response->assertSee('Available Projects');
-    //     $response->assertDontSee($project->title);
-    // }
+        $response->assertStatus(200);
+        $response->assertSee('Available Projects');
+        $response->assertDontSee($project->title);
+    }
 
     public function test_a_student_must_apply_for_the_required_number_of_projects()
     {
@@ -90,14 +90,14 @@ class StudentProjectTest extends TestCase
 
         ProjectConfig::setOption('required_choices', $required);
         $response = $this->actingAs($student)
-                        ->post(route('choices.update'), ['uogChoices' => implode(',', range(1, $required - 1))]);
+            ->post(route('choices.update'), ['uogChoices' => implode(',', range(1, $required - 1))]);
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
         $response->assertSessionHasErrors(['choice_number']);
 
         $response = $this->actingAs($student)
-                        ->post(route('choices.update'), ['uogChoices' => implode(',', range(1, $required + 1))]);
+            ->post(route('choices.update'), ['uogChoices' => implode(',', range(1, $required + 1))]);
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -105,7 +105,8 @@ class StudentProjectTest extends TestCase
     }
 
     /** @test */
-    public function a_student_must_apply_for_correct_number_of_uog_and_uestc_projects () {
+    public function a_student_must_apply_for_correct_number_of_uog_and_uestc_projects()
+    {
         ProjectConfig::setOption('round', 1);
         $student = factory(User::class)->states('student')->create();
         factory(Project::class, 3)->create();
@@ -137,16 +138,16 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => implode(',', range(1, 3)),
-            'uestcChoices' => implode(',', range(4,9)),
+            'uestcChoices' => implode(',', range(4, 9)),
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
         $response->assertSessionHas(['success_message' => 'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.']);
-
     }
 
     /** @test */
-    public function a_student_must_apply_for_projects_that_do_not_have_the_same_supervisor () {
+    public function a_student_must_apply_for_projects_that_do_not_have_the_same_supervisor()
+    {
         ProjectConfig::setOption('round', 1);
         config(['projects.uestc_unique_supervisors' => true]);
         config(['projects.uog_unique_supervisors' => true]);
@@ -158,8 +159,8 @@ class StudentProjectTest extends TestCase
         factory(Project::class, 6)->create(['institution' => 'UESTC']);
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
-            'uogChoices' => implode(',',range(1, 3)),
-            'uestcChoices' => implode(',',range(4, 9)),
+            'uogChoices' => implode(',', range(1, 3)),
+            'uestcChoices' => implode(',', range(4, 9)),
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -357,10 +358,10 @@ class StudentProjectTest extends TestCase
         $projectIds = $projects->pluck('id')->toArray();
         $uestcProjectIds = $uestcProjects->pluck('id')->toArray();
         $response = $this->actingAs($student)
-                        ->post(route('choices.update', [
-                            'uogChoices' => implode(',', $projectIds),
-                            'uestcChoices' => implode(',', $uestcProjectIds),
-                        ]));
+            ->post(route('choices.update', [
+                'uogChoices' => implode(',', $projectIds),
+                'uestcChoices' => implode(',', $uestcProjectIds),
+            ]));
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -389,10 +390,10 @@ class StudentProjectTest extends TestCase
         $projectIds = $otherProjects->pluck('id')->toArray();
         $uestcProjectIds = $uestcProjects->pluck('id')->toArray();
         $response = $this->actingAs($student)
-                        ->post(route('choices.update', [
-                            'uogChoices' => implode(',', $projectIds),
-                            'uestcChoices' => implode(',', $uestcProjectIds)
-                        ]));
+            ->post(route('choices.update', [
+                'uogChoices' => implode(',', $projectIds),
+                'uestcChoices' => implode(',', $uestcProjectIds)
+            ]));
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -453,10 +454,10 @@ class StudentProjectTest extends TestCase
         $projectIds = $projects->pluck('id')->toArray();
         $uestcProjectIds = $uestcProjects->pluck('id')->toArray();
         $response = $this->actingAs($student)
-                        ->post(route('choices.update'), [
-                            'uestcChoices' => implode(',', $uestcProjectIds),
-                            'uogChoices' => implode(',', $projectIds),
-                        ]);
+            ->post(route('choices.update'), [
+                'uestcChoices' => implode(',', $uestcProjectIds),
+                'uogChoices' => implode(',', $projectIds),
+            ]);
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -477,7 +478,7 @@ class StudentProjectTest extends TestCase
 
         ProjectConfig::setOption('applications_allowed', 0);
         $response = $this->actingAs($student)
-                        ->post(route('choices.update', ['uogchoices' => $projectIds]));
+            ->post(route('choices.update', ['uogchoices' => $projectIds]));
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -498,7 +499,7 @@ class StudentProjectTest extends TestCase
         $project1->acceptStudent($student);
 
         $response = $this->actingAs($student)
-                        ->get('/');
+            ->get('/');
 
         $response->assertStatus(200);
         $response->assertSee('You are allocated to the project');
@@ -524,7 +525,7 @@ class StudentProjectTest extends TestCase
 
 
         $response = $this->actingAs($student)
-                        ->get('/');
+            ->get('/');
 
         $response->assertStatus(200);
         $response->assertSee('Your choices');
