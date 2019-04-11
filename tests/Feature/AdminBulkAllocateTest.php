@@ -52,11 +52,11 @@ class AdminBulkAllocateTest extends TestCase
         $response = $this->actingAs($admin)->post(route('bulkallocate.update'), $data);
 
         Notification::assertSentTo(
-                    $student,
-                    AllocatedToProject::class,
-                    function ($notification, $channels) use ($project) {
-                        return $notification->project->id === $project->id;
-                    }
+            $student,
+            AllocatedToProject::class,
+            function ($notification, $channels) use ($project) {
+                return $notification->project->id === $project->id;
+            }
         );
     }
 
@@ -81,5 +81,4 @@ class AdminBulkAllocateTest extends TestCase
         $this->assertDatabaseHas('project_student', ['project_id' => $project1->id, 'user_id' => $student1->id, 'accepted' => true]);
         $this->assertDatabaseMissing('project_student', ['project_id' => $project1->id, 'user_id' => $student2->id, 'accepted' => true]);
     }
-
 }
