@@ -27,6 +27,12 @@ class AuthController extends Controller
         $this->ldap = $ldap;
     }
 
+    public function index()
+    {
+        $data['page_title'] = "Log In";
+        return View::make('login_form', $data);
+    }
+
     public function login(Request $request)
     {
         $username = trim(strtolower($request->input('username')));
