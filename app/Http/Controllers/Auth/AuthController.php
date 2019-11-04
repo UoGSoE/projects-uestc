@@ -30,7 +30,7 @@ class AuthController extends Controller
     public function index()
     {
         $data['page_title'] = "Log In";
-        return View::make('login_form', $data);
+        return view('login_form', compact('data'));
     }
 
     public function login(Request $request)
