@@ -3,6 +3,8 @@
             <tr>
                 <th>Project Title</th>
                 <th>Owner</th>
+                <th>Sup. Name</th>
+                <th>Sup. Email</th>
                 <th>University</th>
                 <th>Disciplines</th>
                 <th>1st round choices</th>
@@ -28,6 +30,12 @@
                         <a href="{!! action('UserController@show', $project->owner->id) !!}">
                             {{ $project->owner->fullName() }}
                         </a>
+                    </td>
+                    <td>
+                        {{  $project->supervisor_name }}
+                    </td>
+                    <td>
+                        {{  $project->supervisor_email }}
                     </td>
                     <td>
                         {{ $project->institution }}

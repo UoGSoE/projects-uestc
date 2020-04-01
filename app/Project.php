@@ -15,7 +15,7 @@ class Project extends Model
 {
     protected $fillable = [
         'title', 'description', 'prereq', 'is_active', 'user_id', 'type_id',
-        'maximum_students', 'institution'
+        'maximum_students', 'institution', 'supervisor_name', 'supervisor_email'
     ];
 
     protected $casts = [

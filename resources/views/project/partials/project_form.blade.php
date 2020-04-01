@@ -49,6 +49,17 @@
                     </option>
             </select>
         </div>
+
+        <div class="form-group">
+            <label for="inputSupervisorName">Supervisor Name</label>
+            <input type="text" id="inputSupervisorName" name="supervisor_name" value="{{ old('supervisor_name', $project->supervisor_name ? $project->supervisor_name : auth()->user()->fullName()) }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="inputSupervisorEmail">Supervisor Email</label>
+            <input type="text" id="inputSupervisorEmail" name="supervisor_email" value="{{ old('supervisor_email', $project->supervisor_email ? $project->supervisor_email : auth()->user()->email) }}" class="form-control">
+        </div>
+
         <input type="hidden" name="maximum_students" value="1">
         @can('edit_projects')
             <div class="form-group">

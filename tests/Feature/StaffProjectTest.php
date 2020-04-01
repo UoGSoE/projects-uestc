@@ -25,13 +25,37 @@ class StaffProjectTest extends TestCase
     {
         $this->regularUser = factory(User::class)->states('staff')->create();
 
+        $response = $this->actingAs($this->regularUser)->get(route('project.create'));
+
+        $response->assertStatus(200);
+
+        $data = $this->defaultProjectData(['institution' => 'UESTC']);
+
         $response = $this->actingAs($this->regularUser)
-                        ->post(route('project.store'), $this->defaultProjectData(['institution' => 'UESTC']));
+                        ->post(route('project.store'), $data);
 
         $response->assertStatus(302);
         $this->assertDatabaseHas('projects', ['title' => 'DEFAULTTITLE',  'institution' => 'UESTC']);
         $project = Project::first();
         $response->assertRedirect(route('project.show', $project->id));
+        // 'title' => 'DEFAULTTITLE',
+        // 'description' => 'DEFAULTDESCRIPTION',
+        // 'is_active' => true,
+        // 'user_id' => $this->regularUser ? $this->regularUser->id : 1,
+        // 'maximum_students' => 1,
+        // 'courses' => [1 => $course->id],
+        // 'discipline_id' => 1,
+        // 'institution' => 'UoG',
+
+        $this->assertEquals($data['title'], $project->title);
+        $this->assertEquals($data['description'], $project->description);
+        $this->assertTrue($data['is_active'], $project->is_active);
+        $this->assertEquals($data['user_id'], $project->user_id);
+        $this->assertEquals($data['maximum_students'], $project->maximum_students);
+        $this->assertEquals([1], $project->courses->pluck('id')->toArray());
+        $this->assertEquals($data['institution'], $project->institution);
+        $this->assertEquals($data['supervisor_name'], $project->supervisor_name);
+        $this->assertEquals($data['supervisor_email'], $project->supervisor_email);
     }
 
     /** @test */
@@ -128,13 +152,19 @@ class StaffProjectTest extends TestCase
         $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
 
         $response = $this->actingAs($this->regularUser)
-                        ->post(route('project.update', $project->id), $this->defaultProjectData(['title' => 'UPDATEDPROJECT']));
+                        ->post(route('project.update', $project->id), $this->defaultProjectData([
+                            'title' => 'UPDATEDPROJECT',
+                            'supervisor_name' => 'Boris',
+                            'supervisor_email' => 'boris@example.com'
+                        ]));
 
         $response->assertStatus(302);
         $this->assertDatabaseHas('projects', ['title' => 'UPDATEDPROJECT']);
         $this->assertDatabaseMissing('projects', ['title' => $project->title]);
         $project = Project::first();
         $response->assertRedirect(route('project.show', $project->id));
+        $this->assertEquals('Boris', $project->supervisor_name);
+        $this->assertEquals('boris@example.com', $project->supervisor_email);
     }
 
     public function test_staff_cant_edit_someone_elses_project()
@@ -376,6 +406,8 @@ class StaffProjectTest extends TestCase
             'courses' => [1 => $course->id],
             'discipline_id' => 1,
             'institution' => 'UoG',
+            'supervisor_name' => 'Big Bird',
+            'supervisor_email' => 'squawk@example.com',
         ], $overrides);
     }
 }
