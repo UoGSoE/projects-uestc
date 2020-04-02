@@ -260,7 +260,7 @@ class Project extends Model
     {
         foreach ($files as $file) {
             $originalName = $file->getClientOriginalName();
-            $size = $file->getClientSize();
+            $size = $file->getSize();
             $extension = preg_replace('/[^a-z0-9]/i', '', $file->getClientOriginalExtension());
             $newName = $this->id . '/' . md5(time()) . '.' . $extension;
             $projFile = $this->files()->create([

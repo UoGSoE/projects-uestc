@@ -28,6 +28,7 @@ class BulkAllocationTest extends DuskTestCase
         $this->browse(function ($browser) use ($student1, $student2, $project1, $project2, $admin) {
             $browser->loginAs($admin)
                     ->visit('/')
+                    ->clickLink('Reports')
                     ->clickLink('Bulk Allocations')
                     ->assertSee('This page lets you bulk-allocate students')
                     ->assertSee($project1->title)

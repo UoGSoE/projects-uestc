@@ -6,6 +6,7 @@ use Excel;
 use App\User;
 use App\EventLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
 class StaffImportController extends Controller
@@ -18,7 +19,8 @@ class StaffImportController extends Controller
     public function update(Request $request)
     {
         $newUsers = [];
-        $rows = SimpleExcelReader::create($request->file('file'))->noHeaderRow()->getRows();
+        $file = Storage::put('tmp', $request->file('file'));
+        $rows = SimpleExcelReader::create(storage_path("app/{$file}"))->noHeaderRow()->getRows();
         foreach ($rows as $row) {
             $newUser = User::fromSpreadsheetData($row);
             if ($newUser) {

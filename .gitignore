@@ -6,4 +6,5 @@ Homestead.json
 .env.dusk.local
 .DS_Store
 public/*.xlsx
+.phpunit.result.cache
 

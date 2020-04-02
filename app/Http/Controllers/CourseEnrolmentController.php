@@ -7,6 +7,7 @@ use App\User;
 use App\Course;
 use App\EventLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
 class CourseEnrolmentController extends Controller
@@ -16,13 +17,16 @@ class CourseEnrolmentController extends Controller
     public function edit($id)
     {
         $course = Course::findOrFail($id);
-        return view('course.edit_students', compact('course'));
+        return view('course.edit_students', [
+            'course' => $course,
+        ]);
     }
 
     public function update(Request $request, $id)
     {
         $course = Course::findOrFail($id);
-        $rows = SimpleExcelReader::create($request->file('file'))->noHeaderRow()->getRows();
+        $file = Storage::put('tmp', $request->file('file'));
+        $rows = SimpleExcelReader::create(storage_path("app/{$file}"))->noHeaderRow()->getRows();
         $students = User::students()->get();
         $rows->each(function ($row) use ($students) {
             $this->studentIds[] = $this->parseExcelRow($row, $students);

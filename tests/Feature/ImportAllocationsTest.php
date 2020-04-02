@@ -59,7 +59,7 @@ class ImportAllocationsTest extends TestCase
         copy('tests/data/allocations.xlsx', 'tests/data/allocations2.xlsx');
 
         $response = $this->actingAs($admin)->call('POST', route('allocations.do_import'), [], [], [
-            'allocations' => new UploadedFile(base_path('tests/data/allocations2.xlsx'), 'allocations2.xlsx', null, null, null, true)]
+            'allocations' => new UploadedFile(base_path('tests/data/allocations2.xlsx'), 'allocations2.xlsx', null, null, false)]
         );
 
         $response->assertStatus(302);

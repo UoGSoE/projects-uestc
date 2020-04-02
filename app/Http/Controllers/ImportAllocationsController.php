@@ -7,6 +7,7 @@ use App\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
 class ImportAllocationsController extends Controller
@@ -18,7 +19,8 @@ class ImportAllocationsController extends Controller
     public function update(Request $request)
     {
         $this->skipped_lines = new MessageBag;
-        $rows = SimpleExcelReader::create($request->file('allocations'))->noHeaderRow()->getRows();
+        $file = Storage::put('tmp', $request->file('allocations'));
+        $rows = SimpleExcelReader::create(storage_path("app/{$file}"))->noHeaderRow()->getRows();
 
 
         foreach ($rows as $lineNumber => $row) {
