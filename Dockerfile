@@ -2,7 +2,7 @@
 ARG PHP_DEV_VERSION=7.4
 
 ### Build JS/css assets
-FROM node:12 as frontend
+FROM node:10 as frontend
 
 USER node
 WORKDIR /home/node
