@@ -1,17 +1,28 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 use App\User;
+
+use App\Course;
 use App\Project;
 use App\Discipline;
-use App\Course;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Mail;
 
 class TestDataSeeder extends Seeder
 {
     public function run()
     {
+        Mail::fake();
+        $admin = factory(User::class)->create([
+            'username' => 'admin',
+            'password' => bcrypt('secret'),
+            'email' => 'admin@example.com',
+            'surname' => 'admin',
+            'forenames' => 'admin',
+            'is_admin' => true,
+        ]);
         $course = factory(Course::class)->create();
+        $course2 = factory(Course::class)->create();
         $disciplines = [
             'Communications',
             'Control',
@@ -34,6 +45,8 @@ class TestDataSeeder extends Seeder
             });
         }
         $students = factory(User::class, 15)->states('student')->create(['degree_type' => null]);
+        $course->students()->sync($students->pluck('id'));
+        $students = factory(User::class, 15)->states('student')->create(['degree_type' => 'Single']);
         $course->students()->sync($students->pluck('id'));
     }
 }

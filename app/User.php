@@ -8,6 +8,7 @@ use App\EventLog;
 use App\ProjectRound;
 use App\PasswordReset;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -244,7 +245,7 @@ class User extends Model implements
             'chosen' => false,
             'discipline' => $project->disciplineTitle(),
             'institution' => $project->institution,
-            'discipline_css' => str_slug($project->disciplineTitle()),
+            'discipline_css' => Str::slug($project->disciplineTitle()),
             'owner' => $project->owner->fullName(),
             'links' => $project->links->toArray(),
             'files' => $project->files->toArray(),
@@ -366,7 +367,7 @@ class User extends Model implements
     {
         $token = PasswordReset::create([
             'user_id' => $this->id,
-            'token' => strtolower(str_random(32)),
+            'token' => strtolower(Str::random(32)),
         ]);
         $this->notify(new StaffPasswordNotification($token));
         EventLog::log($this->id, 'Generated a password creation email');

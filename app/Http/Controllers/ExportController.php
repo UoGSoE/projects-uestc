@@ -2,79 +2,109 @@
 
 namespace App\Http\Controllers;
 
-use Excel;
 use App\User;
 use App\Project;
 use App\ProjectConfig;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class ExportController extends Controller
 {
     public function allocations()
     {
-        $sheet = Excel::create('ProjectAllocations', function ($excel) {
-            $excel->sheet('Sheet1', function ($sheet) {
-                $projects = Project::active()->with('owner', 'students', 'acceptedStudents', 'discipline')->orderBy('title')->get();
-                $excel = true;
-                $sheet->loadView('report.partials.project_list', compact('projects', 'excel'));
-            });
-        })->store('xlsx', false, true);
-        return response()->download($sheet['full'], 'allocations.xlsx');
+        $filename = 'project_allocations_' . now()->format('d_m_Y') . '.xlsx';
+        $writer = SimpleExcelWriter::create(public_path($filename));
+        $projects = Project::active()->with('owner', 'students', 'acceptedStudents', 'discipline')->orderBy('title')->get();
+        $projects->each(function ($project) use ($writer) {
+            $writer->addRow([
+                'Project Title' => $project->is_active ? $project->title : "[Inactive] {$project->title}",
+                'Owner' => $project->owner->fullName(),
+                'Sup. Name' => $project->supervisor_name,
+                'Sup. Email' => $project->supervisor_email,
+                'University' => $project->institution,
+                'Disciplines' => $project->getDisciplineTitles(),
+                '1st round choices' => $project->roundStudentCount(1),
+                'Allocated?' => $project->numberAccepted() ? 'Y' : 'N',
+                'Project Description' => $project->description,
+            ]);
+        });
+        return response()->download(public_path($filename));
     }
 
     public function allStudents()
     {
-        $sheet = Excel::create('ProjectAllocations', function ($excel) {
-            $excel->sheet('Sheet1', function ($sheet) {
-                $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
-                $singleDegreeReq = ProjectConfig::getOption('single_uog_required_choices', config('projects.single_uog_required_choices'))
-                                 + ProjectConfig::getOption('single_uestc_required_choices', config('projects.single_uestc_required_choices'));
-                $dualDegreeReq = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices'))
-                    + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'));
-                $required = $singleDegreeReq >= $dualDegreeReq ? $singleDegreeReq : $dualDegreeReq;
-                $excel = true;
-                $sheet->loadView('report.partials.student_list', compact('students', 'required', 'excel'));
-            });
-        })->store('xlsx', false, true);
-        return response()->download($sheet['full'], 'all_students.xlsx');
+        $filename = 'all_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $writer = SimpleExcelWriter::create(public_path($filename));
+        $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
+        // @TODO remove this _if_ we are sure we can avoid having blank entries for the number of projects
+        // $singleDegreeReq = ProjectConfig::getOption('single_uog_required_choices', config('projects.single_uog_required_choices'))
+        //                     + ProjectConfig::getOption('single_uestc_required_choices', config('projects.single_uestc_required_choices'));
+        // $dualDegreeReq = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices'))
+        //                     + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'));
+        // $required = $singleDegreeReq >= $dualDegreeReq ? $singleDegreeReq : $dualDegreeReq;
+
+        $this->buildStudentRows($students, $writer);
+
+        return response()->download(public_path($filename));
     }
 
     public function singleDegreeStudents()
     {
-        $sheet = Excel::create('ProjectAllocations', function ($excel) {
-            $excel->sheet('Sheet1', function ($sheet) {
-                $students = User::students()->singleDegree()->with('courses', 'projects')->orderBy('surname')->get();
-                $required = ProjectConfig::getOption('single_uestc_required_choices', config('projects.single_uestc_required_choices'))
-                          + ProjectConfig::getOption('single_uog_required_choices', config('projects.single_uog_required_choices'));
-                $excel = true;
-                $sheet->loadView('report.partials.student_list', compact('students', 'required', 'excel'));
-            });
-        })->store('xlsx', false, true);
-        return response()->download($sheet['full'], 'single_degree_students.xlsx');
+        $filename = 'single_degree_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $writer = SimpleExcelWriter::create(public_path($filename));
+        $students = User::students()->singleDegree()->with('courses', 'projects')->orderBy('surname')->get();
+
+        $this->buildStudentRows($students, $writer);
+
+        return response()->download(public_path($filename));
     }
 
     public function dualDegreeStudents()
     {
-        $sheet = Excel::create('ProjectAllocations', function ($excel) {
-            $excel->sheet('Sheet1', function ($sheet) {
-                $students = User::students()->dualDegree()->with('courses', 'projects')->orderBy('surname')->get();
-                $required['uestc'] = ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'));
-                $required['uog'] = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices'));
-                $excel = true;
-                $sheet->loadView('report.partials.dual_student_list', compact('students', 'required', 'excel'));
-            });
-        })->store('xlsx', false, true);
-        return response()->download($sheet['full'], 'dual_degree_students.xlsx');
+        $filename = 'dual_degree_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $writer = SimpleExcelWriter::create(public_path($filename));
+        $students = User::students()->dualDegree()->with('courses', 'projects')->orderBy('surname')->get();
+
+        $this->buildStudentRows($students, $writer);
+
+        return response()->download(public_path($filename));
     }
 
     public function staff()
     {
-        $sheet = Excel::create('ProjectAllocations', function ($excel) {
-            $excel->sheet('Sheet1', function ($sheet) {
-                $users = User::staff()->with('projects')->orderBy('surname')->get();
-                $sheet->loadView('report.partials.staff_list', compact('users', 'excel'));
+        $filename = 'project_staff_list_' . now()->format('d_m_Y') . '.xlsx';
+        $writer = SimpleExcelWriter::create(public_path($filename));
+        $users = User::staff()->with('projects')->orderBy('surname')->get();
+        $users->each(function ($user) use ($writer) {
+            $writer->addRow([
+                'Name' => $user->fullName(),
+                'University' => $user->institution,
+                'Projects' => $user->projects->count(),
+                'Active Projects' => $user->activeProjects->count(),
+                'Inactive Projects' => $user->inactiveProjects->count(),
+                'Applied' => $user->totalStudents(),
+                'Accepted' => $user->totalAcceptedStudents(),
+            ]);
+        });
+
+        return response()->download(public_path($filename));
+    }
+
+    protected function buildStudentRows(Collection $students, SimpleExcelWriter $writer): void
+    {
+        $students->each(function ($student) use ($writer) {
+            $data = [
+                'GUID' => $student->username,
+                'Name' => $student->fullName(),
+            ];
+            $student->projects()->UESTC()->orderBy('preference')->get()->each(function ($project) use ($data) {
+                $data["Choice {$project->preference}"] = $project->institution . ' ' . $project->title;
             });
-        })->store('xlsx', false, true);
-        return response()->download($sheet['full'], 'staff.xlsx');
+            $student->projects()->UoG()->orderBy('preference')->get()->each(function ($project) use ($data) {
+                $data["Choice {$project->preference}"] = $project->institution . ' ' . $project->title;
+            });
+            $writer->addRow($data);
+        });
     }
 }

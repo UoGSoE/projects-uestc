@@ -34,7 +34,9 @@ class ImportAllocationsTest extends TestCase
     }
 
     /** @test */
-    public function import_spreadsheet_to_allocate_student_projects () {
+    public function import_spreadsheet_to_allocate_student_projects ()
+    {
+        $this->withoutExceptionHandling();
         Notification::fake();
         ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();

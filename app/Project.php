@@ -227,6 +227,19 @@ class Project extends Model
         return $this->courses->contains($id);
     }
 
+    public function getDisciplineTitles()
+    {
+        if ($this->discipline_id) {
+            return $this->discipline->title;
+        }
+
+        if ($this->disciplines->count()) {
+            return $this->disciplines->pluck('title')->implode(', ');
+        }
+
+        return 'N/A';
+    }
+
     public function syncLinks($links)
     {
         ProjectLink::where('project_id', '=', $this->id)->delete();

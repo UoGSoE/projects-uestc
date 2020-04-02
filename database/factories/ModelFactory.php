@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Str;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -20,7 +22,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'is_student' => false,
         'last_login' => $faker->dateTimeThisYear(),
         'is_admin' => false,
-        'remember_token' => str_random(10),
+        'remember_token' => Str::random(10),
         'institution' => 'UoG',
         'degree_type' => 'Dual',
     ];
@@ -98,7 +100,7 @@ $factory->define(App\ProjectType::class, function (Faker\Generator $faker) {
 $factory->define(App\PasswordReset::class, function (Faker\Generator $faker) {
     return [
         'user_id' => $faker->randomNumber(),
-        'token' => strtolower(str_random(32)),
+        'token' => strtolower(Str::random(32)),
     ];
 });
 

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -15,7 +16,7 @@ class PasswordResetTest extends TestCase
     {
         $user = $this->createStaff();
         $token = $this->createToken(['user_id' => $user->id]);
-        $password = str_random(20);
+        $password = Str::random(20);
 
         $response = $this->post(route('password.do_reset', $token), [
             'password1' => $password,
@@ -30,7 +31,7 @@ class PasswordResetTest extends TestCase
     {
         $user = $this->createStaff();
         $token = $this->createToken(['user_id' => $user->id]);
-        $password = str_random(2);
+        $password = Str::random(2);
 
         $response = $this->fromUrl(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
             'password1' => $password,
@@ -46,7 +47,7 @@ class PasswordResetTest extends TestCase
     {
         $user = $this->createStaff();
         $token = $this->createToken(['user_id' => $user->id]);
-        $password = str_random(2);
+        $password = Str::random(2);
 
         $response = $this->fromUrl(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
             'password1' => $password,
@@ -62,7 +63,7 @@ class PasswordResetTest extends TestCase
     {
         $user = $this->createStaff();
         $token = $this->createToken(['user_id' => $user->id, 'created_at' => \Carbon\Carbon::now()->subDays(100)]);
-        $password = str_random(20);
+        $password = Str::random(20);
 
         $response = $this->fromUrl(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
             'password1' => $password,
@@ -77,7 +78,7 @@ class PasswordResetTest extends TestCase
     public function test_invalid_reset_token()
     {
         $user = $this->createStaff();
-        $password = str_random(20);
+        $password = Str::random(20);
 
         $response = $this->fromUrl(route('password.reset', 'NOTATOKEN'))->post(route('password.do_reset', 'NOTATOKEN'), [
             'password1' => $password,

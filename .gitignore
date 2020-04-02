@@ -5,3 +5,5 @@ Homestead.json
 .env
 .env.dusk.local
 .DS_Store
+public/*.xlsx
+

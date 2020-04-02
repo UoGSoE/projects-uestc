@@ -1,21 +1,22 @@
 <?php namespace App\Http\Controllers\Auth;
 
+use DB;
+use Log;
+use Auth;
+use Mail;
+use App\User;
 use App\EventLog;
-use App\FundingType;
-use App\Http\Controllers\Auth\Ldap;
-use App\Http\Controllers\Controller;
 use App\Location;
+use App\UserType;
+use App\UserGroup;
+use Carbon\Carbon;
+use App\FundingType;
 use App\PasswordReset;
 use App\ProjectConfig;
-use App\User;
-use App\UserGroup;
-use App\UserType;
-use Auth;
-use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Log;
-use Mail;
+use App\Http\Controllers\Auth\Ldap;
+use App\Http\Controllers\Controller;
 
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
@@ -145,7 +146,7 @@ class AuthController extends Controller
         }
         $token = PasswordReset::create([
             'user_id' => $user->id,
-            'token' => strtolower(str_random(32)),
+            'token' => strtolower(Str::random(32)),
         ]);
         Mail::send('emails.reset_password', ['token' => $token], function ($m) use ($user) {
             $m->from('donotreply@eng.gla.ac.uk', '[UoG] Student Projects');

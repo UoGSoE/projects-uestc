@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Auth;
+use App\User;
 use App\Course;
 use App\EventLog;
-use App\User;
-use Auth;
-use Excel;
+use Illuminate\Http\Request;
+use Spatie\SimpleExcel\SimpleExcelReader;
 
 class CourseEnrolmentController extends Controller
 {
+    protected $studentIds;
+
     public function edit($id)
     {
         $course = Course::findOrFail($id);
@@ -20,15 +22,13 @@ class CourseEnrolmentController extends Controller
     public function update(Request $request, $id)
     {
         $course = Course::findOrFail($id);
-        $studentIds = [];
-        $sheet = Excel::load($request->file('file'))->get();
-        $rows = $sheet->first();
+        $rows = SimpleExcelReader::create($request->file('file'))->noHeaderRow()->getRows();
         $students = User::students()->get();
-        foreach ($rows as $row) {
-            $studentIds[] = $this->parseExcelRow($row, $students);
-        }
-        $studentIds = array_filter($studentIds);    // strip out any null-like keys
-        $course->students()->sync($studentIds);
+        $rows->each(function ($row) use ($students) {
+            $this->studentIds[] = $this->parseExcelRow($row, $students);
+        });
+        $this->studentIds = array_filter($this->studentIds);    // strip out any null-like keys
+        $course->students()->sync($this->studentIds);
         EventLog::log(Auth::user()->id, "Updated student list for course {$course->title} {$course->code}");
         return redirect()->action('CourseController@show', $id);
     }

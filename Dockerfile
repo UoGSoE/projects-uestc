@@ -1,8 +1,8 @@
 ### PHP version we are targetting
-ARG PHP_VERSION=7.2
+ARG PHP_DEV_VERSION=7.4
 
 ### Build JS/css assets
-FROM node:10 as frontend
+FROM node:12 as frontend
 
 USER node
 WORKDIR /home/node
@@ -22,7 +22,7 @@ RUN npm install && \
     npm cache clean --force
 
 ### And build the prod app
-FROM uogsoe/soe-php-apache:${PHP_VERSION} as prod
+FROM uogsoe/soe-php-apache:${PHP_DEV_VERSION} as prod
 
 WORKDIR /var/www/html
 
