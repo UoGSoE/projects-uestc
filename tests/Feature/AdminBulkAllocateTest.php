@@ -19,7 +19,7 @@ class AdminBulkAllocateTest extends TestCase
     /** @test */
     public function admin_can_bulk_allocate_students()
     {
-        if (env('CI')) {
+        if (env("CI")) {
             $this->markTestSkipped('Not doing ldap stuff in CI');
         }
 

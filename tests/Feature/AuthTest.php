@@ -35,7 +35,7 @@ class AuthTest extends TestCase
     /** @test */
     public function an_invalid_password_fails()
     {
-        if (env('CI')) {
+        if (env("CI")) {
             $this->markTestSkipped('Not doing ldap stuff in CI');
         }
 
