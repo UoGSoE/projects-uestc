@@ -35,6 +35,10 @@ class AuthTest extends TestCase
     /** @test */
     public function an_invalid_password_fails()
     {
+        if (env('CI')) {
+            $this->markTestSkipped('Not doing ldap stuff in CI');
+        }
+
         config(['ldap.authentication' => true]);
         $user = $this->createStaff(['password' => bcrypt('HELLOKITTY1234')]);
 

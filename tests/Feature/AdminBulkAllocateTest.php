@@ -19,7 +19,10 @@ class AdminBulkAllocateTest extends TestCase
     /** @test */
     public function admin_can_bulk_allocate_students()
     {
-        $this->withoutExceptionHandling();
+        if (env('CI')) {
+            $this->markTestSkipped('Not doing ldap stuff in CI');
+        }
+
         ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();
         $project1 = $this->createProject();
