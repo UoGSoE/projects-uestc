@@ -202,7 +202,12 @@ class User extends Model implements
     {
         $maxAllowed = ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6));
         $studentCourses = $this->courses->pluck('id')->toArray(); //94
-        $projects = Project::with(['discipline', 'disciplines', 'owner', 'students'])->whereHas('courses', function ($query) use ($studentCourses) {
+        $projects = Project::with(['links', 'files', 'discipline', 'disciplines', 'owner', 'students'])->withCount([
+            'students as accepted_students_count' => function ($query) {
+                $query->where('accepted', '=', 1);
+            },
+            'students',
+        ])->whereHas('courses', function ($query) use ($studentCourses) {
             $query->whereIn('course_id', $studentCourses);
         })->get()->filter(function ($project) use ($maxAllowed) {
             if ($this->isSingleDegree() && $project->institution == 'UoG') {
@@ -240,7 +245,12 @@ class User extends Model implements
             $this->maxAllowed = ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6));
         }
 
-        $popularityPercent = 100 * ($project->students()->count() / $this->maxAllowed);
+        if (array_key_exists('students_count', $project->attributes)) {
+            $studentCount = $project->students_count;
+        } else {
+            $studentCount = $project->students()->count();
+        }
+        $popularityPercent = 100 * ($studentCount / $this->maxAllowed);
         return [
             'id' => $project->id,
             'title' => $project->title,

@@ -129,11 +129,18 @@ class Project extends Model
         if (! $maxAllowed) {
             $maxAllowed = ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6));
         }
+        if (array_key_exists('students_count', $this->attributes)) {
+            return $this->students_count >= $maxAllowed;
+        }
+
         return $this->students()->count() >= $maxAllowed;
     }
 
     public function isFull()
     {
+        if (array_key_exists('accepted_students_count', $this->attributes)) {
+            return $this->accepted_students_count >= $this->maximum_students;
+        }
         return $this->acceptedStudents()->count() >= $this->maximum_students;
     }
 
