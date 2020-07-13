@@ -201,7 +201,7 @@ class User extends Model implements
     public function availableProjectsJson()
     {
         $studentCourses = $this->courses->pluck('id')->toArray(); //94
-        $projects = Project::whereHas('courses', function ($query) use ($studentCourses) {
+        $projects = Project::with(['discipline', 'disciplines', 'owner', 'students'])->whereHas('courses', function ($query) use ($studentCourses) {
             $query->whereIn('course_id', $studentCourses);
         })->get()->filter(function ($project) {
             if ($this->isSingleDegree() && $project->institution == 'UoG') {
@@ -235,7 +235,11 @@ class User extends Model implements
 
     public function projectForJSON($project)
     {
-        $popularityPercent = 100 * ($project->students()->count() / ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6)));
+        if (! $this->maxAllowed) {
+            $this->maxAllowed = ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6));
+        }
+
+        $popularityPercent = 100 * ($project->students()->count() / $this->maxAllowed);
         return [
             'id' => $project->id,
             'title' => $project->title,
