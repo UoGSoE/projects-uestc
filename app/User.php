@@ -200,17 +200,18 @@ class User extends Model implements
      */
     public function availableProjectsJson()
     {
+        $maxAllowed = ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6));
         $studentCourses = $this->courses->pluck('id')->toArray(); //94
         $projects = Project::with(['discipline', 'disciplines', 'owner', 'students'])->whereHas('courses', function ($query) use ($studentCourses) {
             $query->whereIn('course_id', $studentCourses);
-        })->get()->filter(function ($project) {
+        })->get()->filter(function ($project) use ($maxAllowed) {
             if ($this->isSingleDegree() && $project->institution == 'UoG') {
                 return false;
             }
-            if ($project->isFullySubscribed()) {
+            if ($project->isFullySubscribed($maxAllowed)) {
                 return false;
             }
-            if (!$project->isAvailable()) {
+            if (!$project->isAvailable($maxAllowed)) {
                 return false;
             }
             return true;

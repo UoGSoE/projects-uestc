@@ -102,7 +102,7 @@ class Project extends Model
         return (bool) ProjectConfig::getOption('applications_allowed', '1');
     }
 
-    public function isAvailable()
+    public function isAvailable($maxAllowed = null)
     {
         if (!$this->is_active) {
             return false;
@@ -124,10 +124,12 @@ class Project extends Model
         return true;
     }
 
-    public function isFullySubscribed()
+    public function isFullySubscribed($maxAllowed = null)
     {
-        $maximumAllowedToApply = ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6));
-        return $this->students()->count() >= $maximumAllowedToApply;
+        if (! $maxAllowed) {
+            $maxAllowed = ProjectConfig::getOption('maximum_applications', config('projects.maximumAllowedToApply', 6));
+        }
+        return $this->students()->count() >= $maxAllowed;
     }
 
     public function isFull()
