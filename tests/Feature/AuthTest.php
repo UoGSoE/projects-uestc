@@ -35,8 +35,7 @@ class AuthTest extends TestCase
     /** @test */
     public function an_invalid_password_fails()
     {
-	$this->disableExceptionHandling();
-
+        config(['ldap.authentication' => true]);
         $user = $this->createStaff(['password' => bcrypt('HELLOKITTY1234')]);
 
         $response = $this->post(route('login.login', ['username' => $user->email, 'password' => 'NOTHELLOKITTY1234']));
@@ -49,6 +48,7 @@ class AuthTest extends TestCase
     /** @test */
     public function an_invalid_username_fails()
     {
+        config(['ldap.authentication' => true]);
         $user = $this->createStaff(['username' => 'fred', 'password' => bcrypt('HELLOKITTY1234')]);
 
         $response = $this->post(route('login.login', ['username' => "NOTfred", 'password' => 'HELLOKITTY1234']));

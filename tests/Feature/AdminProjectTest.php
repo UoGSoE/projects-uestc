@@ -18,14 +18,18 @@ class AdminProjectTest extends TestCase
     public function test_admin_can_see_all_projects()
     {
         $admin = $this->createAdmin();
-        $project1 = $this->createProject();
-        $project2 = $this->createProject();
+        $project1 = $this->createProject(['supervisor_name' => "JIMMY", 'supervisor_email' => 'jimmy@example.com']);
+        $project2 = $this->createProject(['supervisor_name' => "BRENDA", 'supervisor_email' => 'brenda@example.com']);
 
         $response = $this->actingAs($admin)->get(route('report.projects'));
 
         $response->assertStatus(200);
         $response->assertSee($project1->title);
         $response->assertSee($project2->title);
+        $response->assertSee($project1->supervisor_name);
+        $response->assertSee($project1->supervisor_email);
+        $response->assertSee($project2->supervisor_name);
+        $response->assertSee($project2->supervisor_email);
     }
 
     public function test_admin_can_clear_all_unsuccessful_student_applications()

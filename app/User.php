@@ -2,21 +2,21 @@
 
 namespace App;
 
+use Validator;
 use App\Course;
 use App\EventLog;
-use App\Notifications\StaffPasswordNotification;
-use App\PasswordReset;
 use App\ProjectRound;
-use App\projects;
+use App\PasswordReset;
+use Illuminate\Support\Arr;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
-use Validator;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use App\Notifications\StaffPasswordNotification;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 class User extends Model implements
     AuthenticatableContract,
@@ -230,7 +230,7 @@ class User extends Model implements
                 }
             }
         }
-        return json_encode(array_sort($projectArray));
+        return json_encode(Arr::sort($projectArray));
     }
 
     public function projectForJSON($project)

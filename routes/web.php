@@ -4,10 +4,7 @@
 //Route::group(['prefix' => 'projects2'], function() {
 
 // Authentication routes
-Route::get('auth/login', function () {
-    $data['page_title'] = "Log In";
-    return View::make('login_form', $data);
-})->name('login.show');
+Route::get('auth/login', 'Auth\AuthController@index')->name('login.show');
 Route::post('auth/login', 'Auth\AuthController@login')->name('login.login');
 Route::get('logout', 'Auth\AuthController@logout')->name('logout');
 

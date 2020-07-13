@@ -2,16 +2,27 @@
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Exceptions\Handler;
-use Illuminate\Contracts\Debug\ExceptionHandler;
 use Exception;
+use App\Exceptions\Handler;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
-    use DatabaseMigrations;
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Enable foreign key support for SQLITE databases
+        if (DB::connection() instanceof \Illuminate\Database\SQLiteConnection) {
+            DB::statement(DB::raw('PRAGMA foreign_keys=on'));
+        }
+    }
 
     public function fromUrl($url = '')
     {
