@@ -1,5 +1,5 @@
 ### PHP version we are targetting
-ARG PHP_VERSION=7.2
+ARG PHP_VERSION=7.1
 
 ### Build JS/css assets
 FROM node:10 as frontend
