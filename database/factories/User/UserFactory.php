@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 |
 */
 
-class ModelFactory extends Factory
+class UserFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
