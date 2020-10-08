@@ -15,9 +15,10 @@ class ConvenorOrAdmin
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->user()->hasRoles()) {
+        if (! $request->user()->hasRoles()) {
             redirect('/');
         }
+
         return $next($request);
     }
 }

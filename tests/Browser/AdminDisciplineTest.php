@@ -1,10 +1,11 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\DuskTestCase;
 
 class AdminDisciplineTest extends DuskTestCase
 {

@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use App\Permission;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -30,11 +30,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('edit_users', function ($user) {
             return $user->isAdmin();
         });
-        
+
         Gate::define('edit_this_project', function ($user, $project) {
             if ($user->isAdmin()) {
                 return true;
             }
+
             return $user->id == $project->user_id;
         });
 
@@ -42,6 +43,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->isAdmin()) {
                 return true;
             }
+
             return $user->id == $project->user_id;
         });
 
@@ -52,6 +54,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->isConvenor()) {
                 return true;
             }
+
             return false;
         });
     }

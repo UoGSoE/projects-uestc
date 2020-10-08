@@ -1,21 +1,23 @@
 <?php
+
 // @codingStandardsIgnoreFile
+
 namespace Tests\Feature;
 
-use App\User;
 use App\Course;
-use App\Project;
-use Carbon\Carbon;
 use App\Discipline;
-use Tests\TestCase;
-use App\ProjectConfig;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use App\Notifications\AllocatedToProject;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Project;
+use App\ProjectConfig;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
 
 class StaffProjectTest extends TestCase
 {
@@ -61,7 +63,7 @@ class StaffProjectTest extends TestCase
     }
 
     /** @test */
-    public function staff_can_add_multiple_disciplines_to_a_project ()
+    public function staff_can_add_multiple_disciplines_to_a_project()
     {
         $staff = factory(User::class)->states('staff')->create();
         $courses = factory(Course::class, 2)->create();
@@ -73,15 +75,15 @@ class StaffProjectTest extends TestCase
             'prereq' => 'Project prerequisite skills',
             'is_active' => 1,
             'courses' => [
-                $courses[0]->id
+                $courses[0]->id,
             ],
             'disciplines' => [
                 $disciplines[0]->id,
-                $disciplines[1]->id
+                $disciplines[1]->id,
             ],
             'institution' => 'UESTC',
             'maximum_students' => 1,
-            'user_id' => $staff->id
+            'user_id' => $staff->id,
         ]);
 
         $response->assertStatus(302);
@@ -91,24 +93,25 @@ class StaffProjectTest extends TestCase
             'prereq' => 'Project prerequisite skills',
             'is_active' => 1,
             'institution' => 'UESTC',
-            'user_id' => $staff->id
+            'user_id' => $staff->id,
         ]);
         $this->assertDatabaseHas('course_project', [
             'project_id' => Project::first()->id,
-            'course_id' => $courses[0]->id
+            'course_id' => $courses[0]->id,
         ]);
         $this->assertDatabaseHas('project_disciplines', [
             'project_id' => Project::first()->id,
-            'discipline_id' => $disciplines[0]->id
+            'discipline_id' => $disciplines[0]->id,
         ]);
         $this->assertDatabaseHas('project_disciplines', [
             'project_id' => Project::first()->id,
-            'discipline_id' => $disciplines[1]->id
+            'discipline_id' => $disciplines[1]->id,
         ]);
     }
 
     /** @test */
-    public function staff_can_only_create_projects_between_valid_dates () {
+    public function staff_can_only_create_projects_between_valid_dates()
+    {
         $this->regularUser = factory(User::class)->states('staff')->create();
         ProjectConfig::setOption('project_edit_start', Carbon::now()->addDays(7)->format('d/m/Y'));
         ProjectConfig::setOption('project_edit_end', Carbon::now()->addDays(14)->format('d/m/Y'));
@@ -123,7 +126,8 @@ class StaffProjectTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_edit_projects_no_matter_what_the_date () {
+    public function admin_can_edit_projects_no_matter_what_the_date()
+    {
         $this->admin = factory(User::class)->states('admin')->create();
         ProjectConfig::setOption('project_edit_start', Carbon::now()->addDays(7)->format('d/m/Y'));
         ProjectConfig::setOption('project_edit_end', Carbon::now()->addDays(14)->format('d/m/Y'));
@@ -138,7 +142,8 @@ class StaffProjectTest extends TestCase
     }
 
     /** @test */
-    public function check_dropdown_matches_users_institution_on_project_edit_page () {
+    public function check_dropdown_matches_users_institution_on_project_edit_page()
+    {
         $this->regularUser = factory(User::class)->states('staff')->create(['institution' => 'UESTC']);
 
         $response = $this->actingAs($this->regularUser)
@@ -157,7 +162,7 @@ class StaffProjectTest extends TestCase
                         ->post(route('project.update', $project->id), $this->defaultProjectData([
                             'title' => 'UPDATEDPROJECT',
                             'supervisor_name' => 'Boris',
-                            'supervisor_email' => 'boris@example.com'
+                            'supervisor_email' => 'boris@example.com',
                         ]));
 
         $response->assertStatus(302);
@@ -322,8 +327,8 @@ class StaffProjectTest extends TestCase
                         ->post(route('project.update', $project->id), $this->defaultProjectData([
                             'links' => [
                                 ['url' => 'http://www.example.com'],
-                                ['url' => 'http://www.another.com']
-                            ]
+                                ['url' => 'http://www.another.com'],
+                            ],
                         ]));
 
         $response->assertStatus(302);
@@ -343,7 +348,7 @@ class StaffProjectTest extends TestCase
                         ->post(route('project.update', $project->id), $this->defaultProjectData([
                             'links' => [
                                 ['url' => 'http://site1.com'],
-                            ]
+                            ],
                         ]));
 
         $response->assertStatus(302);
@@ -384,7 +389,7 @@ class StaffProjectTest extends TestCase
         $filename = 'tests/data/test_cv.pdf';
         $file = UploadedFile::fake()->create('test_cv.pdf');
         $files = [
-            'files' => [$file]
+            'files' => [$file],
         ];
         $project->addFiles($files['files']);
         $file = $project->files()->first();
@@ -397,10 +402,10 @@ class StaffProjectTest extends TestCase
         $this->assertEquals(0, $project->files()->count());
     }
 
-
     protected function defaultProjectData($overrides = [])
     {
         $course = factory(Course::class)->create();
+
         return array_merge([
             'title' => 'DEFAULTTITLE',
             'description' => 'DEFAULTDESCRIPTION',

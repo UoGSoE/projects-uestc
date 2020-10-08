@@ -1,14 +1,15 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
 use App\Project;
-use App\User;
 use App\ProjectConfig;
-use Tests\TestCase;
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 class ClearUnsuccessfulStudentTest extends TestCase
 {
@@ -30,6 +31,5 @@ class ClearUnsuccessfulStudentTest extends TestCase
 
         $this->assertEquals(0, $project1->students()->count());
         $this->assertEquals(1, $project2->students()->count());
-
     }
 }

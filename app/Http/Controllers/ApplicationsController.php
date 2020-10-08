@@ -10,6 +10,7 @@ class ApplicationsController extends Controller
     public function clearUnsuccessful()
     {
         Project::clearAllUnsucessfulStudents();
+
         return redirect()->back();
     }
 }

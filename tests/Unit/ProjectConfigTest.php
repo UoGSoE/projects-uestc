@@ -1,12 +1,13 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use App\ProjectConfig;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\ProjectConfig;
+use Tests\TestCase;
 
 class ProjectConfigTest extends TestCase
 {
@@ -48,6 +49,7 @@ class ProjectConfigTest extends TestCase
             $value = ProjectConfig::getOption('testkey');
         } catch (\InvalidArgumentException $e) {
             $this->assertTrue(true);
+
             return;
         }
 
@@ -60,6 +62,5 @@ class ProjectConfigTest extends TestCase
         $value = ProjectConfig::getOption('testkey', 'DEFAULT');
 
         $this->assertEquals('DEFAULT', $value);
-
     }
 }

@@ -1,5 +1,7 @@
 <?php
+
 // @codingStandardsIgnoreFile
+
 namespace Tests\Feature;
 
 use App\Notifications\AllocatedToProject;
@@ -14,7 +16,8 @@ use Tests\TestCase;
 class ImportAllocationsTest extends TestCase
 {
     /** @test */
-    public function admin_can_view_import_student_allocations_page () {
+    public function admin_can_view_import_student_allocations_page()
+    {
         $admin = $this->createAdmin();
 
         $response = $this->actingAs($admin)->get(route('allocations.import'));
@@ -25,7 +28,8 @@ class ImportAllocationsTest extends TestCase
     }
 
     /** @test */
-    public function non_authorised_users_cannot_view_import_student_allocations_page () {
+    public function non_authorised_users_cannot_view_import_student_allocations_page()
+    {
         $student = $this->createStudent();
 
         $response = $this->actingAs($student)->get(route('allocations.import'));
@@ -34,7 +38,7 @@ class ImportAllocationsTest extends TestCase
     }
 
     /** @test */
-    public function import_spreadsheet_to_allocate_student_projects ()
+    public function import_spreadsheet_to_allocate_student_projects()
     {
         $this->withoutExceptionHandling();
         Notification::fake();
@@ -55,11 +59,10 @@ class ImportAllocationsTest extends TestCase
         $assignedProject = $this->createProject(['title' => 'Assigned Project', 'maximum_students' => 1]);
         $assignedProject->acceptStudent($student6);
 
-
         copy('tests/data/allocations.xlsx', 'tests/data/allocations2.xlsx');
 
         $response = $this->actingAs($admin)->call('POST', route('allocations.do_import'), [], [], [
-            'allocations' => new UploadedFile(base_path('tests/data/allocations2.xlsx'), 'allocations2.xlsx', null, null, false)]
+            'allocations' => new UploadedFile(base_path('tests/data/allocations2.xlsx'), 'allocations2.xlsx', null, null, false), ]
         );
 
         $response->assertStatus(302);

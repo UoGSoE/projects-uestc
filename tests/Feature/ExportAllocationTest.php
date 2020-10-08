@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\ProjectConfig;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\ProjectConfig;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class ExportAllocationTest extends TestCase
 {
@@ -26,7 +27,7 @@ class ExportAllocationTest extends TestCase
         $response = $this->actingAs($admin)->get(route('export.allocations'));
 
         $response->assertStatus(200);
-        $expectedFilename = 'project_allocations_' . now()->format('d_m_Y') . '.xlsx';
+        $expectedFilename = 'project_allocations_'.now()->format('d_m_Y').'.xlsx';
         $response->assertHeader('content-disposition', "attachment; filename={$expectedFilename}");
         // should really try loading the sheet into memory and testing, but it's
         // Friday afternoon - yolo.
@@ -47,17 +48,17 @@ class ExportAllocationTest extends TestCase
 
         $response = $this->actingAs($admin)->get(route('export.students'));
         $response->assertStatus(200);
-        $expectedFilename = 'all_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $expectedFilename = 'all_project_students_'.now()->format('d_m_Y').'.xlsx';
         $response->assertHeader('content-disposition', "attachment; filename={$expectedFilename}");
 
         $response = $this->actingAs($admin)->get(route('export.students.single'));
         $response->assertStatus(200);
-        $expectedFilename = 'single_degree_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $expectedFilename = 'single_degree_project_students_'.now()->format('d_m_Y').'.xlsx';
         $response->assertHeader('content-disposition', "attachment; filename={$expectedFilename}");
 
         $response = $this->actingAs($admin)->get(route('export.students.dual'));
         $response->assertStatus(200);
-        $expectedFilename = 'dual_degree_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $expectedFilename = 'dual_degree_project_students_'.now()->format('d_m_Y').'.xlsx';
         $response->assertHeader('content-disposition', "attachment; filename={$expectedFilename}");
     }
 
@@ -79,7 +80,7 @@ class ExportAllocationTest extends TestCase
         $response = $this->actingAs($admin)->get(route('export.staff'));
 
         $response->assertStatus(200);
-        $expectedFilename = 'project_staff_list_' . now()->format('d_m_Y') . '.xlsx';
+        $expectedFilename = 'project_staff_list_'.now()->format('d_m_Y').'.xlsx';
         $response->assertHeader('content-disposition', "attachment; filename={$expectedFilename}");
         // should really try loading the sheet into memory and testing, but it's
         // Friday afternoon - yolo.

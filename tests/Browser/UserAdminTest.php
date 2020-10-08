@@ -1,9 +1,11 @@
 <?php
+
 // @codingStandardsIgnoreFile
+
 namespace Tests\Browser;
 
-use App\User;
 use App\Notifications\StaffPasswordNotification;
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Notification;
 use Tests\DuskTestCase;
@@ -114,8 +116,8 @@ class UserAdminTest extends DuskTestCase
                     ->assertSee('xyz@gmail.com')
                     ->press('Send Email')
                     ->pause(2000);
-                    $logFile = file_get_contents(storage_path().'/logs/laravel.log');
-                    $this->assertContains('To: xyz@gmail.com', $logFile);
+            $logFile = file_get_contents(storage_path().'/logs/laravel.log');
+            $this->assertContains('To: xyz@gmail.com', $logFile);
         });
     }
 }

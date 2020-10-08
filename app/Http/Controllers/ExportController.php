@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use App\Project;
 use App\ProjectConfig;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Spatie\SimpleExcel\SimpleExcelWriter;
@@ -13,7 +13,7 @@ class ExportController extends Controller
 {
     public function allocations()
     {
-        $filename = 'project_allocations_' . now()->format('d_m_Y') . '.xlsx';
+        $filename = 'project_allocations_'.now()->format('d_m_Y').'.xlsx';
         $writer = SimpleExcelWriter::create(public_path($filename));
         $projects = Project::active()->with('owner', 'students', 'acceptedStudents', 'discipline')->orderBy('title')->get();
         $projects->each(function ($project) use ($writer) {
@@ -29,12 +29,13 @@ class ExportController extends Controller
                 'Project Description' => $project->description,
             ]);
         });
+
         return response()->download(public_path($filename));
     }
 
     public function allStudents()
     {
-        $filename = 'all_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $filename = 'all_project_students_'.now()->format('d_m_Y').'.xlsx';
         $writer = SimpleExcelWriter::create(public_path($filename));
         $students = User::students()->with('courses', 'projects')->orderBy('surname')->get();
         // @TODO remove this _if_ we are sure we can avoid having blank entries for the number of projects
@@ -51,7 +52,7 @@ class ExportController extends Controller
 
     public function singleDegreeStudents()
     {
-        $filename = 'single_degree_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $filename = 'single_degree_project_students_'.now()->format('d_m_Y').'.xlsx';
         $writer = SimpleExcelWriter::create(public_path($filename));
         $students = User::students()->singleDegree()->with('courses', 'projects')->orderBy('surname')->get();
 
@@ -62,7 +63,7 @@ class ExportController extends Controller
 
     public function dualDegreeStudents()
     {
-        $filename = 'dual_degree_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $filename = 'dual_degree_project_students_'.now()->format('d_m_Y').'.xlsx';
         $writer = SimpleExcelWriter::create(public_path($filename));
         $students = User::students()->dualDegree()->with('courses', 'projects')->orderBy('surname')->get();
 
@@ -73,7 +74,7 @@ class ExportController extends Controller
 
     public function staff()
     {
-        $filename = 'project_staff_list_' . now()->format('d_m_Y') . '.xlsx';
+        $filename = 'project_staff_list_'.now()->format('d_m_Y').'.xlsx';
         $writer = SimpleExcelWriter::create(public_path($filename));
         $users = User::staff()->with('projects')->orderBy('surname')->get();
         $users->each(function ($user) use ($writer) {
@@ -99,10 +100,10 @@ class ExportController extends Controller
                 'Name' => $student->fullName(),
             ];
             $student->projects()->UESTC()->orderBy('preference')->get()->each(function ($project) use ($data) {
-                $data["Choice {$project->preference}"] = $project->institution . ' ' . $project->title;
+                $data["Choice {$project->preference}"] = $project->institution.' '.$project->title;
             });
             $student->projects()->UoG()->orderBy('preference')->get()->each(function ($project) use ($data) {
-                $data["Choice {$project->preference}"] = $project->institution . ' ' . $project->title;
+                $data["Choice {$project->preference}"] = $project->institution.' '.$project->title;
             });
             $writer->addRow($data);
         });

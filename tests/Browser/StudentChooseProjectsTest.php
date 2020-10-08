@@ -1,16 +1,16 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\DuskTestCase;
 
 class StudentChooseProjectsTest extends DuskTestCase
 {
-
     /** @test */
-    public function if_student_hasnt_selected_degree_type_then_redirect_them_to_choose ()
+    public function if_student_hasnt_selected_degree_type_then_redirect_them_to_choose()
     {
         $student = $this->createStudent(['degree_type' => null]);
         $this->browse(function ($browser) use ($student) {
@@ -20,6 +20,7 @@ class StudentChooseProjectsTest extends DuskTestCase
                     ->assertSee('Degree Type');
         });
     }
+
     /** @test */
     public function a_student_can_see_available_projects()
     {
@@ -71,7 +72,7 @@ class StudentChooseProjectsTest extends DuskTestCase
                     ->assertSee('Available Projects')
                     ->assertSee($project1->title)
                     ->click("#title_{$project1->id}")
-                    ->assertSee("Somewhat popular")
+                    ->assertSee('Somewhat popular')
                     ->assertSee($project2->title)
                     ->assertSee($project3->title)
                     ->assertDontSee($fullProject->title);

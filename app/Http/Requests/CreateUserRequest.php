@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Gate;
 use App\Http\Requests\Request;
+use Gate;
 
 class CreateUserRequest extends Request
 {
@@ -15,6 +15,7 @@ class CreateUserRequest extends Request
     public function authorize()
     {
         return true;
+
         return $this->user()->isAdmin();
         //return Gate::allows('edit_users');
     }
@@ -30,7 +31,7 @@ class CreateUserRequest extends Request
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'surname' => 'required',
-            'forenames' => 'required'
+            'forenames' => 'required',
         ];
     }
 }

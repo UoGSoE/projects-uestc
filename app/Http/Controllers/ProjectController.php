@@ -28,6 +28,7 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::orderBy('title')->get();
+
         return view('project.index', compact('projects'));
     }
 
@@ -45,6 +46,7 @@ class ProjectController extends Controller
         $courses = Course::orderBy('title')->get();
         $disciplines = Discipline::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
+
         return view('project.create', compact('project', 'courses', 'staff', 'disciplines'));
     }
 
@@ -56,7 +58,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$this->projectEditingAllowed()) {
+        if (! $this->projectEditingAllowed()) {
             return redirect()->route('home')->withErrors(['dates' => 'Project editing currently disabled.']);
         }
 
@@ -80,6 +82,7 @@ class ProjectController extends Controller
             $project->addFiles($request->file('files'));
         }
         EventLog::log(Auth::user()->id, "Created project {$project->title}");
+
         return redirect()->action('ProjectController@show', $project->id);
     }
 
@@ -95,6 +98,7 @@ class ProjectController extends Controller
         if (Gate::denies('view_this_project', $project)) {
             abort(403);
         }
+
         return view('project.show', compact('project'));
     }
 
@@ -113,6 +117,7 @@ class ProjectController extends Controller
         $courses = Course::orderBy('title')->get();
         $disciplines = Discipline::orderBy('title')->get();
         $staff = User::staff()->orderBy('surname')->get();
+
         return view('project.edit', compact('project', 'courses', 'staff', 'disciplines'));
     }
 
@@ -125,7 +130,7 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!$this->projectEditingAllowed()) {
+        if (! $this->projectEditingAllowed()) {
             return redirect()->route('home')->withErrors(['dates' => 'Project editing currently disabled.']);
         }
 
@@ -159,6 +164,7 @@ class ProjectController extends Controller
         $project->courses()->sync($request->courses);
         $project->disciplines()->sync($request->disciplines);
         EventLog::log(Auth::user()->id, "Updated project {$project->title}");
+
         return redirect()->action('ProjectController@show', $project->id);
     }
 
@@ -176,6 +182,7 @@ class ProjectController extends Controller
         }
         EventLog::log(Auth::user()->id, "Deleted project {$project->title}");
         $project->delete();
+
         return redirect()->to('/')->with('success_message', 'Project deleted');
     }
 
@@ -183,7 +190,7 @@ class ProjectController extends Controller
      * Make a copy of an existing project.
      * Note: The replicate() function copies the main object but not it's relations, so we don't copy
      * students allocations etc to the new version.
-     * @param  integer $id Project ID
+     * @param  int $id Project ID
      * @return Response
      */
     public function copy($id)
@@ -193,13 +200,14 @@ class ProjectController extends Controller
         $staff = User::staff()->orderBy('surname')->get();
         $disciplines = Discipline::orderBy('title')->get();
         EventLog::log(Auth::user()->id, "Copied project {$project->title}");
+
         return view('project.create', compact('project', 'courses', 'staff', 'disciplines'));
     }
 
     public function acceptStudent(Request $request, $id)
     {
         $project = Project::findOrFail($id);
-        if (!$project->canAcceptAStudent()) {
+        if (! $project->canAcceptAStudent()) {
             return redirect()->route('project.show', $id)->withErrors(['full' => 'This project cannot accept students']);
         }
         $student = User::findOrFail($request->accepted);
@@ -208,6 +216,7 @@ class ProjectController extends Controller
         }
         $project->acceptStudent($student);
         EventLog::log(Auth::user()->id, "Accepted student {$student->fullName()} onto project {$project->title}");
+
         return redirect()->route('project.show', $project->id)->with('success_message', 'Allocations Saved');
     }
 
@@ -223,9 +232,10 @@ class ProjectController extends Controller
         }
         $start = Carbon::createFromFormat('d/m/Y', ProjectConfig::getOption('project_edit_start', Carbon::now()->subDays(1)->format('d/m/Y')));
         $end = Carbon::createFromFormat('d/m/Y', ProjectConfig::getOption('project_edit_end', Carbon::now()->addDays(1)->format('d/m/Y')));
-        if (!Carbon::now()->between($start, $end)) {
+        if (! Carbon::now()->between($start, $end)) {
             return false;
         }
+
         return true;
     }
 }

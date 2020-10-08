@@ -9,7 +9,7 @@ class ProjectConfig extends Model
     public static function setOption($key, $value)
     {
         $entry = static::where('key', '=', $key)->first();
-        if (!$entry) {
+        if (! $entry) {
             $entry = new static;
         }
         $entry->key = $key;
@@ -20,12 +20,14 @@ class ProjectConfig extends Model
     public static function getOption($key, $default = null)
     {
         $entry = static::where('key', '=', $key)->first();
-        if (!$entry) {
+        if (! $entry) {
             if (is_null($default)) {
                 throw new \InvalidArgumentException("No config value for {$key}", 1);
             }
+
             return $default;
         }
+
         return $entry->value;
     }
 }

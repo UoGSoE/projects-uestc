@@ -1,12 +1,13 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
@@ -35,7 +36,7 @@ class AuthTest extends TestCase
     /** @test */
     public function an_invalid_password_fails()
     {
-        if (env("CI")) {
+        if (env('CI')) {
             $this->markTestSkipped('Not doing ldap stuff in CI');
         }
 
@@ -55,7 +56,7 @@ class AuthTest extends TestCase
         config(['ldap.authentication' => true]);
         $user = $this->createStaff(['username' => 'fred', 'password' => bcrypt('HELLOKITTY1234')]);
 
-        $response = $this->post(route('login.login', ['username' => "NOTfred", 'password' => 'HELLOKITTY1234']));
+        $response = $this->post(route('login.login', ['username' => 'NOTfred', 'password' => 'HELLOKITTY1234']));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login.show'));

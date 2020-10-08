@@ -16,7 +16,7 @@ class ProjectFile extends Model
 
     public function saveToDisk($file, $filename)
     {
-        $file->storeAs("projectfiles", $filename);
+        $file->storeAs('projectfiles', $filename);
     }
 
     public function removeFromDisk()

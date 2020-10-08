@@ -1,15 +1,16 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\User;
+use App\Exceptions\ProjectOversubscribedException;
 use App\Project;
 use App\ProjectConfig;
-use App\Exceptions\ProjectOversubscribedException;
+use App\User;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 class ProjectTest extends TestCase
 {
@@ -45,6 +46,7 @@ class ProjectTest extends TestCase
             $project->addStudent($student2);
         } catch (ProjectOversubscribedException $e) {
             $this->assertTrue(true);
+
             return;
         }
 
@@ -142,5 +144,5 @@ class ProjectTest extends TestCase
         $this->assertDatabaseHas('project_student', ['user_id' => $student->id, 'project_id' => $project->id, 'accepted' => true]);
         $this->assertDatabaseMissing('project_student', ['user_id' => $student->id, 'project_id' => $project2->id]);
         $this->assertDatabaseHas('project_student', ['user_id' => $student2->id, 'project_id' => $project2->id]);
- }
+    }
 }

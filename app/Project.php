@@ -15,11 +15,11 @@ class Project extends Model
 {
     protected $fillable = [
         'title', 'description', 'prereq', 'is_active', 'user_id', 'type_id',
-        'maximum_students', 'institution', 'supervisor_name', 'supervisor_email'
+        'maximum_students', 'institution', 'supervisor_name', 'supervisor_email',
     ];
 
     protected $casts = [
-        'manually_allocated' => 'boolean'
+        'manually_allocated' => 'boolean',
     ];
 
     public function scopeActive($query)
@@ -87,13 +87,15 @@ class Project extends Model
         if ($this->disciplines->count() > 0) {
             $disciplines = '';
             foreach ($this->disciplines as $discipline) {
-                $disciplines = $disciplines . $discipline->title . ', ';
+                $disciplines = $disciplines.$discipline->title.', ';
             }
+
             return substr($disciplines, 0, -2);
         }
-        if (!$this->discipline_id) {
+        if (! $this->discipline_id) {
             return null;
         }
+
         return $this->discipline->title;
     }
 
@@ -104,23 +106,25 @@ class Project extends Model
 
     public function isAvailable($maxAllowed = null)
     {
-        if (!$this->is_active) {
+        if (! $this->is_active) {
             return false;
         }
         if ($this->isFull()) {
             return false;
         }
+
         return true;
     }
 
     public function canAcceptAStudent()
     {
-        if (!$this->is_active) {
+        if (! $this->is_active) {
             return false;
         }
         if ($this->isFull()) {
             return false;
         }
+
         return true;
     }
 
@@ -141,9 +145,9 @@ class Project extends Model
         if (array_key_exists('accepted_students_count', $this->attributes)) {
             return $this->accepted_students_count >= $this->maximum_students;
         }
+
         return $this->acceptedStudents()->count() >= $this->maximum_students;
     }
-
 
     public function acceptedStudents()
     {
@@ -186,7 +190,7 @@ class Project extends Model
 
     public function addStudent($student, $accepted = false)
     {
-        if (!$this->isAvailable()) {
+        if (! $this->isAvailable()) {
             throw new ProjectOversubscribedException;
         }
 
@@ -211,13 +215,14 @@ class Project extends Model
                     ->where('user_id', '=', $student->id)
                     ->where('round', '=', $currentRound)
                     ->first();
-        if (!$round) {
+        if (! $round) {
             $round = new ProjectRound;
             $round->user_id = $student->id;
             $round->project_id = $this->id;
             $round->round = $currentRound;
         }
         $round->save();
+
         return $round;
     }
 
@@ -259,7 +264,7 @@ class Project extends Model
 
     protected function addLink($url)
     {
-        if (!$url) {
+        if (! $url) {
             return;
         }
         $this->links()->create(['url' => $url]);
@@ -271,11 +276,11 @@ class Project extends Model
             $originalName = $file->getClientOriginalName();
             $size = $file->getSize();
             $extension = preg_replace('/[^a-z0-9]/i', '', $file->getClientOriginalExtension());
-            $newName = $this->id . '/' . md5(time()) . '.' . $extension;
+            $newName = $this->id.'/'.md5(time()).'.'.$extension;
             $projFile = $this->files()->create([
                 'original_filename' => $originalName,
                 'file_size' => $size,
-                'filename' => $newName
+                'filename' => $newName,
             ]);
             $projFile->saveToDisk($file, $newName);
         }
@@ -309,6 +314,7 @@ class Project extends Model
         if ($this->institution) {
             return $this->institution;
         }
+
         return Auth::user()->institution;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Project;
 use App\ProjectConfig;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -13,14 +13,16 @@ class HomeController extends Controller
         if (auth()->user()->isStaff()) {
             return $this->staffHomepage();
         }
+
         return $this->studentHomepage();
     }
 
     public function studentHomepage()
     {
-        if (!auth()->user()->degree_type) {
+        if (! auth()->user()->degree_type) {
             return view('profile.edit_degree');
         }
+
         return view(
             'project.student_index',
             [
@@ -43,12 +45,12 @@ class HomeController extends Controller
                             : ProjectConfig::getOption(
                                 'required_choices',
                                 config('projects.uog_required_choices')
-                            )
+                            ),
                 ],
                 'unique_supervisors' => [
                     'UESTC' => config('projects.uestc_unique_supervisors'),
-                    'UoG' => config('projects.uog_unique_supervisors')
-                ]
+                    'UoG' => config('projects.uog_unique_supervisors'),
+                ],
             ]
         );
     }

@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
-use URL;
-use Config;
+use App\PasswordReset;
 use App\Role;
 use App\User;
-use App\PasswordReset;
-use Illuminate\Support\Str;
+use Config;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
+use URL;
 
 class CreateAdmin extends Command
 {
@@ -54,6 +54,6 @@ class CreateAdmin extends Command
             'token' => strtolower(Str::random(64)),
         ]);
         $url = route('password.reset', ['token' => $token->token]);
-        $this->info('Now go to ' . $url);
+        $this->info('Now go to '.$url);
     }
 }

@@ -1,11 +1,11 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
 use App\ProjectConfig;
-
+use Tests\DuskTestCase;
 
 class StudentProfileTest extends DuskTestCase
 {

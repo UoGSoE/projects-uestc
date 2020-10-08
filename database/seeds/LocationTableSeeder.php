@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Seeder;
 
 class LocationTableSeeder extends Seeder
 {
@@ -16,7 +16,7 @@ class LocationTableSeeder extends Seeder
 
         DB::table('locations')->insert([
             'title' => 'Glasgow',
-            'is_default' => true
+            'is_default' => true,
         ]);
         Model::reguard();
     }

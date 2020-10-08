@@ -1,10 +1,9 @@
 <?php
 
-use App\User;
-
 use App\Course;
-use App\Project;
 use App\Discipline;
+use App\Project;
+use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Mail;
 
@@ -31,7 +30,7 @@ class TestDataSeeder extends Seeder
             'Image processing',
             'Machine learning',
             'Power',
-            'Signal Processing'
+            'Signal Processing',
         ];
         foreach ($disciplines as $disciplineTitle) {
             $discipline = factory(Discipline::class)->create(['title' => $disciplineTitle]);

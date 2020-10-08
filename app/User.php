@@ -2,22 +2,22 @@
 
 namespace App;
 
-use Validator;
 use App\Course;
 use App\EventLog;
-use App\ProjectRound;
+use App\Notifications\StaffPasswordNotification;
 use App\PasswordReset;
+use App\ProjectRound;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use App\Notifications\StaffPasswordNotification;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Validator;
 
 class User extends Model implements
     AuthenticatableContract,
@@ -46,7 +46,7 @@ class User extends Model implements
         'is_student',
         'is_admin',
         'is_convenor',
-        'institution'
+        'institution',
     ];
 
     /**
@@ -60,7 +60,7 @@ class User extends Model implements
     {
         parent::boot();
 
-        User::deleting(function ($user) {
+        self::deleting(function ($user) {
             foreach ($user->rounds as $round) {
                 $round->delete();
             }
@@ -104,6 +104,7 @@ class User extends Model implements
         if ($this->is_student) {
             return $this->belongsToMany(Project::class, 'project_student')->withPivot(['accepted', 'preference']);
         }
+
         return $this->hasMany(Project::class)->with('students', 'acceptedStudents');
     }
 
@@ -143,9 +144,10 @@ class User extends Model implements
             $projectArray[$offset] = $project;
             $offset = $offset + 1;
         }
-        if (!is_null($index)) {
+        if (! is_null($index)) {
             return $projectArray[$index];
         }
+
         return $projectArray;
     }
 
@@ -155,6 +157,7 @@ class User extends Model implements
         foreach ($this->projects as $project) {
             $total = $total + $project->students->count();
         }
+
         return $total;
     }
 
@@ -164,12 +167,13 @@ class User extends Model implements
         foreach ($this->projects as $project) {
             $total = $total + $project->acceptedStudents->count();
         }
+
         return $total;
     }
 
     /**
      * Mutator on the email field - always strip whitespace and make lower case as it's
-     * used as a username for external staff
+     * used as a username for external staff.
      * @param string $email
      */
     public function setEmailAttribute($email)
@@ -179,7 +183,7 @@ class User extends Model implements
 
     /**
      * Used to get the first course a student belongs to.  In reality a student should only ever be on
-     * one course - need confirmation from Scott/Kathleen before changing the relationship though
+     * one course - need confirmation from Scott/Kathleen before changing the relationship though.
      * @return App\Course
      */
     public function course()
@@ -217,9 +221,10 @@ class User extends Model implements
             if ($project->isFullySubscribed($maxAllowed)) {
                 return false;
             }
-            if (!$project->isAvailable($maxAllowed)) {
+            if (! $project->isAvailable($maxAllowed)) {
                 return false;
             }
+
             return true;
         });
 
@@ -237,6 +242,7 @@ class User extends Model implements
                 }
             }
         }
+
         return json_encode(Arr::sort($projectArray));
     }
 
@@ -252,6 +258,7 @@ class User extends Model implements
             $studentCount = $project->students()->count();
         }
         $popularityPercent = 100 * ($studentCount / $this->maxAllowed);
+
         return [
             'id' => $project->id,
             'title' => $project->title,
@@ -270,14 +277,15 @@ class User extends Model implements
 
     public function fullName()
     {
-        return $this->forenames . ' ' . $this->surname;
+        return $this->forenames.' '.$this->surname;
     }
 
     public function matric()
     {
-        if (!$this->is_student) {
+        if (! $this->is_student) {
             return 'N/A';
         }
+
         return preg_replace('/[^0-9]+/', '', $this->username);
     }
 
@@ -288,7 +296,7 @@ class User extends Model implements
 
     public function isStaff()
     {
-        return !$this->is_student;
+        return ! $this->is_student;
     }
 
     public function hasRoles()
@@ -299,6 +307,7 @@ class User extends Model implements
         if ($this->isConvenor()) {
             return true;
         }
+
         return false;
     }
 
@@ -324,7 +333,7 @@ class User extends Model implements
 
     public function isAllocated()
     {
-        return !$this->unallocated();
+        return ! $this->unallocated();
     }
 
     public function allocatedProject()
@@ -335,7 +344,7 @@ class User extends Model implements
     public function removeFromAcceptedProject()
     {
         $project = $this->allocatedProject();
-        if (!$project) {
+        if (! $project) {
             return;
         }
         $project->students()->sync([$this->id => ['accepted' => false]], false);
@@ -344,9 +353,9 @@ class User extends Model implements
     }
 
     /**
-     * Create or update an existing user based on data from a spreadsheet row (see UserController->updateStaff())
+     * Create or update an existing user based on data from a spreadsheet row (see UserController->updateStaff()).
      * @param  array $row A row of data from the spreadsheet
-     * @return Mixed      False if the data is invalid, otherwise an instance of App\User
+     * @return mixed      False if the data is invalid, otherwise an instance of App\User
      */
     public static function fromSpreadsheetData($row)
     {
@@ -358,13 +367,13 @@ class User extends Model implements
             'email' => 'required|email',
             'surname' => 'required',
             'forenames' => 'required',
-            'institution' => 'required'
+            'institution' => 'required',
         ];
         if (Validator::make(['email' => $email, 'surname' => $surname, 'forenames' => $forenames, 'institution' => $institution], $rules)->fails()) {
             return;
         }
         $userExists = $user = static::where('email', '=', $email)->first();
-        if (!$userExists) {
+        if (! $userExists) {
             $user = new static;
             $user->email = $email;
             $user->username = $email;
@@ -373,7 +382,7 @@ class User extends Model implements
         $user->forenames = $forenames;
         $user->institution = $institution;
         $user->save();
-        if (!$userExists) {
+        if (! $userExists) {
             return $user;
         }
     }
@@ -390,9 +399,10 @@ class User extends Model implements
 
     public function hasPasswordReset()
     {
-        if ($this->resetToken and !$this->resetToken->hasExpired()) {
+        if ($this->resetToken and ! $this->resetToken->hasExpired()) {
             return true;
         }
+
         return false;
     }
 
@@ -411,6 +421,7 @@ class User extends Model implements
         if (preg_match('/@/', $this->username)) {
             return true;
         }
+
         return false;
     }
 
@@ -423,6 +434,7 @@ class User extends Model implements
             $user->updateCourse($request);
         }
         EventLog::log($request->user()->id, "Created new user $user->username");
+
         return $user;
     }
 
@@ -443,6 +455,7 @@ class User extends Model implements
             $user->updateCourse($request);
         }
         EventLog::log($request->user()->id, "Updated user $user->username");
+
         return $user;
     }
 
@@ -454,10 +467,10 @@ class User extends Model implements
     public function storeCV($cv)
     {
         $ext = $cv->guessClientExtension();
-        if (!$ext) {
+        if (! $ext) {
             $ext = $cv->getClientOriginalExtension();
         }
-        $filename = $this->id . '_cv.' . $ext;
+        $filename = $this->id.'_cv.'.$ext;
         $cv->storeAs('cvs', $filename);
         $this->cv_file = $filename;
         $this->save();
@@ -465,7 +478,7 @@ class User extends Model implements
 
     public function deleteCV()
     {
-        if (!$this->hasCV()) {
+        if (! $this->hasCV()) {
             return true;
         }
         \Storage::delete("cvs/{$this->cv_file}");
@@ -483,15 +496,16 @@ class User extends Model implements
         $this->projects()->detach();
         foreach ($choices['uestc'] as $key => $project) {
             $this->projects()->attach($project, [
-                'preference' => $key + 1
+                'preference' => $key + 1,
             ]);
         }
         foreach ($choices['uog'] as $key => $project) {
             $this->projects()->attach($project, [
-                'preference' => $key + 1
+                'preference' => $key + 1,
             ]);
         }
         $this->addRoundsInfo($choices);
+
         return true;
     }
 
@@ -514,7 +528,7 @@ class User extends Model implements
     {
         $currentRound = ProjectConfig::getOption('round');
         $round = $this->rounds()->where('round', '=', $currentRound)->where('project_id', '=', $projectId)->first();
-        if (!$round) {
+        if (! $round) {
             $round = new ProjectRound;
             $round->project_id = $projectId;
             $round->user_id = $this->id;
@@ -530,6 +544,7 @@ class User extends Model implements
         if ($round) {
             return true;
         }
+
         return 0; // this is because blade template echo's false as an empty string (possibly a new bug)
     }
 

@@ -2,12 +2,12 @@
 
 namespace Tests;
 
-use Exception;
 use App\Exceptions\Handler;
-use Illuminate\Support\Facades\DB;
+use Exception;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 abstract class TestCase extends BaseTestCase
@@ -28,6 +28,7 @@ abstract class TestCase extends BaseTestCase
     public function fromUrl($url = '')
     {
         $this->app['session']->setPreviousUrl($url);
+
         return $this;
     }
 

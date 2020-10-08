@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use App\Course;
+use App\User;
 use Illuminate\Http\Request;
 
 class StaffController extends Controller
@@ -11,6 +11,7 @@ class StaffController extends Controller
     public function index()
     {
         $users = User::staff()->orderBy('surname')->get();
+
         return view('staff.index', compact('users'));
     }
 
@@ -18,6 +19,7 @@ class StaffController extends Controller
     {
         $user = new User(['is_staff' => true]);
         $courses = Course::orderBy('title')->get();
+
         return view('user.create', compact('user', 'courses'));
     }
 
@@ -25,6 +27,7 @@ class StaffController extends Controller
     {
         $user = User::findOrFail($id);
         $user->sendPasswordEmail();
+
         return redirect()->route('user.edit', $id)->with('success_message', 'Email sent.');
     }
 }

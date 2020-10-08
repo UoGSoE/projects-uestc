@@ -1,11 +1,12 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\ProjectConfig;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\DuskTestCase;
 
 class AdminBulkActiveTest extends DuskTestCase
 {

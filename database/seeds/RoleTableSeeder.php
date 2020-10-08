@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Seeder;
 
 class RoleTableSeeder extends Seeder
 {
@@ -16,15 +16,15 @@ class RoleTableSeeder extends Seeder
 
         DB::table('roles')->insert([
             'title' => 'site_admin',
-            'label' => 'Site Administrator'
+            'label' => 'Site Administrator',
         ]);
         DB::table('roles')->insert([
             'title' => 'teaching_office',
-            'label' => 'Teaching Office Staff'
+            'label' => 'Teaching Office Staff',
         ]);
         DB::table('roles')->insert([
             'title' => 'convenor',
-            'label' => 'Project Convenor'
+            'label' => 'Project Convenor',
         ]);
 
         Model::reguard();

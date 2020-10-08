@@ -1,12 +1,13 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class StudentProfileTest extends TestCase
 {
@@ -88,5 +89,4 @@ class StudentProfileTest extends TestCase
     //     $response->assertStatus(200);
     //     $response->assertHeader('attachment');
     // }
-
 }

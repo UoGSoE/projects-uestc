@@ -1,17 +1,18 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Course;
+use App\Discipline;
+use App\Project;
+use App\ProjectConfig;
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\User;
-use App\Course;
-use App\Project;
-use App\Discipline;
-use App\ProjectConfig;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class StudentProjectTest extends TestCase
 {
@@ -179,12 +180,12 @@ class StudentProjectTest extends TestCase
         $uniqueUogProjects = factory(Project::class, 3)->create(['institution' => 'UoG']);
         $sameSupUogProjects = factory(Project::class, 3)->create([
             'user_id' => $uogSupervisor->id,
-            'institution' => 'UoG'
+            'institution' => 'UoG',
         ]);
         $uniqueUestcProjects = factory(Project::class, 6)->create(['institution' => 'UESTC']);
         $sameSupUestcProjects = factory(Project::class, 6)->create([
             'user_id' => $uestcSupervisor->id,
-            'institution' => 'UESTC'
+            'institution' => 'UESTC',
         ]);
 
         $uniqueUogIds = implode(',', $uniqueUogProjects->pluck('id')->toArray());
@@ -194,7 +195,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $sameSupUogIds,
-            'uestcChoices' => $sameSupUestcIds
+            'uestcChoices' => $sameSupUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -202,7 +203,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $sameSupUogIds,
-            'uestcChoices' => $uniqueUestcIds
+            'uestcChoices' => $uniqueUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -210,7 +211,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $uniqueUogIds,
-            'uestcChoices' => $sameSupUestcIds
+            'uestcChoices' => $sameSupUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -218,7 +219,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $uniqueUogIds,
-            'uestcChoices' => $uniqueUestcIds
+            'uestcChoices' => $uniqueUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -237,12 +238,12 @@ class StudentProjectTest extends TestCase
         $uniqueUogProjects = factory(Project::class, 3)->create(['institution' => 'UoG']);
         $sameSupUogProjects = factory(Project::class, 3)->create([
             'user_id' => $uogSupervisor->id,
-            'institution' => 'UoG'
+            'institution' => 'UoG',
         ]);
         $uniqueUestcProjects = factory(Project::class, 6)->create(['institution' => 'UESTC']);
         $sameSupUestcProjects = factory(Project::class, 6)->create([
             'user_id' => $uestcSupervisor->id,
-            'institution' => 'UESTC'
+            'institution' => 'UESTC',
         ]);
 
         $uniqueUogIds = implode(',', $uniqueUogProjects->pluck('id')->toArray());
@@ -252,7 +253,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $sameSupUogIds,
-            'uestcChoices' => $sameSupUestcIds
+            'uestcChoices' => $sameSupUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -260,7 +261,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $uniqueUogIds,
-            'uestcChoices' => $sameSupUestcIds
+            'uestcChoices' => $sameSupUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -268,7 +269,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $sameSupUogIds,
-            'uestcChoices' => $uniqueUestcIds
+            'uestcChoices' => $uniqueUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -276,7 +277,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $uniqueUogIds,
-            'uestcChoices' => $uniqueUestcIds
+            'uestcChoices' => $uniqueUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -295,12 +296,12 @@ class StudentProjectTest extends TestCase
         $uniqueUogProjects = factory(Project::class, 3)->create(['institution' => 'UoG']);
         $sameSupUogProjects = factory(Project::class, 3)->create([
             'user_id' => $uogSupervisor->id,
-            'institution' => 'UoG'
+            'institution' => 'UoG',
         ]);
         $uniqueUestcProjects = factory(Project::class, 6)->create(['institution' => 'UESTC']);
         $sameSupUestcProjects = factory(Project::class, 6)->create([
             'user_id' => $uestcSupervisor->id,
-            'institution' => 'UESTC'
+            'institution' => 'UESTC',
         ]);
 
         $uniqueUogIds = implode(',', $uniqueUogProjects->pluck('id')->toArray());
@@ -310,7 +311,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $sameSupUogIds,
-            'uestcChoices' => $sameSupUestcIds
+            'uestcChoices' => $sameSupUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -318,7 +319,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $uniqueUogIds,
-            'uestcChoices' => $sameSupUestcIds
+            'uestcChoices' => $sameSupUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -326,7 +327,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $sameSupUogIds,
-            'uestcChoices' => $uniqueUestcIds
+            'uestcChoices' => $uniqueUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -334,7 +335,7 @@ class StudentProjectTest extends TestCase
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => $uniqueUogIds,
-            'uestcChoices' => $uniqueUestcIds
+            'uestcChoices' => $uniqueUestcIds,
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -392,7 +393,7 @@ class StudentProjectTest extends TestCase
         $response = $this->actingAs($student)
             ->post(route('choices.update', [
                 'uogChoices' => implode(',', $projectIds),
-                'uestcChoices' => implode(',', $uestcProjectIds)
+                'uestcChoices' => implode(',', $uestcProjectIds),
             ]));
 
         $response->assertStatus(302);
@@ -403,7 +404,7 @@ class StudentProjectTest extends TestCase
     /**
      * This is to check for a race condition.  Students all get told to pick at the same time,
      * so if one has the list of projects open for a while - other students may have filled
-     * up their choice in the meantime
+     * up their choice in the meantime.
      */
     // public function test_a_student_cant_apply_for_projects_which_are_fully_subscribed()
     // {
@@ -523,7 +524,6 @@ class StudentProjectTest extends TestCase
         $project2 = factory(Project::class)->create(['maximum_students' => 1]);
         $project2->courses()->save($course);
 
-
         $response = $this->actingAs($student)
             ->get('/');
 
@@ -534,8 +534,6 @@ class StudentProjectTest extends TestCase
         });
         $response->assertDontSee($project2->title);
     }
-
-
 
     /** @test */
     public function a_student_can_post_their_project_preferences()
@@ -554,53 +552,53 @@ class StudentProjectTest extends TestCase
 
         $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => '2, 3, 1',
-            'uestcChoices' => '5, 4, 9, 6, 8, 7'
+            'uestcChoices' => '5, 4, 9, 6, 8, 7',
         ]);
         $this->assertDatabaseHas('project_student', [
             'user_id' => $student->id,
             'project_id' => 1,
-            'preference' => 3
+            'preference' => 3,
         ]);
         $this->assertDatabaseHas('project_student', [
             'user_id' => $student->id,
             'project_id' => 2,
-            'preference' => 1
+            'preference' => 1,
         ]);
         $this->assertDatabaseHas('project_student', [
             'user_id' => $student->id,
             'project_id' => 3,
-            'preference' => 2
+            'preference' => 2,
         ]);
 
         $this->assertDatabaseHas('project_student', [
             'user_id' => $student->id,
             'project_id' => 4,
-            'preference' => 2
+            'preference' => 2,
         ]);
         $this->assertDatabaseHas('project_student', [
             'user_id' => $student->id,
             'project_id' => 5,
-            'preference' => 1
+            'preference' => 1,
         ]);
         $this->assertDatabaseHas('project_student', [
             'user_id' => $student->id,
             'project_id' => 6,
-            'preference' => 4
+            'preference' => 4,
         ]);
         $this->assertDatabaseHas('project_student', [
             'user_id' => $student->id,
             'project_id' => 7,
-            'preference' => 6
+            'preference' => 6,
         ]);
         $this->assertDatabaseHas('project_student', [
             'user_id' => $student->id,
             'project_id' => 8,
-            'preference' => 5
+            'preference' => 5,
         ]);
         $this->assertDatabaseHas('project_student', [
             'user_id' => $student->id,
             'project_id' => 9,
-            'preference' => 3
+            'preference' => 3,
         ]);
     }
 }

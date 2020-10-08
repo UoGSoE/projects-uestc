@@ -1,11 +1,12 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\ProjectConfig;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\DuskTestCase;
 
 class StaffProjectTest extends DuskTestCase
 {
@@ -121,7 +122,7 @@ class StaffProjectTest extends DuskTestCase
     //     ]);
     // }
 
-    /** @test */
+    /* @test */
     /*.
         Not needed at present as form input changed from checkboxes (when staff could
         allocate more than one student to a project) to a radio so only one is ever (ha)

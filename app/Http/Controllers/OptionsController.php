@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\ProjectConfig;
+use App\ProjectRound;
 use App\User;
 use Carbon\Carbon;
-use App\ProjectRound;
-use App\ProjectConfig;
 use Illuminate\Http\Request;
 
 class OptionsController extends Controller
@@ -22,6 +22,7 @@ class OptionsController extends Controller
         $applications_allowed = ProjectConfig::getOption('applications_allowed', 1);
         $project_edit_start = ProjectConfig::getOption('project_edit_start', Carbon::now()->format('d/m/Y'));
         $project_edit_end = ProjectConfig::getOption('project_edit_end', Carbon::now()->addMonths(1)->format('d/m/Y'));
+
         return view('options.edit', compact('dual_uog_required_choices', 'dual_uestc_required_choices', 'single_uog_required_choices', 'single_uestc_required_choices', 'maximum_applications', 'round', 'logins_allowed', 'applications_allowed', 'project_edit_start', 'project_edit_end'));
     }
 
@@ -49,6 +50,7 @@ class OptionsController extends Controller
         ProjectConfig::setOption('round', $request->round);
         ProjectConfig::setOption('project_edit_start', $request->project_edit_start);
         ProjectConfig::setOption('project_edit_end', $request->project_edit_end);
+
         return redirect()->route('options.edit')->with('success_message', 'Options Updated');
     }
 
@@ -61,6 +63,7 @@ class OptionsController extends Controller
         ProjectRound::each(function ($projectRound, $key) {
             $projectRound->delete();
         });
+
         return redirect()->route('options.edit')->with('success_message', 'All allocations deleted');
     }
 }

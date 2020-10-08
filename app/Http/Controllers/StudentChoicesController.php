@@ -12,7 +12,7 @@ class StudentChoicesController extends Controller
 {
     public function update(Request $request)
     {
-        if (!Project::applicationsEnabled()) {
+        if (! Project::applicationsEnabled()) {
             return redirect()->to('/')->withErrors(['disabled' => 'Applications are currently disabled']);
         }
         $student = $request->user();
@@ -29,7 +29,8 @@ class StudentChoicesController extends Controller
         $student->allocateToProjects($choices);
         $uestcProjects = Project::whereIn('id', array_values($choices['uestc']))->pluck('title')->toArray();
         $uogProjects = Project::whereIn('id', array_values($choices['uog']))->pluck('title')->toArray();
-        EventLog::log($student->id, "Chose projects " . implode(', ', array_merge($uestcProjects, $uogProjects)));
+        EventLog::log($student->id, 'Chose projects '.implode(', ', array_merge($uestcProjects, $uogProjects)));
+
         return redirect()->to('/')->with(
             'success_message',
             'Your choices have been submitted - thank you! You will get an email once you have been accepted by a member of staff.'
@@ -59,19 +60,20 @@ class StudentChoicesController extends Controller
                 return false;
             }
         }
+
         return true;
     }
 
     private function checkChoicesAreOk($choices)
     {
-        if (!$this->choicesAreAllDifferent($choices)) {
+        if (! $this->choicesAreAllDifferent($choices)) {
             return redirect()->back()->withErrors([
-                'choice_diff' => "You must pick *different* projects"
+                'choice_diff' => 'You must pick *different* projects',
             ]);
         }
-        if (!$this->choicesHaveDifferentSupervisors($choices)) {
+        if (! $this->choicesHaveDifferentSupervisors($choices)) {
             return redirect()->back()->withErrors([
-                'supervisor_diff' => "You cannot choose two projects that have the same supervisor"
+                'supervisor_diff' => 'You cannot choose two projects that have the same supervisor',
             ]);
         }
         $choiceIds = array_merge($choices['uog'], $choices['uestc']);
@@ -79,7 +81,7 @@ class StudentChoicesController extends Controller
         foreach ($projects as $project) {
             if ($project->isFull()) {
                 return redirect()->back()->withErrors([
-                    'full' => "Places on project {$project->title} are all taken. Please make your choices again."
+                    'full' => "Places on project {$project->title} are all taken. Please make your choices again.",
                 ]);
             }
         }
@@ -99,8 +101,9 @@ class StudentChoicesController extends Controller
         if (count($choices['uog']) != $requiredUOGChoices or count($choices['uestc']) != $requiredUESTCChoices) {
             return redirect()->back()->withErrors([
                 'choice_number' => "You must pick {$requiredUOGChoices} University of Glasgow projects
-                    and {$requiredUESTCChoices} UESTC projects."]);
+                    and {$requiredUESTCChoices} UESTC projects.", ]);
         }
+
         return true;
     }
 
@@ -108,6 +111,7 @@ class StudentChoicesController extends Controller
     {
         $student = User::findOrFail($id);
         $student->removeFromAcceptedProject();
+
         return redirect()->route('user.show', $id);
     }
 }

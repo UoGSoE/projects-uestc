@@ -2,11 +2,11 @@
 
 namespace App\Notifications;
 
+use App\Project;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Project;
+use Illuminate\Notifications\Notification;
 
 class AllocatedToProject extends Notification implements ShouldQueue
 {

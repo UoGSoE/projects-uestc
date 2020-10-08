@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Project;
 use App\User;
+use Illuminate\Http\Request;
 
 class BulkPreallocateController extends Controller
 {
@@ -16,16 +16,17 @@ class BulkPreallocateController extends Controller
         $students = User::students()->get()->filter(function ($student) {
             return $student->unallocated();
         });
+
         return view('report.bulk_preallocate', compact('projects', 'students'));
     }
 
     public function update(Request $request)
     {
-        if (!$request->filled('project')) {
+        if (! $request->filled('project')) {
             return redirect()->back();
         }
         foreach ($request->project as $projectId => $studentId) {
-            if (!$studentId) {
+            if (! $studentId) {
                 continue;
             }
             $project = Project::findOrFail($projectId);
@@ -33,6 +34,7 @@ class BulkPreallocateController extends Controller
                 $project->preAllocate($studentId);
             }
         }
+
         return redirect()->route('bulkpreallocate.edit')->with('success_message', 'Allocated');
     }
 }

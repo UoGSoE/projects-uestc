@@ -1,12 +1,13 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class AdminDisciplineTest extends TestCase
 {
@@ -80,5 +81,4 @@ class AdminDisciplineTest extends TestCase
         $response->assertSessionHasErrors(['title']);
         $response->assertRedirect(route('discipline.edit', $discipline1->id));
     }
-
 }

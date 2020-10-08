@@ -1,4 +1,5 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
@@ -52,7 +53,7 @@ class UserAdminTest extends TestCase
                             'is_student' => false,
                             'is_convenor' => true,
                             'email' => 'hellokitty@example.com',
-                            'institution' => 'UoG'
+                            'institution' => 'UoG',
                         ]);
 
         $response->assertStatus(302);
@@ -81,7 +82,7 @@ class UserAdminTest extends TestCase
 
     public function test_admin_can_delete_a_user()
     {
-	$this->disableExceptionHandling();
+        $this->disableExceptionHandling();
 
         $adminUser = factory(User::class)->states('admin')->create();
         $regularUser = factory(User::class)->states('staff')->create();
@@ -106,7 +107,7 @@ class UserAdminTest extends TestCase
                             'forenames' => 'Hello',
                             'is_student' => true,
                             'email' => 'hellokitty@example.com',
-                            'project_id' => $project->id
+                            'project_id' => $project->id,
                         ]);
 
         $response->assertStatus(302);

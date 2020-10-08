@@ -1,4 +1,5 @@
 <?php
+
 //\URL::forceSchema("https");
 
 //Route::group(['prefix' => 'projects2'], function() {
@@ -15,7 +16,6 @@ Route::post('resetpassword/{token}', 'Auth\AuthController@resetPassword')->name(
 Route::get('api/projects', 'ProjectController@getProjectsJSON')->name('api.projects');
 
 Route::group(['middleware' => ['auth']], function () {
-
     Route::get('/', 'HomeController@show')->name('home');
 
     Route::get('/projectfile/{id}', 'ProjectFileController@download')->name('projectfile.download');
@@ -42,7 +42,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('profile', 'StudentProfileController@update')->name('student.profile_update');
         Route::post('degree', 'StudentProfileController@updateDegree')->name('student.profile_update_degree');
     });
-
 
     Route::group(['middleware' => ['admin'], 'prefix' => '/admin'], function () {
         Route::get('/staff', 'StaffController@index')->name('staff.index');
@@ -93,7 +92,6 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['middleware' => ['convenor_or_admin'], 'prefix' => '/admin'], function () {
-
         Route::get('/report/projects/bytype/{id}', 'ReportController@allProjectsOfDiscipline');
         Route::get('/report/projects/bylocation/{id}', 'ReportController@allProjectsAtLocation');
         Route::get('/report/projects', 'ReportController@allProjects')->name('report.projects');

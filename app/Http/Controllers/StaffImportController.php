@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Excel;
-use App\User;
 use App\EventLog;
+use App\User;
+use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Spatie\SimpleExcel\SimpleExcelReader;
@@ -30,7 +30,8 @@ class StaffImportController extends Controller
         if ($newUsers) {
             return view('staff.newusers', compact('newUsers'));
         }
-        EventLog::log($request->user()->id, "Updated staff list");
+        EventLog::log($request->user()->id, 'Updated staff list');
+
         return redirect()->route('staff.index')->with('success_message', 'Updated staff list');
     }
 }

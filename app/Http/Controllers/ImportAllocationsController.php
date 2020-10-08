@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use App\Project;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Storage;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
 class ImportAllocationsController extends Controller
@@ -16,12 +16,12 @@ class ImportAllocationsController extends Controller
     {
         return view('allocations.import');
     }
+
     public function update(Request $request)
     {
         $this->skipped_lines = new MessageBag;
         $file = Storage::put('tmp', $request->file('allocations'));
         $rows = SimpleExcelReader::create(storage_path("app/{$file}"))->noHeaderRow()->getRows();
-
 
         foreach ($rows as $lineNumber => $row) {
             $student = $this->getStudentFromRow($row, $lineNumber);
@@ -29,7 +29,8 @@ class ImportAllocationsController extends Controller
             if ($student and $project) {
                 $project->acceptStudent($student);
             }
-        };
+        }
+
         return redirect()->route('allocations.import')->withErrors($this->skipped_lines);
     }
 
@@ -37,10 +38,12 @@ class ImportAllocationsController extends Controller
     {
         $username = $this->stripWhiteSpace($row[0]);
         $student = User::where('username', '=', $username)->first();
-        if (!$student) {
+        if (! $student) {
             $this->skipped_lines->add('Invalid student', "Skipped Row $lineNumber (could not find student)");
+
             return false;
         }
+
         return $student;
     }
 
@@ -48,20 +51,24 @@ class ImportAllocationsController extends Controller
     {
         $title = $row[2];
         $project = Project::where('title', '=', $title)->first();
-        if (!$project) {
+        if (! $project) {
             $this->skipped_lines->add('Invalid project', "Skipped Row $lineNumber (could not find project)");
+
             return false;
         }
         if ($project->isFull()) {
             $this->skipped_lines->add('Project taken', "Skipped Row $lineNumber (project is already assigned)");
+
             return false;
         }
+
         return $project;
     }
 
     public function stripWhiteSpace($value)
     {
-        $value = preg_replace("/\-.*/", "", $value);
-        return preg_replace("/\s+/", "", $value);
+        $value = preg_replace("/\-.*/", '', $value);
+
+        return preg_replace("/\s+/", '', $value);
     }
 }

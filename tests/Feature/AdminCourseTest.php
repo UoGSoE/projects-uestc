@@ -1,12 +1,13 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class AdminCourseTest extends TestCase
 {
@@ -32,7 +33,7 @@ class AdminCourseTest extends TestCase
 
         $response = $this->actingAs($admin)->post(route('course.store'), [
             'title' => 'AN AMAZING COURSE',
-            'code' => 'TEST1234'
+            'code' => 'TEST1234',
         ]);
 
         $response->assertStatus(302);
@@ -48,7 +49,7 @@ class AdminCourseTest extends TestCase
 
         $response = $this->actingAs($admin)->post(route('course.update', $course->id), [
             'title' => 'AN UPDATED COURSE',
-            'code' => 'TEST5678'
+            'code' => 'TEST5678',
         ]);
 
         $response->assertStatus(302);

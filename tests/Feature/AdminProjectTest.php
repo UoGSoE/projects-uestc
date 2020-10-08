@@ -1,4 +1,5 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
@@ -18,8 +19,8 @@ class AdminProjectTest extends TestCase
     public function test_admin_can_see_all_projects()
     {
         $admin = $this->createAdmin();
-        $project1 = $this->createProject(['supervisor_name' => "JIMMY", 'supervisor_email' => 'jimmy@example.com']);
-        $project2 = $this->createProject(['supervisor_name' => "BRENDA", 'supervisor_email' => 'brenda@example.com']);
+        $project1 = $this->createProject(['supervisor_name' => 'JIMMY', 'supervisor_email' => 'jimmy@example.com']);
+        $project2 = $this->createProject(['supervisor_name' => 'BRENDA', 'supervisor_email' => 'brenda@example.com']);
 
         $response = $this->actingAs($admin)->get(route('report.projects'));
 
@@ -69,7 +70,7 @@ class AdminProjectTest extends TestCase
             'courses' => [$course->id],
             'maximum_students' => 1,
             'user_id' => $project->user_id,
-            'student_id' => $student->id
+            'student_id' => $student->id,
         ]);
 
         $response->assertStatus(302);
@@ -78,7 +79,8 @@ class AdminProjectTest extends TestCase
     }
 
     /** @test */
-    public function student_can_be_manually_removed_from_a_project () {
+    public function student_can_be_manually_removed_from_a_project()
+    {
         Notification::fake();
         ProjectConfig::setOption('round', 1);
         $project = $this->createProject();
@@ -100,7 +102,8 @@ class AdminProjectTest extends TestCase
     }
 
     /** @test */
-    public function get_project_json_via_api () {
+    public function get_project_json_via_api()
+    {
         ProjectConfig::setOption('round', 1);
         $project = $this->createProject();
         factory(Project::class, 10)->create();

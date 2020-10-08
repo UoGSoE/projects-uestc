@@ -1,14 +1,15 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Carbon\Carbon;
-use Tests\TestCase;
 use App\ProjectConfig;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class AdminConfigOptionsTest extends TestCase
 {
@@ -44,7 +45,7 @@ class AdminConfigOptionsTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_delete_all_project_allocations ()
+    public function admin_can_delete_all_project_allocations()
     {
         ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();

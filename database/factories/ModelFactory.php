@@ -42,7 +42,7 @@ $factory->state(App\User::class, 'convenor', function ($faker) {
 $factory->state(App\User::class, 'student', function ($faker) {
     return [
         'is_student' => true,
-        'username' => $faker->numberBetween(1000000, 9999999) . $faker->randomLetter,
+        'username' => $faker->numberBetween(1000000, 9999999).$faker->randomLetter,
         'bio' => $faker->paragraph,
     ];
 });
@@ -68,8 +68,8 @@ $factory->define(App\Project::class, function (Faker\Generator $faker) {
 
 $factory->define(App\ProjectFile::class, function (Faker\Generator $faker) {
     return [
-        'filename' => $faker->word . '.' . $faker->fileExtension,
-        'original_filename' => $faker->word . '.' . $faker->fileExtension,
+        'filename' => $faker->word.'.'.$faker->fileExtension,
+        'original_filename' => $faker->word.'.'.$faker->fileExtension,
         'file_size' => $faker->numberBetween(1000, 10000),
         'project_id' => function () {
             return factory(App\Project::class)->create()->id;
@@ -88,13 +88,13 @@ $factory->define(App\ProjectLink::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Course::class, function (Faker\Generator $faker) {
     return [
-        'title' => implode(" ", $faker->words(3)),
-        'code' => 'ENG' . $faker->numberBetween(1000, 9999),
+        'title' => implode(' ', $faker->words(3)),
+        'code' => 'ENG'.$faker->numberBetween(1000, 9999),
     ];
 });
 $factory->define(App\ProjectType::class, function (Faker\Generator $faker) {
     return [
-        'title' => $faker->word . $faker->word . $faker->word,
+        'title' => $faker->word.$faker->word.$faker->word,
     ];
 });
 $factory->define(App\PasswordReset::class, function (Faker\Generator $faker) {

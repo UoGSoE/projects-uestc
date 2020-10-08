@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Discipline;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Project;
 use App\ProjectConfig;
-use App\Discipline;
-use App\Http\Requests;
+use App\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class ReportController extends Controller
 {
@@ -17,6 +17,7 @@ class ReportController extends Controller
         $applicationsEnabled = Project::applicationsEnabled();
         $projects = Project::with('owner', 'students', 'acceptedStudents', 'discipline')->orderBy('title')->get();
         $disciplines = Discipline::orderBy('title')->get();
+
         return view('report.all_projects', compact('projects', 'disciplines', 'applicationsEnabled'));
     }
 
@@ -31,6 +32,7 @@ class ReportController extends Controller
                     ->orderBy('title')
                     ->get();
         $disciplines = Discipline::orderBy('title')->get();
+
         return view('report.all_projects', compact('projects', 'disciplines', 'applicationsEnabled'));
     }
 
@@ -42,12 +44,14 @@ class ReportController extends Controller
         $dualDegreeReq = ProjectConfig::getOption('required_choices', config('projects.uog_required_choices'))
                        + ProjectConfig::getOption('uestc_required_choices', config('projects.uestc_required_choices'));
         $required = $singleDegreeReq >= $dualDegreeReq ? $singleDegreeReq : $dualDegreeReq;
+
         return view('report.all_students', compact('students', 'required'));
     }
 
     public function allStaff()
     {
         $users = User::staff()->with(['projects', 'activeProjects', 'inactiveProjects'])->orderBy('surname')->get();
+
         return view('report.all_staff', compact('users'));
     }
 }

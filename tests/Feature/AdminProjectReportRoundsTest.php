@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\ProjectConfig;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\ProjectConfig;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class AdminProjectReportRoundsTest extends TestCase
 {
@@ -29,6 +30,6 @@ class AdminProjectReportRoundsTest extends TestCase
         $response = $this->actingAs($admin)->get(route('report.projects'));
 
         $response->assertStatus(200);
-        $response->assertSee((string)$project->students()->count());
+        $response->assertSee((string) $project->students()->count());
     }
 }

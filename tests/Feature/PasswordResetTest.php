@@ -1,12 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
+
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Support\Str;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Str;
+use Tests\TestCase;
 
 class PasswordResetTest extends TestCase
 {
@@ -20,7 +22,7 @@ class PasswordResetTest extends TestCase
 
         $response = $this->post(route('password.do_reset', $token), [
             'password1' => $password,
-            'password2' => $password
+            'password2' => $password,
         ]);
 
         $response->assertStatus(302);
@@ -35,7 +37,7 @@ class PasswordResetTest extends TestCase
 
         $response = $this->fromUrl(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
             'password1' => $password,
-            'password2' => $password
+            'password2' => $password,
         ]);
 
         $response->assertStatus(302);
@@ -51,7 +53,7 @@ class PasswordResetTest extends TestCase
 
         $response = $this->fromUrl(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
             'password1' => $password,
-            'password2' => "NOT" . $password
+            'password2' => 'NOT'.$password,
         ]);
 
         $response->assertStatus(302);
@@ -67,7 +69,7 @@ class PasswordResetTest extends TestCase
 
         $response = $this->fromUrl(route('password.reset', $token->token))->post(route('password.do_reset', $token->token), [
             'password1' => $password,
-            'password2' => $password
+            'password2' => $password,
         ]);
 
         $response->assertStatus(302);
@@ -82,7 +84,7 @@ class PasswordResetTest extends TestCase
 
         $response = $this->fromUrl(route('password.reset', 'NOTATOKEN'))->post(route('password.do_reset', 'NOTATOKEN'), [
             'password1' => $password,
-            'password2' => $password
+            'password2' => $password,
         ]);
 
         $response->assertStatus(302);

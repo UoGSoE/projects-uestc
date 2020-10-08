@@ -1,16 +1,17 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\ProjectConfig;
 use App\Notifications\AllocatedToProject;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\ProjectConfig;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Notification;
+use Tests\TestCase;
 
 class AdminBulkAllocateTest extends TestCase
 {
@@ -19,7 +20,7 @@ class AdminBulkAllocateTest extends TestCase
     /** @test */
     public function admin_can_bulk_allocate_students()
     {
-        if (env("CI")) {
+        if (env('CI')) {
             $this->markTestSkipped('Not doing ldap stuff in CI');
         }
 

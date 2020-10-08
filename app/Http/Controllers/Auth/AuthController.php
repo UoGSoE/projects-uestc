@@ -1,22 +1,24 @@
-<?php namespace App\Http\Controllers\Auth;
+<?php
 
-use DB;
-use Log;
-use Auth;
-use Mail;
-use App\User;
+namespace App\Http\Controllers\Auth;
+
 use App\EventLog;
-use App\Location;
-use App\UserType;
-use App\UserGroup;
-use Carbon\Carbon;
 use App\FundingType;
-use App\PasswordReset;
-use App\ProjectConfig;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\Ldap;
 use App\Http\Controllers\Controller;
+use App\Location;
+use App\PasswordReset;
+use App\ProjectConfig;
+use App\User;
+use App\UserGroup;
+use App\UserType;
+use Auth;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Log;
+use Mail;
 
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
@@ -30,7 +32,8 @@ class AuthController extends Controller
 
     public function index()
     {
-        $data['page_title'] = "Log In";
+        $data['page_title'] = 'Log In';
+
         return view('login_form', compact('data'));
     }
 
@@ -73,9 +76,11 @@ class AuthController extends Controller
                 Auth::user()->last_login = \Carbon\Carbon::now();
                 Auth::user()->save();
                 EventLog::log(Auth::user()->id, 'Logged in');
+
                 return Auth::user();
             }
         }
+
         return null;
     }
 
@@ -86,9 +91,11 @@ class AuthController extends Controller
                 Auth::user()->last_login = \Carbon\Carbon::now();
                 Auth::user()->save();
                 EventLog::log(Auth::user()->id, 'Logged in');
+
                 return Auth::user();
             }
         }
+
         return null;
     }
 
@@ -120,15 +127,16 @@ class AuthController extends Controller
             Auth::user()->last_login = \Carbon\Carbon::now();
             Auth::user()->save();
             EventLog::log(Auth::user()->id, 'Logged in');
+
             return Auth::user();
         }
+
         return null;
     }
 
     public function logout()
     {
-
-        if (!Auth::guest()) {
+        if (! Auth::guest()) {
             Auth::logout();
 
             return redirect('auth/login');
@@ -141,7 +149,7 @@ class AuthController extends Controller
     {
         $email = strtolower(trim($request->email));
         $user = User::where('email', '=', $email)->first();
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login.show')->withErrors(['errors' => 'Could not find that email address']);
         }
         $token = PasswordReset::create([
@@ -153,6 +161,7 @@ class AuthController extends Controller
             $m->to($user->email)->subject('[UoG] Student Projects - Password Reset');
         });
         EventLog::log($user->id, 'Generated a password reset email');
+
         return redirect()->route('login.show')->with('success_message', 'Password reset link has been sent.  Please check your email shortly.');
         //return view('auth.password_reset_message', compact('token', 'user'));
     }
@@ -160,19 +169,20 @@ class AuthController extends Controller
     public function password($token)
     {
         $resetToken = PasswordReset::where('token', '=', $token)->first();
-        if (!$resetToken) {
+        if (! $resetToken) {
             return redirect('/auth/login')->withErrors(['errors' => 'Invalid token']);
         }
         if ($resetToken->hasExpired()) {
             return redirect('/auth/login')->withErrors(['errors' => 'Token has expired']);
         }
+
         return view('auth.password', compact('token'));
     }
 
     public function resetPassword(Request $request, $token)
     {
         $resetToken = PasswordReset::where('token', '=', $token)->first();
-        if (!$resetToken) {
+        if (! $resetToken) {
             return redirect()->back()->withErrors(['token_invalid' => 'Invalid token']);
         }
         if ($resetToken->hasExpired()) {
@@ -185,7 +195,7 @@ class AuthController extends Controller
             return redirect()->back()->withErrors(['password_length' => 'Password was too short']);
         }
         $user = $resetToken->user;
-        if (!$user) {
+        if (! $user) {
             return redirect()->back()->withErrors(['errors' => 'Invalid user']);
         }
         $user->password = bcrypt($request->password1);
@@ -193,22 +203,25 @@ class AuthController extends Controller
         Auth::login($user);
         $resetToken->delete();
         EventLog::log($user->id, 'Reset their password');
+
         return redirect('/');
     }
 
     public function isAStudent($username)
     {
-        if (preg_match("/^[0-9]{7}[a-zA-Z]/", $username)) {
+        if (preg_match('/^[0-9]{7}[a-zA-Z]/', $username)) {
             return true;
         }
+
         return false;
     }
 
     public function studentLoginsDisabled($username)
     {
-        if (!$this->isAStudent($username) or ProjectConfig::getOption('logins_allowed', config("projects.logins_allowed")) == true) {
+        if (! $this->isAStudent($username) or ProjectConfig::getOption('logins_allowed', config('projects.logins_allowed')) == true) {
             return false;
         }
+
         return true;
     }
 }
