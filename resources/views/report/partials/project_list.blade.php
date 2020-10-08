@@ -21,13 +21,13 @@
                 <tr class="active_{{ $project->is_active }}">
                     <td>
                         @if (!$project->is_active) <del title="Not running"> @endif
-                        <a href="{!! action('ProjectController@show', $project->id) !!}">
+                        <a href="{!! route('project.show', $project->id) !!}">
                             {{ $project->title }}
                         </a>
                         @if (!$project->is_active) </del> @endif
                     </td>
                     <td>
-                        <a href="{!! action('UserController@show', $project->owner->id) !!}">
+                        <a href="{!! route('user.show', $project->owner->id) !!}">
                             {{ $project->owner->fullName() }}
                         </a>
                     </td>
@@ -42,14 +42,14 @@
                     </td>
                     <td>
                         @if ($project->discipline_id)
-                            <a href="{!! action('ReportController@allProjectsOfDiscipline', $project->discipline_id) !!}">
+                            <a href="{!! route('report.projects_of_discipline', $project->discipline_id) !!}">
                                 {{ $project->discipline->title }}
                             </a>
                         @elseif ($project->disciplines->count())
                             <ul class="list-inline">
                                 @foreach ($project->disciplines as $discipline)
                                     <li>
-                                        <a href="{!! action('ReportController@allProjectsOfDiscipline', $discipline->id) !!}">
+                                        <a href="{!! route('report.projects_of_discipline', $discipline->id) !!}">
                                             {{ $discipline->title }}
                                         </a>
                                     </li>

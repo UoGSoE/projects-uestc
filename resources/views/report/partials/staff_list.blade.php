@@ -15,7 +15,7 @@
             <tr>
                 <td>
                     @can('view_users')
-                        <a href="{!! action('UserController@show', $user->id) !!}">
+                        <a href="{!! route('user.show', $user->id) !!}">
                             {{ $user->fullName() }}
                         </a>
                     @else

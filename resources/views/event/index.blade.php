@@ -16,7 +16,7 @@
                 <tr>
                     <td>{{ $event->created_at->format('d/m/Y H:i') }}</td>
                     <td>
-                        <a href="{!! action('UserController@show', $event->user_id) !!}" title="{{ $event->user->username }}">
+                        <a href="{!! route('user.show', $event->user_id) !!}" title="{{ $event->user->username }}">
                             {{ $event->user->fullName() }}
                         </a>
                     </td>

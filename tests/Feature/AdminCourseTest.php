@@ -14,6 +14,7 @@ class AdminCourseTest extends TestCase
     /** @test */
     public function admins_can_see_the_list_of_courses()
     {
+        $this->withoutExceptionHandling();
         $admin = $this->createAdmin();
         $course1 = $this->createCourse();
         $course2 = $this->createCourse();

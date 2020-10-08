@@ -3,10 +3,13 @@
 namespace App;
 
 use App\Project;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Discipline extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['title'];
 
     public function projects()

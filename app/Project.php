@@ -8,11 +8,14 @@ use App\Notifications\AllocatedToProject;
 use App\ProjectConfig;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Storage;
 
 class Project extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'title', 'description', 'prereq', 'is_active', 'user_id', 'type_id',
         'maximum_students', 'institution', 'supervisor_name', 'supervisor_email',

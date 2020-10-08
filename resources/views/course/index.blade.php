@@ -4,7 +4,7 @@
 
     <h2>
         Courses
-        <a href="{!! action('CourseController@create') !!}" class="btn btn-default">New Course</a>
+        <a href="{!! route('course.create') !!}" class="btn btn-default">New Course</a>
     </h2>
     <table class="table table-striped table-hover">
         <thead>

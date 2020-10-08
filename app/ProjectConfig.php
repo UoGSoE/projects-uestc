@@ -2,10 +2,13 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ProjectConfig extends Model
 {
+    use HasFactory;
+
     public static function setOption($key, $value)
     {
         $entry = static::where('key', '=', $key)->first();
