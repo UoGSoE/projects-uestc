@@ -16,6 +16,7 @@ class AdminCourseTest extends DuskTestCase
         $this->browse(function ($browser) use ($admin) {
             $browser->loginAs($admin)
                     ->visit('/')
+                    ->clickLink('Admin')
                     ->clickLink('Courses')
                     ->clickLink('New Course')
                     ->type('title', 'MY THRILLING TITLE')

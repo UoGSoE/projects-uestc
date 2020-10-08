@@ -20,6 +20,7 @@ class AdminBulkActiveTest extends DuskTestCase
         $this->browse(function ($browser) use ($project1, $project2, $admin) {
             $browser->loginAs($admin)
                     ->visit('/')
+                    ->clickLink('Reports')
                     ->clickLink('Bulk Active/Inactive')
                     ->assertSee('Projects - Bulk Inactive/Active')
                     ->assertSee($project1->title)

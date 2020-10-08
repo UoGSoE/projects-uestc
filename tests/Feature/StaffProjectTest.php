@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use App\Discipline;
 use Tests\TestCase;
 use App\ProjectConfig;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use App\Notifications\AllocatedToProject;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -143,7 +145,7 @@ class StaffProjectTest extends TestCase
                         ->get(route('project.create'));
 
         $response->assertStatus(200);
-        $response->assertSee('class="UESTC ');
+        $response->assertSee('class="UESTC ', false); // the false param disables escaping the double-quote
     }
 
     public function test_staff_can_edit_their_own_project()
@@ -352,13 +354,15 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_can_attach_files_to_a_project()
     {
+        Storage::fake();
+        $this->withoutExceptionHandling();
         $staff = factory(User::class)->states('staff')->create();
         $project = factory(Project::class)->create(['user_id' => $staff->id]);
 
         $filename = 'tests/data/test_cv.pdf';
-        $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+        $file = UploadedFile::fake()->create('test_cv.pdf');
         $files = [
-            'files' => [$file]
+            'files' => [$file],
         ];
         $response = $this->actingAs($staff)
                         ->call('POST', route('project.update', $project->id), $this->defaultProjectData(), [], $files);
@@ -378,7 +382,7 @@ class StaffProjectTest extends TestCase
         $project = factory(Project::class)->create(['user_id' => $staff->id]);
 
         $filename = 'tests/data/test_cv.pdf';
-        $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+        $file = UploadedFile::fake()->create('test_cv.pdf');
         $files = [
             'files' => [$file]
         ];

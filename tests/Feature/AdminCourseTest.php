@@ -98,6 +98,7 @@ class AdminCourseTest extends TestCase
     /** @test */
     public function admin_can_import_a_spreadsheet_of_students_onto_a_course()
     {
+        $this->withoutExceptionHandling();
         $admin = $this->createAdmin();
         $course = $this->createCourse();
         $filename = 'tests/data/test_student.xlsx';

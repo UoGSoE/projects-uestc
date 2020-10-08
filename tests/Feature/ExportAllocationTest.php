@@ -26,13 +26,15 @@ class ExportAllocationTest extends TestCase
         $response = $this->actingAs($admin)->get(route('export.allocations'));
 
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename=allocations.xlsx');
+        $expectedFilename = 'project_allocations_' . now()->format('d_m_Y') . '.xlsx';
+        $response->assertHeader('content-disposition', "attachment; filename={$expectedFilename}");
         // should really try loading the sheet into memory and testing, but it's
         // Friday afternoon - yolo.
     }
 
     public function test_can_export_the_student_list_as_a_spreadsheet()
     {
+        $this->withoutExceptionHandling();
         ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();
         $project1 = $this->createProject();
@@ -45,19 +47,23 @@ class ExportAllocationTest extends TestCase
 
         $response = $this->actingAs($admin)->get(route('export.students'));
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename=all_students.xlsx');
+        $expectedFilename = 'all_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $response->assertHeader('content-disposition', "attachment; filename={$expectedFilename}");
 
         $response = $this->actingAs($admin)->get(route('export.students.single'));
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename=single_degree_students.xlsx');
+        $expectedFilename = 'single_degree_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $response->assertHeader('content-disposition', "attachment; filename={$expectedFilename}");
 
         $response = $this->actingAs($admin)->get(route('export.students.dual'));
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename=dual_degree_students.xlsx');
+        $expectedFilename = 'dual_degree_project_students_' . now()->format('d_m_Y') . '.xlsx';
+        $response->assertHeader('content-disposition', "attachment; filename={$expectedFilename}");
     }
 
     public function test_can_export_the_staff_list_as_a_spreadsheet()
     {
+        $this->withoutExceptionHandling();
         ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();
         $staff1 = $this->createStaff();
@@ -73,7 +79,8 @@ class ExportAllocationTest extends TestCase
         $response = $this->actingAs($admin)->get(route('export.staff'));
 
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename=staff.xlsx');
+        $expectedFilename = 'project_staff_list_' . now()->format('d_m_Y') . '.xlsx';
+        $response->assertHeader('content-disposition', "attachment; filename={$expectedFilename}");
         // should really try loading the sheet into memory and testing, but it's
         // Friday afternoon - yolo.
     }

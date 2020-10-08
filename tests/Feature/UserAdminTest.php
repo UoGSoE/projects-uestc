@@ -153,6 +153,7 @@ class UserAdminTest extends TestCase
     /** @test */
     public function can_import_a_list_of_staff_from_a_spreadsheet_with_new_users()
     {
+        $this->withoutExceptionHandling();
         $admin = $this->createAdmin();
         $staff = $this->createStaff();
         $filename = 'tests/data/test_staff.xlsx';

@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
+use URL;
+use Config;
 use App\Role;
 use App\User;
-use Config;
-use URL;
 use App\PasswordReset;
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 
 class CreateAdmin extends Command
@@ -45,12 +46,12 @@ class CreateAdmin extends Command
         $user = User::create([
             'username' => $this->argument('username'),
             'email' => $this->argument('email'),
-            'password' => bcrypt(str_random(40)),
+            'password' => bcrypt(Str::random(40)),
             'is_admin' => true,
         ]);
         $token = PasswordReset::create([
             'user_id' => $user->id,
-            'token' => strtolower(str_random(64)),
+            'token' => strtolower(Str::random(64)),
         ]);
         $url = route('password.reset', ['token' => $token->token]);
         $this->info('Now go to ' . $url);

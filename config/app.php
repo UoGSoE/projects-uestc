@@ -143,9 +143,8 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
-        'Maatwebsite\Excel\ExcelServiceProvider',
     ],
 
     /*
@@ -196,7 +195,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
         'Notify'    => Illuminate\Support\Facades\Notification::class,
-        'Excel' => 'Maatwebsite\Excel\Facades\Excel',
     ],
 
 ];
