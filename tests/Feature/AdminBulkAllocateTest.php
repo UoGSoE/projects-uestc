@@ -70,6 +70,7 @@ class AdminBulkAllocateTest extends TestCase
     /** @test */
     public function admin_cant_bulk_allocate_more_students_to_a_project_than_allowed()
     {
+        $this->withoutExceptionHandling();
         ProjectConfig::setOption('round', 1);
         $admin = $this->createAdmin();
         $project1 = $this->createProject(['maximum_students' => 1]);
