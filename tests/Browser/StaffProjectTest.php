@@ -17,7 +17,7 @@ class StaffProjectTest extends DuskTestCase
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
-        $disciplines = factory(\App\Discipline::class, 5)->create();
+        $disciplines = \App\Discipline::factory()->count(5)->create();
 
         $this->browse(function ($browser) use ($staff, $course, $disciplines) {
             $browser->loginAs($staff)
@@ -50,7 +50,7 @@ class StaffProjectTest extends DuskTestCase
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
-        $disciplines = factory(\App\Discipline::class, 5)->create();
+        $disciplines = \App\Discipline::factory()->count(5)->create();
         $project = $this->createProject(['user_id' => $staff->id]);
         $project->courses()->sync([$course->id]);
         $this->browse(function ($browser) use ($staff, $course, $disciplines, $project) {
@@ -95,7 +95,7 @@ class StaffProjectTest extends DuskTestCase
     //     $course = $this->createCourse();
     //     $student = $this->createStudent();
     //     $student2 = $this->createStudent();
-    //     $disciplines = factory(\App\Discipline::class, 5)->create();
+    //     $disciplines = \App\Discipline::factory()->count(5)->create();
     //     $project = $this->createProject(['user_id' => $staff->id, 'maximum_students' => 1]);
     //     $project->courses()->sync([$course->id]);
     //     $project->addStudent($student);
@@ -134,7 +134,7 @@ class StaffProjectTest extends DuskTestCase
         $course = $this->createCourse();
         $student = $this->createStudent();
         $student2 = $this->createStudent();
-        $disciplines = factory(\App\Discipline::class, 5)->create();
+        $disciplines = \App\Discipline::factory()->count(5)->create();
         $project = $this->createProject(['user_id' => $staff->id, 'maximum_students' => 1]);
         $project->courses()->sync([$course->id]);
         $project->addStudent($student);

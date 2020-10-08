@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Course;
 use App\EventLog;
 use App\Notifications\StaffPasswordNotification;
@@ -24,6 +25,8 @@ class User extends Model implements
     AuthorizableContract,
     CanResetPasswordContract
 {
+    use HasFactory;
+
     use Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     /**

@@ -19,7 +19,7 @@ class UserAdminTest extends TestCase
 
     public function test_staff_admin_routes_cant_be_accessed_by_regular_users()
     {
-        $regularUser = factory(User::class)->states('staff')->create();
+        $regularUser = User::factory()->staff()->create();
 
         $response = $this->actingAs($regularUser)
                         ->get(route('staff.index'));
@@ -29,8 +29,8 @@ class UserAdminTest extends TestCase
 
     public function test_admin_can_view_current_staff()
     {
-        $adminUser = factory(User::class)->states('admin')->create();
-        $regularUser = factory(User::class)->states('staff')->create();
+        $adminUser = User::factory()->admin()->create();
+        $regularUser = User::factory()->staff()->create();
 
         $response = $this->actingAs($adminUser)
                         ->get(route('staff.index'));
@@ -43,7 +43,7 @@ class UserAdminTest extends TestCase
 
     public function test_admin_can_create_a_new_user()
     {
-        $adminUser = factory(User::class)->states('admin')->create();
+        $adminUser = User::factory()->admin()->create();
 
         $response = $this->actingAs($adminUser)
                         ->post(route('user.store'), [
@@ -62,8 +62,8 @@ class UserAdminTest extends TestCase
 
     public function test_admin_can_edit_an_existing_user()
     {
-        $adminUser = factory(User::class)->states('admin')->create();
-        $regularUser = factory(User::class)->states('staff')->create();
+        $adminUser = User::factory()->admin()->create();
+        $regularUser = User::factory()->staff()->create();
 
         $response = $this->actingAs($adminUser)
                         ->post(route('user.update', $regularUser->id), [
@@ -84,8 +84,8 @@ class UserAdminTest extends TestCase
     {
         $this->disableExceptionHandling();
 
-        $adminUser = factory(User::class)->states('admin')->create();
-        $regularUser = factory(User::class)->states('staff')->create();
+        $adminUser = User::factory()->admin()->create();
+        $regularUser = User::factory()->staff()->create();
 
         $response = $this->actingAs($adminUser)->get(route('user.destroy', $regularUser->id));
 

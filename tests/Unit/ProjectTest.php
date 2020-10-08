@@ -19,9 +19,9 @@ class ProjectTest extends TestCase
     // public function test_a_project_cannot_be_oversubscribed()
     // {
     //     ProjectConfig::setOption('round', 1);
-    //     $project = factory(Project::class)->create();
-    //     $student = factory(User::class)->states('student')->create();
-    //     $otherStudents = factory(User::class, config('projects.maximumAllowedToApply'))->states('student')->create();
+    //     $project = Project::factory()->create();
+    //     $student = User::factory()->student()->create();
+    //     $otherStudents = User::factory()->count(config('projects.maximumAllowedToApply'))->states('student')->create();
     //     $project->students()->saveMany($otherStudents);
 
     //     try {
@@ -36,9 +36,9 @@ class ProjectTest extends TestCase
     public function test_a_project_cannot_accept_more_students_than_allowed()
     {
         ProjectConfig::setOption('round', 1);
-        $project = factory(Project::class)->create(['maximum_students' => 1]);
-        $student1 = factory(User::class)->states('student')->create();
-        $student2 = factory(User::class)->states('student')->create();
+        $project = Project::factory()->create(['maximum_students' => 1]);
+        $student1 = User::factory()->student()->create();
+        $student2 = User::factory()->student()->create();
         $project->addStudent($student1);
         $project->acceptStudent($student1);
 
@@ -56,9 +56,9 @@ class ProjectTest extends TestCase
     public function test_can_add_multiple_students()
     {
         ProjectConfig::setOption('round', 1);
-        $project = factory(Project::class)->create();
-        $student1 = factory(User::class)->states('student')->create();
-        $student2 = factory(User::class)->states('student')->create();
+        $project = Project::factory()->create();
+        $student1 = User::factory()->student()->create();
+        $student2 = User::factory()->student()->create();
 
         $project->addStudent($student1);
         $project->addStudent($student2);
@@ -69,8 +69,8 @@ class ProjectTest extends TestCase
     public function test_cannot_add_the_same_student_more_than_once()
     {
         ProjectConfig::setOption('round', 1);
-        $project = factory(Project::class)->create();
-        $student = factory(User::class)->states('student')->create();
+        $project = Project::factory()->create();
+        $student = User::factory()->student()->create();
 
         $project->addStudent($student);
         $project->addStudent($student);
@@ -81,9 +81,9 @@ class ProjectTest extends TestCase
     public function test_accepting_a_student_removes_other_students_from_the_project_if_only_one_allowed()
     {
         ProjectConfig::setOption('round', 1);
-        $project = factory(Project::class)->create(['maximum_students' => 1]);
-        $student1 = factory(User::class)->states('student')->create();
-        $student2 = factory(User::class)->states('student')->create();
+        $project = Project::factory()->create(['maximum_students' => 1]);
+        $student1 = User::factory()->student()->create();
+        $student2 = User::factory()->student()->create();
         $project->addStudent($student1);
         $project->addStudent($student2);
 
@@ -97,10 +97,10 @@ class ProjectTest extends TestCase
     public function test_accepting_a_student_removes_other_students_from_the_project_if_now_filled()
     {
         ProjectConfig::setOption('round', 1);
-        $project = factory(Project::class)->create(['maximum_students' => 2]);
-        $student1 = factory(User::class)->states('student')->create();
-        $student2 = factory(User::class)->states('student')->create();
-        $student3 = factory(User::class)->states('student')->create();
+        $project = Project::factory()->create(['maximum_students' => 2]);
+        $student1 = User::factory()->student()->create();
+        $student2 = User::factory()->student()->create();
+        $student3 = User::factory()->student()->create();
         $project->addStudent($student1);
         $project->addStudent($student2);
         $project->addStudent($student3);

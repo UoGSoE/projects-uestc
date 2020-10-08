@@ -21,15 +21,15 @@ class StudentProjectTest extends TestCase
     public function test_a_student_can_see_applicable_available_projects()
     {
         ProjectConfig::setOption('round', 1);
-        $student = factory(User::class)->states('student')->create();
-        $course = factory(Course::class)->create();
+        $student = User::factory()->student()->create();
+        $course = Course::factory()->create();
         $course->students()->save($student);
-        $discipline = factory(Discipline::class)->create();
-        $project = factory(Project::class)->create(['maximum_students' => 1, 'discipline_id' => $discipline->id]);
+        $discipline = Discipline::factory()->create();
+        $project = Project::factory()->create(['maximum_students' => 1, 'discipline_id' => $discipline->id]);
         $project->courses()->save($course);
-        $disabledProject = factory(Project::class)->create(['is_active' => false]);
+        $disabledProject = Project::factory()->create(['is_active' => false]);
         $disabledProject->courses()->save($course);
-        $projectNotForStudentsCourse = factory(Project::class)->create();
+        $projectNotForStudentsCourse = Project::factory()->create();
 
         $response = $this->actingAs($student)
             ->get('/');
@@ -45,11 +45,11 @@ class StudentProjectTest extends TestCase
     public function test_student_cant_see_projects_which_already_have_the_maximum_number_of_students_accepted()
     {
         ProjectConfig::setOption('round', 1);
-        $student = factory(User::class)->states('student')->create();
-        $student2 = factory(User::class)->states('student')->create();
-        $course = factory(Course::class)->create();
+        $student = User::factory()->student()->create();
+        $student2 = User::factory()->student()->create();
+        $course = Course::factory()->create();
         $course->students()->save($student);
-        $project = factory(Project::class)->create(['maximum_students' => 1]);
+        $project = Project::factory()->create(['maximum_students' => 1]);
         $project->courses()->save($course);
         $project->students()->save($student2);
         $project->acceptStudent($student2);
@@ -65,11 +65,11 @@ class StudentProjectTest extends TestCase
     public function test_student_cant_see_projects_which_the_maximum_number_have_already_applied()
     {
         ProjectConfig::setOption('round', 1);
-        $otherStudents = factory(User::class, 6)->states('student')->create();
-        $student = factory(User::class)->states('student')->create();
-        $course = factory(Course::class)->create();
+        $otherStudents = User::factory()->count(6)->student()->create();
+        $student = User::factory()->student()->create();
+        $course = Course::factory()->create();
         $course->students()->save($student);
-        $project = factory(Project::class)->create(['maximum_students' => 1]);
+        $project = Project::factory()->create(['maximum_students' => 1]);
         $project->courses()->save($course);
         $project->students()->saveMany($otherStudents);
 
@@ -85,8 +85,8 @@ class StudentProjectTest extends TestCase
     public function test_a_student_must_apply_for_the_required_number_of_projects()
     {
         ProjectConfig::setOption('round', 1);
-        $student = factory(User::class)->states('student')->create();
-        $project = factory(Project::class)->create();
+        $student = User::factory()->student()->create();
+        $project = Project::factory()->create();
         $required = 3;
 
         ProjectConfig::setOption('required_choices', $required);
@@ -109,9 +109,9 @@ class StudentProjectTest extends TestCase
     public function a_student_must_apply_for_correct_number_of_uog_and_uestc_projects()
     {
         ProjectConfig::setOption('round', 1);
-        $student = factory(User::class)->states('student')->create();
-        factory(Project::class, 3)->create();
-        factory(Project::class, 6)->create(['institution' => 'UESTC']);
+        $student = User::factory()->student()->create();
+        Project::factory()->count(3)->create();
+        Project::factory()->count(6)->create(['institution' => 'UESTC']);
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => implode(',', range(1, 3)),
@@ -152,12 +152,12 @@ class StudentProjectTest extends TestCase
         ProjectConfig::setOption('round', 1);
         config(['projects.uestc_unique_supervisors' => true]);
         config(['projects.uog_unique_supervisors' => true]);
-        $supervisor = factory(User::class)->states('staff')->create();
-        $student = factory(User::class)->states('student')->create();
-        $project1 = factory(Project::class)->create(['user_id' => $supervisor->id]);
-        $project2 = factory(Project::class)->create(['user_id' => $supervisor->id]);
-        factory(Project::class)->create();
-        factory(Project::class, 6)->create(['institution' => 'UESTC']);
+        $supervisor = User::factory()->staff()->create();
+        $student = User::factory()->student()->create();
+        $project1 = Project::factory()->create(['user_id' => $supervisor->id]);
+        $project2 = Project::factory()->create(['user_id' => $supervisor->id]);
+        Project::factory()->create();
+        Project::factory()->count(6)->create(['institution' => 'UESTC']);
 
         $response = $this->actingAs($student)->post(route('choices.update'), [
             'uogChoices' => implode(',', range(1, 3)),
@@ -174,16 +174,16 @@ class StudentProjectTest extends TestCase
         ProjectConfig::setOption('round', 1);
         config(['projects.uestc_unique_supervisors' => false]);
         config(['projects.uog_unique_supervisors' => true]);
-        $uogSupervisor = factory(User::class)->states('staff')->create();
-        $uestcSupervisor = factory(User::class)->states('staff')->create();
-        $student = factory(User::class)->states('student')->create();
-        $uniqueUogProjects = factory(Project::class, 3)->create(['institution' => 'UoG']);
-        $sameSupUogProjects = factory(Project::class, 3)->create([
+        $uogSupervisor = User::factory()->staff()->create();
+        $uestcSupervisor = User::factory()->staff()->create();
+        $student = User::factory()->student()->create();
+        $uniqueUogProjects = Project::factory()->count(3)->create(['institution' => 'UoG']);
+        $sameSupUogProjects = Project::factory()->count(3)->create([
             'user_id' => $uogSupervisor->id,
             'institution' => 'UoG',
         ]);
-        $uniqueUestcProjects = factory(Project::class, 6)->create(['institution' => 'UESTC']);
-        $sameSupUestcProjects = factory(Project::class, 6)->create([
+        $uniqueUestcProjects = Project::factory()->count(6)->create(['institution' => 'UESTC']);
+        $sameSupUestcProjects = Project::factory()->count(6)->create([
             'user_id' => $uestcSupervisor->id,
             'institution' => 'UESTC',
         ]);
@@ -232,16 +232,16 @@ class StudentProjectTest extends TestCase
         ProjectConfig::setOption('round', 1);
         config(['projects.uestc_unique_supervisors' => true]);
         config(['projects.uog_unique_supervisors' => false]);
-        $uogSupervisor = factory(User::class)->states('staff')->create();
-        $uestcSupervisor = factory(User::class)->states('staff')->create();
-        $student = factory(User::class)->states('student')->create();
-        $uniqueUogProjects = factory(Project::class, 3)->create(['institution' => 'UoG']);
-        $sameSupUogProjects = factory(Project::class, 3)->create([
+        $uogSupervisor = User::factory()->staff()->create();
+        $uestcSupervisor = User::factory()->staff()->create();
+        $student = User::factory()->student()->create();
+        $uniqueUogProjects = Project::factory()->count(3)->create(['institution' => 'UoG']);
+        $sameSupUogProjects = Project::factory()->count(3)->create([
             'user_id' => $uogSupervisor->id,
             'institution' => 'UoG',
         ]);
-        $uniqueUestcProjects = factory(Project::class, 6)->create(['institution' => 'UESTC']);
-        $sameSupUestcProjects = factory(Project::class, 6)->create([
+        $uniqueUestcProjects = Project::factory()->count(6)->create(['institution' => 'UESTC']);
+        $sameSupUestcProjects = Project::factory()->count(6)->create([
             'user_id' => $uestcSupervisor->id,
             'institution' => 'UESTC',
         ]);
@@ -290,16 +290,16 @@ class StudentProjectTest extends TestCase
         ProjectConfig::setOption('round', 1);
         config(['projects.uestc_unique_supervisors' => false]);
         config(['projects.uog_unique_supervisors' => false]);
-        $uogSupervisor = factory(User::class)->states('staff')->create();
-        $uestcSupervisor = factory(User::class)->states('staff')->create();
-        $student = factory(User::class)->states('student')->create();
-        $uniqueUogProjects = factory(Project::class, 3)->create(['institution' => 'UoG']);
-        $sameSupUogProjects = factory(Project::class, 3)->create([
+        $uogSupervisor = User::factory()->staff()->create();
+        $uestcSupervisor = User::factory()->staff()->create();
+        $student = User::factory()->student()->create();
+        $uniqueUogProjects = Project::factory()->count(3)->create(['institution' => 'UoG']);
+        $sameSupUogProjects = Project::factory()->count(3)->create([
             'user_id' => $uogSupervisor->id,
             'institution' => 'UoG',
         ]);
-        $uniqueUestcProjects = factory(Project::class, 6)->create(['institution' => 'UESTC']);
-        $sameSupUestcProjects = factory(Project::class, 6)->create([
+        $uniqueUestcProjects = Project::factory()->count(6)->create(['institution' => 'UESTC']);
+        $sameSupUestcProjects = Project::factory()->count(6)->create([
             'user_id' => $uestcSupervisor->id,
             'institution' => 'UESTC',
         ]);
@@ -345,11 +345,11 @@ class StudentProjectTest extends TestCase
     public function test_a_student_can_successfully_apply_for_available_projects()
     {
         ProjectConfig::setOption('round', 1);
-        $student = factory(User::class)->states('student')->create();
-        $course = factory(Course::class)->create();
+        $student = User::factory()->student()->create();
+        $course = Course::factory()->create();
         $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
-        $uestcProjects = factory(Project::class, config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
+        $projects = Project::factory()->count(config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
+        $uestcProjects = Project::factory()->count(config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
         $projects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
         });
@@ -372,12 +372,12 @@ class StudentProjectTest extends TestCase
     public function test_a_student_can_resubmit_and_change_their_choices()
     {
         ProjectConfig::setOption('round', 1);
-        $student = factory(User::class)->states('student')->create(['degree_type' => 'Dual']);
-        $course = factory(Course::class)->create();
+        $student = User::factory()->student()->create(['degree_type' => 'Dual']);
+        $course = Course::factory()->create();
         $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
-        $uestcProjects = factory(Project::class, config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
-        $otherProjects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
+        $projects = Project::factory()->count(config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
+        $uestcProjects = Project::factory()->count(config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
+        $otherProjects = Project::factory()->count(config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
         $projects->each(function ($project, $key) use ($course, $student) {
             $project->courses()->save($course);
             $project->addStudent($student);
@@ -410,14 +410,14 @@ class StudentProjectTest extends TestCase
     // {
     //     ProjectConfig::setOption('round', 1);
     //     ProjectConfig::setOption('uestc_required_choices', 0);
-    //     $student = factory(User::class)->states('student')->create();
-    //     $course = factory(Course::class)->create();
+    //     $student = User::factory()->student()->create();
+    //     $course = Course::factory()->create();
     //     $course->students()->save($student);
-    //     $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
+    //     $projects = Project::factory()->count(config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
     //     $projects->each(function ($project, $key) use ($course) {
     //         $project->courses()->save($course);
     //     });
-    //     $otherStudents = factory(User::class, config('projects.maximumAllowedToApply'))->states('student')->create();
+    //     $otherStudents = User::factory()->count(config('projects.maximumAllowedToApply'))->states('student')->create();
     //     $firstProject = Project::first();
     //     $firstProject->students()->saveMany($otherStudents);
 
@@ -437,18 +437,18 @@ class StudentProjectTest extends TestCase
     public function test_a_student_cant_apply_for_projects_which_are_full()
     {
         ProjectConfig::setOption('round', 1);
-        $student = factory(User::class)->states('student')->create(['degree_type' => 'Dual']);
-        $course = factory(Course::class)->create();
+        $student = User::factory()->student()->create(['degree_type' => 'Dual']);
+        $course = Course::factory()->create();
         $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
-        $uestcProjects = factory(Project::class, config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
+        $projects = Project::factory()->count(config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
+        $uestcProjects = Project::factory()->count(config('projects.uestc_required_choices'))->create(['maximum_students' => 1, 'institution' => 'UESTC']);
         $projects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
         });
         $uestcProjects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
         });
-        $otherStudent = factory(User::class)->states('student')->create();
+        $otherStudent = User::factory()->student()->create();
         $firstProject = Project::first();
         $firstProject->acceptStudent($otherStudent);
 
@@ -468,10 +468,10 @@ class StudentProjectTest extends TestCase
     public function test_a_student_cant_apply_for_projects_when_in_read_only_mode()
     {
         ProjectConfig::setOption('round', 1);
-        $student = factory(User::class)->states('student')->create();
-        $course = factory(Course::class)->create();
+        $student = User::factory()->student()->create();
+        $course = Course::factory()->create();
         $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
+        $projects = Project::factory()->count(config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
         $projects->each(function ($project, $key) use ($course) {
             $project->courses()->save($course);
         });
@@ -490,11 +490,11 @@ class StudentProjectTest extends TestCase
     public function a_student_who_has_been_accepted_onto_a_project_only_sees_that_project()
     {
         ProjectConfig::setOption('round', 1);
-        $student = factory(User::class)->states('student')->create();
-        $course = factory(Course::class)->create();
+        $student = User::factory()->student()->create();
+        $course = Course::factory()->create();
         $course->students()->save($student);
-        $project1 = factory(Project::class)->create(['maximum_students' => 1]);
-        $project2 = factory(Project::class)->create(['maximum_students' => 1]);
+        $project1 = Project::factory()->create(['maximum_students' => 1]);
+        $project2 = Project::factory()->create(['maximum_students' => 1]);
         $project1->courses()->save($course);
         $project2->courses()->save($course);
         $project1->acceptStudent($student);
@@ -513,15 +513,15 @@ class StudentProjectTest extends TestCase
     public function a_student_who_has_made_their_choices_only_sees_those_projects()
     {
         ProjectConfig::setOption('round', 1);
-        $student = factory(User::class)->states('student')->create();
-        $course = factory(Course::class)->create();
+        $student = User::factory()->student()->create();
+        $course = Course::factory()->create();
         $course->students()->save($student);
-        $projects = factory(Project::class, config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
+        $projects = Project::factory()->count(config('projects.uog_required_choices'))->create(['maximum_students' => 1]);
         $projects->each(function ($project, $key) use ($course, $student) {
             $project->courses()->save($course);
             $project->addStudent($student);
         });
-        $project2 = factory(Project::class)->create(['maximum_students' => 1]);
+        $project2 = Project::factory()->create(['maximum_students' => 1]);
         $project2->courses()->save($course);
 
         $response = $this->actingAs($student)
@@ -541,11 +541,11 @@ class StudentProjectTest extends TestCase
         $student = $this->createStudent(['degree_type' => 'Dual']);
         $course = $this->createCourse();
         $course->students()->sync([$student->id]);
-        list($uogProject1, $uogProject2, $uogProject3) = factory(\App\Project::class, 3)->create(['institution' => 'UoG'])
+        list($uogProject1, $uogProject2, $uogProject3) = \App\Project::factory()->count(3)->create(['institution' => 'UoG'])
             ->each(function ($project) use ($course) {
                 $project->courses()->sync([$course->id]);
             });
-        list($uestcProject1, $uestcProject2, $uestcProject3, $uestcProject4, $uestcProject5, $uestcProject6) = factory(\App\Project::class, 6)->create(['institution' => 'UESTC'])
+        list($uestcProject1, $uestcProject2, $uestcProject3, $uestcProject4, $uestcProject5, $uestcProject6) = \App\Project::factory()->count(6)->create(['institution' => 'UESTC'])
             ->each(function ($project) use ($course) {
                 $project->courses()->sync([$course->id]);
             });

@@ -16,7 +16,7 @@ class UserAdminTest extends DuskTestCase
 
     public function test_staff_admin_routes_cant_be_accessed_by_regular_users()
     {
-        $regularUser = factory(User::class)->create(['is_admin' => false]);
+        $regularUser = User::factory()->create(['is_admin' => false]);
 
         $response = $this->actingAs($regularUser)
                         ->get(route('staff.index'));
@@ -26,7 +26,7 @@ class UserAdminTest extends DuskTestCase
 
     public function test_admin_can_create_a_new_staff_member()
     {
-        $adminUser = factory(User::class)->create(['is_admin' => true]);
+        $adminUser = User::factory()->create(['is_admin' => true]);
         $this->browse(function ($browser) use ($adminUser) {
             $browser->loginAs($adminUser)
                     ->visit(route('staff.index'))
@@ -50,7 +50,7 @@ class UserAdminTest extends DuskTestCase
 
     public function test_admin_can_create_a_new_student_member()
     {
-        $adminUser = factory(User::class)->create(['is_admin' => true]);
+        $adminUser = User::factory()->create(['is_admin' => true]);
         $this->browse(function ($browser) use ($adminUser) {
             $browser->loginAs($adminUser)
                     ->visit(route('student.index'))
@@ -71,8 +71,8 @@ class UserAdminTest extends DuskTestCase
 
     public function test_admin_can_edit_an_existing_user()
     {
-        $adminUser = factory(User::class)->create(['is_admin' => true]);
-        $staffUser = factory(User::class)->create(['is_student' => false]);
+        $adminUser = User::factory()->create(['is_admin' => true]);
+        $staffUser = User::factory()->create(['is_student' => false]);
         $this->browse(function ($browser) use ($adminUser, $staffUser) {
             $browser->loginAs($adminUser)
                     ->visit(route('staff.index'))
@@ -87,8 +87,8 @@ class UserAdminTest extends DuskTestCase
 
     public function test_admin_can_impersonate_another_user()
     {
-        $adminUser = factory(User::class)->create(['is_admin' => true]);
-        $staffUser = factory(User::class)->create(['is_student' => false]);
+        $adminUser = User::factory()->create(['is_admin' => true]);
+        $staffUser = User::factory()->create(['is_student' => false]);
         $this->browse(function ($browser) use ($adminUser, $staffUser) {
             $browser->loginAs($adminUser)
                     ->visit('/')

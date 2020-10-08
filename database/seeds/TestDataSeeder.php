@@ -12,7 +12,7 @@ class TestDataSeeder extends Seeder
     public function run()
     {
         Mail::fake();
-        $admin = factory(User::class)->create([
+        $admin = User::factory()->create([
             'username' => 'admin',
             'password' => bcrypt('secret'),
             'email' => 'admin@example.com',
@@ -20,8 +20,8 @@ class TestDataSeeder extends Seeder
             'forenames' => 'admin',
             'is_admin' => true,
         ]);
-        $course = factory(Course::class)->create();
-        $course2 = factory(Course::class)->create();
+        $course = Course::factory()->create();
+        $course2 = Course::factory()->create();
         $disciplines = [
             'Communications',
             'Control',
@@ -33,19 +33,19 @@ class TestDataSeeder extends Seeder
             'Signal Processing',
         ];
         foreach ($disciplines as $disciplineTitle) {
-            $discipline = factory(Discipline::class)->create(['title' => $disciplineTitle]);
-            $uogProjects = factory(Project::class, 3)->create(['institution' => 'UoG'])->each(function ($project) use ($course, $discipline) {
+            $discipline = Discipline::factory()->create(['title' => $disciplineTitle]);
+            $uogProjects = Project::factory()->count(3)->create(['institution' => 'UoG'])->each(function ($project) use ($course, $discipline) {
                 $project->courses()->sync([$course->id]);
                 $project->disciplines()->sync([$discipline->id]);
             });
-            $uestcProjects = factory(Project::class, 3)->create(['institution' => 'UESTC'])->each(function ($project) use ($course, $discipline) {
+            $uestcProjects = Project::factory()->count(3)->create(['institution' => 'UESTC'])->each(function ($project) use ($course, $discipline) {
                 $project->courses()->sync([$course->id]);
                 $project->disciplines()->sync([$discipline->id]);
             });
         }
-        $students = factory(User::class, 15)->states('student')->create(['degree_type' => null]);
+        $students = User::factory()->count(15)->student()->create(['degree_type' => null]);
         $course->students()->sync($students->pluck('id'));
-        $students = factory(User::class, 15)->states('student')->create(['degree_type' => 'Single']);
+        $students = User::factory()->count(15)->student()->create(['degree_type' => 'Single']);
         $course->students()->sync($students->pluck('id'));
     }
 }

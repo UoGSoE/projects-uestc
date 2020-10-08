@@ -27,7 +27,7 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_can_create_a_new_project()
     {
-        $this->regularUser = factory(User::class)->states('staff')->create();
+        $this->regularUser = User::factory()->staff()->create();
 
         $response = $this->actingAs($this->regularUser)->get(route('project.create'));
 
@@ -65,9 +65,9 @@ class StaffProjectTest extends TestCase
     /** @test */
     public function staff_can_add_multiple_disciplines_to_a_project()
     {
-        $staff = factory(User::class)->states('staff')->create();
-        $courses = factory(Course::class, 2)->create();
-        $disciplines = factory(Discipline::class, 3)->create();
+        $staff = User::factory()->staff()->create();
+        $courses = Course::factory()->count(2)->create();
+        $disciplines = Discipline::factory()->count(3)->create();
 
         $response = $this->actingAs($staff)->post(route('project.store'), [
             'title' => 'Project Title',
@@ -112,7 +112,7 @@ class StaffProjectTest extends TestCase
     /** @test */
     public function staff_can_only_create_projects_between_valid_dates()
     {
-        $this->regularUser = factory(User::class)->states('staff')->create();
+        $this->regularUser = User::factory()->staff()->create();
         ProjectConfig::setOption('project_edit_start', Carbon::now()->addDays(7)->format('d/m/Y'));
         ProjectConfig::setOption('project_edit_end', Carbon::now()->addDays(14)->format('d/m/Y'));
 
@@ -128,7 +128,7 @@ class StaffProjectTest extends TestCase
     /** @test */
     public function admin_can_edit_projects_no_matter_what_the_date()
     {
-        $this->admin = factory(User::class)->states('admin')->create();
+        $this->admin = User::factory()->admin()->create();
         ProjectConfig::setOption('project_edit_start', Carbon::now()->addDays(7)->format('d/m/Y'));
         ProjectConfig::setOption('project_edit_end', Carbon::now()->addDays(14)->format('d/m/Y'));
 
@@ -144,7 +144,7 @@ class StaffProjectTest extends TestCase
     /** @test */
     public function check_dropdown_matches_users_institution_on_project_edit_page()
     {
-        $this->regularUser = factory(User::class)->states('staff')->create(['institution' => 'UESTC']);
+        $this->regularUser = User::factory()->staff()->create(['institution' => 'UESTC']);
 
         $response = $this->actingAs($this->regularUser)
                         ->get(route('project.create'));
@@ -155,8 +155,8 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_can_edit_their_own_project()
     {
-        $this->regularUser = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
+        $this->regularUser = User::factory()->staff()->create();
+        $project = Project::factory()->create(['user_id' => $this->regularUser->id]);
 
         $response = $this->actingAs($this->regularUser)
                         ->post(route('project.update', $project->id), $this->defaultProjectData([
@@ -176,9 +176,9 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_cant_edit_someone_elses_project()
     {
-        $this->regularUser = factory(User::class)->states('staff')->create();
-        $user2 = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $user2->id]);
+        $this->regularUser = User::factory()->staff()->create();
+        $user2 = User::factory()->staff()->create();
+        $project = Project::factory()->create(['user_id' => $user2->id]);
 
         $response = $this->actingAs($this->regularUser)
                         ->post(route('project.update', $project->id), $this->defaultProjectData(['title' => 'UPDATEDPROJECT']));
@@ -189,9 +189,9 @@ class StaffProjectTest extends TestCase
 
     public function test_admin_can_edit_someone_elses_project()
     {
-        $admin = factory(User::class)->states('admin')->create();
-        $user2 = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $user2->id]);
+        $admin = User::factory()->admin()->create();
+        $user2 = User::factory()->staff()->create();
+        $project = Project::factory()->create(['user_id' => $user2->id]);
 
         $response = $this->actingAs($admin)
                         ->post(route('project.update', $project->id), $this->defaultProjectData(['title' => 'UPDATEDPROJECT']));
@@ -202,8 +202,8 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_can_delete_their_own_project()
     {
-        $this->regularUser = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
+        $this->regularUser = User::factory()->staff()->create();
+        $project = Project::factory()->create(['user_id' => $this->regularUser->id]);
 
         $response = $this->actingAs($this->regularUser)
                         ->get(route('project.destroy', $project->id));
@@ -215,9 +215,9 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_cant_delete_someone_elses_project()
     {
-        $this->regularUser = factory(User::class)->states('staff')->create();
-        $user2 = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
+        $this->regularUser = User::factory()->staff()->create();
+        $user2 = User::factory()->staff()->create();
+        $project = Project::factory()->create(['user_id' => $this->regularUser->id]);
 
         $response = $this->actingAs($user2)
                         ->get(route('project.destroy', $project->id));
@@ -228,8 +228,8 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_can_make_a_copy_of_their_project()
     {
-        $this->regularUser = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $this->regularUser->id]);
+        $this->regularUser = User::factory()->staff()->create();
+        $project = Project::factory()->create(['user_id' => $this->regularUser->id]);
 
         $response = $this->actingAs($this->regularUser)
                         ->get(route('project.copy', $project->id));
@@ -244,9 +244,9 @@ class StaffProjectTest extends TestCase
     // public function staff_can_accept_a_student_onto_a_project()
     // {
     //     ProjectConfig::setOption('round', 1);
-    //     $staff = factory(User::class)->states('staff')->create();
-    //     $student = factory(User::class)->states('student')->create();
-    //     $project = factory(Project::class)->create(['user_id' => $staff->id]);
+    //     $staff = User::factory()->staff()->create();
+    //     $student = User::factory()->student()->create();
+    //     $project = Project::factory()->create(['user_id' => $staff->id]);
 
     //     $response = $this->actingAs($staff)
     //                     ->post(route('project.enrol', $project->id), ['accepted' => $student->id]);
@@ -260,9 +260,9 @@ class StaffProjectTest extends TestCase
     // public function a_notification_is_sent_to_the_student_when_accepted_onto_a_project()
     // {
     //     Notification::fake();
-    //     $staff = factory(User::class)->states('staff')->create();
-    //     $student = factory(User::class)->states('student')->create();
-    //     $project = factory(Project::class)->create(['user_id' => $staff->id]);
+    //     $staff = User::factory()->staff()->create();
+    //     $student = User::factory()->student()->create();
+    //     $project = Project::factory()->create(['user_id' => $staff->id]);
 
     //     $response = $this->actingAs($staff)
     //                     ->post(route('project.enrol', $project->id), ['accepted' => $student->id]);
@@ -287,11 +287,11 @@ class StaffProjectTest extends TestCase
     // public function staff_cant_accept_a_student_onto_a_project_if_they_are_already_accepted_onto_one()
     // {
     //     ProjectConfig::setOption('round', 1);
-    //     $staff1 = factory(User::class)->states('staff')->create();
-    //     $staff2 = factory(User::class)->states('staff')->create();
-    //     $student = factory(User::class)->states('student')->create();
-    //     $project1 = factory(Project::class)->create(['user_id' => $staff1->id]);
-    //     $project2 = factory(Project::class)->create(['user_id' => $staff2->id]);
+    //     $staff1 = User::factory()->staff()->create();
+    //     $staff2 = User::factory()->staff()->create();
+    //     $student = User::factory()->student()->create();
+    //     $project1 = Project::factory()->create(['user_id' => $staff1->id]);
+    //     $project2 = Project::factory()->create(['user_id' => $staff2->id]);
     //     $project2->acceptStudent($student);
 
     //     $response = $this->actingAs($staff1)->fromUrl(route('project.show', $project1->id))
@@ -306,9 +306,9 @@ class StaffProjectTest extends TestCase
     public function test_staff_can_preallocate_a_student_to_a_project()
     {
         ProjectConfig::setOption('round', 1);
-        $staff = factory(User::class)->states('staff')->create();
-        $student = factory(User::class)->states('student')->create();
-        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+        $staff = User::factory()->staff()->create();
+        $student = User::factory()->student()->create();
+        $project = Project::factory()->create(['user_id' => $staff->id]);
 
         $response = $this->actingAs($staff)
                         ->post(route('project.update', $project->id), $this->defaultProjectData(['student_id' => $student->id]));
@@ -320,8 +320,8 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_can_add_links_to_a_project()
     {
-        $staff = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+        $staff = User::factory()->staff()->create();
+        $project = Project::factory()->create(['user_id' => $staff->id]);
 
         $response = $this->actingAs($staff)
                         ->post(route('project.update', $project->id), $this->defaultProjectData([
@@ -339,8 +339,8 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_can_remove_links_from_a_project()
     {
-        $staff = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+        $staff = User::factory()->staff()->create();
+        $project = Project::factory()->create(['user_id' => $staff->id]);
         $project->links()->create(['url' => 'http://site1.com']);
         $project->links()->create(['url' => 'http://site2.com']);
 
@@ -361,8 +361,8 @@ class StaffProjectTest extends TestCase
     {
         Storage::fake();
         $this->withoutExceptionHandling();
-        $staff = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+        $staff = User::factory()->staff()->create();
+        $project = Project::factory()->create(['user_id' => $staff->id]);
 
         $filename = 'tests/data/test_cv.pdf';
         $file = UploadedFile::fake()->create('test_cv.pdf');
@@ -383,8 +383,8 @@ class StaffProjectTest extends TestCase
 
     public function test_staff_can_remove_existing_files_from_a_project()
     {
-        $staff = factory(User::class)->states('staff')->create();
-        $project = factory(Project::class)->create(['user_id' => $staff->id]);
+        $staff = User::factory()->staff()->create();
+        $project = Project::factory()->create(['user_id' => $staff->id]);
 
         $filename = 'tests/data/test_cv.pdf';
         $file = UploadedFile::fake()->create('test_cv.pdf');
@@ -404,7 +404,7 @@ class StaffProjectTest extends TestCase
 
     protected function defaultProjectData($overrides = [])
     {
-        $course = factory(Course::class)->create();
+        $course = Course::factory()->create();
 
         return array_merge([
             'title' => 'DEFAULTTITLE',

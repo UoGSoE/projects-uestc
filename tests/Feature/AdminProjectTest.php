@@ -106,7 +106,7 @@ class AdminProjectTest extends TestCase
     {
         ProjectConfig::setOption('round', 1);
         $project = $this->createProject();
-        factory(Project::class, 10)->create();
+        Project::factory()->count(10)->create();
 
         $response = $this->get(route('api.projects'));
 

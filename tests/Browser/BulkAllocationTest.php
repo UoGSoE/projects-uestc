@@ -18,7 +18,7 @@ class BulkAllocationTest extends DuskTestCase
         $student1 = $this->createStudent();
         $student2 = $this->createStudent();
         $course = $this->createCourse();
-        list($project1, $project2) = factory(\App\Project::class, 2)->create()->each(function ($project) use ($course) {
+        list($project1, $project2) = \App\Project::factory()->count(2)->create()->each(function ($project) use ($course) {
             $project->courses()->sync([$course->id]);
         });
         $project1->addStudent($student1);

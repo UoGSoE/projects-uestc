@@ -18,10 +18,10 @@ class ClearUnsuccessfulStudentTest extends TestCase
     public function test_can_remove_all_unsuccessful_student_choices()
     {
         ProjectConfig::setOption('round', 1);
-        $project1 = factory(Project::class)->create();
-        $project2 = factory(Project::class)->create(['maximum_students' => 2]);
-        $student1 = factory(User::class)->states('student')->create();
-        $student2 = factory(User::class)->states('student')->create();
+        $project1 = Project::factory()->create();
+        $project2 = Project::factory()->create(['maximum_students' => 2]);
+        $student1 = User::factory()->student()->create();
+        $student2 = User::factory()->student()->create();
         $project1->addStudent($student1);
         $project1->addStudent($student2);
         $project2->acceptStudent($student1);
