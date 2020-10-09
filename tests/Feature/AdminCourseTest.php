@@ -80,6 +80,7 @@ class AdminCourseTest extends TestCase
     /** @test */
     public function admin_can_remove_all_students_from_a_course()
     {
+        $this->withoutExceptionHandling();
         $admin = $this->createAdmin();
         $course = $this->createCourse();
         $course2 = $this->createCourse();

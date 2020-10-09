@@ -117,7 +117,7 @@ class UserAdminTest extends DuskTestCase
                     ->press('Send Email')
                     ->pause(2000);
             $logFile = file_get_contents(storage_path().'/logs/laravel.log');
-            $this->assertContains('To: xyz@gmail.com', $logFile);
+            $this->assertStringContainsString('To: xyz@gmail.com', $logFile);
         });
     }
 }

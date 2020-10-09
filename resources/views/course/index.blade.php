@@ -18,7 +18,7 @@
         <tbody>
             @foreach ($courses as $course)
                 <tr>
-                    <td><a href="{!! action('CourseController@show', $course->id) !!}">{{ $course->code }}</a></td>
+                    <td><a href="{!! route('course.show', $course->id) !!}">{{ $course->code }}</a></td>
                     <td>{{ $course->title }}</td>
                     <td>{{ $course->students->count() }}</td>
                     <td>{{ $course->projects->count() }}</td>

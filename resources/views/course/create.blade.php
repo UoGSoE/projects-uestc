@@ -6,7 +6,7 @@
             New Course
         </h2>
 
-        <form method="POST" action="{!! action('CourseController@store') !!}">
+        <form method="POST" action="{!! route('course.store') !!}">
 
             @include ('course.partials.course_form')
 

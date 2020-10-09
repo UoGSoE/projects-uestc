@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\PasswordReset;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PasswordResetFactory extends Factory

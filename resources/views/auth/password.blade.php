@@ -6,7 +6,7 @@
             Update your password
         </h2>
 
-        <form method="POST" action="{!! action('Auth\AuthController@resetPassword', $token) !!}">
+        <form method="POST" action="{!! route('password.do_reset', $token) !!}">
             {!! csrf_field() !!}
             <div class="form-group">
                 <label for="inputPassword1">New Password</label>

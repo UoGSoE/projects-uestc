@@ -11,7 +11,7 @@
             Students &amp; Glasgow staff can log in using your University of Glasgow username &amp; password. External staff
             should use your email address.
         </p>
-		<form class="form-inline" role="form" method="POST" action="{{ url("/auth/login") }}" id="loginform">
+		<form class="form-inline" role="form" method="POST" action="{{ route('login.login') }}" id="loginform">
           <input type="hidden" name="_token" value="{{ csrf_token() }}" >
 		  <div class="form-group">
 		    <label class="sr-only" for="username">Username or Email</label>
@@ -28,7 +28,7 @@
             </p>
 		</form>
         <div id="resetform" style="display: none">
-            <form class="form-inline" role="form" method="POST" action="{{ action("Auth\AuthController@generateResetLink") }}">
+            <form class="form-inline" role="form" method="POST" action="{{ route('password.generate_reset') }}">
               <input type="hidden" name="_token" value="{{ csrf_token() }}" >
               <div class="form-group">
                 <label class="sr-only" for="email">Email address</label>

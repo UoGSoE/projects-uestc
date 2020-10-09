@@ -9,7 +9,7 @@
             </a>
         </h2>
 
-        <form method="POST" action="{!! action('CourseController@update', $course->id) !!}">
+        <form method="POST" action="{!! route('course.update', $course->id) !!}">
 
             @include ('course.partials.course_form')
 

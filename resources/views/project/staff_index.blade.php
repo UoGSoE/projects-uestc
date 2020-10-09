@@ -3,7 +3,7 @@
 @section('content')
     <h2>
         Your Projects
-        <a href="{!! action('ProjectController@create') !!}" class="btn btn-default">New Project</a>
+        <a href="{!! route('project.create') !!}" class="btn btn-default">New Project</a>
     </h2>
     <table class="table table-striped">
         <thead>
@@ -17,7 +17,7 @@
             @foreach (Auth::user()->projects as $project)
                 <tr>
                     <td>
-                        <a href="{!! action('ProjectController@show', $project->id) !!}">
+                        <a href="{!! route('project.show', $project->id) !!}">
                             @if ($project->is_active)
                                 {{ $project->title }}
                             @else

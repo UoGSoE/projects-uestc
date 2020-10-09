@@ -9,7 +9,7 @@ Route::get('auth/login', [App\Http\Controllers\Auth\AuthController::class, 'inde
 Route::post('auth/login', [App\Http\Controllers\Auth\AuthController::class, 'login'])->name('login.login');
 Route::get('logout', [App\Http\Controllers\Auth\AuthController::class, 'logout'])->name('logout');
 
-Route::post('resetgenerate', [App\Http\Controllers\Auth\AuthController::class, 'generateResetLink']);
+Route::post('resetgenerate', [App\Http\Controllers\Auth\AuthController::class, 'generateResetLink'])->name('password.generate_reset');
 Route::get('resetpassword/{token}', [App\Http\Controllers\Auth\AuthController::class, 'password'])->name('password.reset');
 Route::post('resetpassword/{token}', [App\Http\Controllers\Auth\AuthController::class, 'resetPassword'])->name('password.do_reset');
 
@@ -45,7 +45,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['middleware' => ['admin'], 'prefix' => '/admin'], function () {
         Route::get('/staff', [App\Http\Controllers\StaffController::class, 'index'])->name('staff.index');
-        Route::post('/staff/email/{id}', [App\Http\Controllers\StaffController::class, 'sendPasswordEmail']);
+        Route::post('/staff/email/{id}', [App\Http\Controllers\StaffController::class, 'sendPasswordEmail'])->name('staff.send_password_email');
         Route::get('/staff/import', [App\Http\Controllers\StaffImportController::class, 'edit'])->name('staff.import');
         Route::post('/staff/import', [App\Http\Controllers\StaffImportController::class, 'update'])->name('staff.do_import');
 

@@ -5,7 +5,7 @@
     <h2>
         Project Details
         @can('edit_this_project', $project)
-            <a href="{!! action('ProjectController@edit', $project->id) !!}" class="btn btn-default">
+            <a href="{!! route('project.edit', $project->id) !!}" class="btn btn-default">
                 Edit
             </a>
         @endcan
@@ -22,7 +22,7 @@
         <dt>Run By</dt>
         <dd>
             @can('view_users')
-                <a href="{!! action('UserController@show', $project->owner->id) !!}">
+                <a href="{!! route('user.show', $project->owner->id) !!}">
                     {{ $project->owner->fullName() }}
                 </a>
             @else
@@ -37,7 +37,7 @@
                 @foreach ($project->courses as $course)
                     <li>
                         @can('edit_courses')
-                            <a href="{!! action('CourseController@show', $course->id) !!}">
+                            <a href="{!! route('course.show', $course->id) !!}">
                                 {{ $course->code }} {{ $course->title }}
                             </a>
                         @else

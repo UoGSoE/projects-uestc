@@ -4,7 +4,7 @@
     <div class="container">
         <h2>
             Course {{ $course->code }}
-            <a href="{!! action('CourseController@edit', $course->id) !!}" class="btn btn-default">Edit</a>
+            <a href="{!! route('course.edit', $course->id) !!}" class="btn btn-default">Edit</a>
         </h2>
         <dl>
             <dt>Title</dt>
@@ -14,7 +14,7 @@
                 <ul class="list-inline">
                     @foreach ($course->projects as $project)
                         <li>
-                            <a href="{!! action('ProjectController@show', $project->id) !!}">
+                            <a href="{!! route('project.show', $project->id) !!}">
                                 {{ $project->title }}
                             </a>
                         </li>

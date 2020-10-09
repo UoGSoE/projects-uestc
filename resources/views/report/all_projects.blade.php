@@ -20,11 +20,11 @@
     </p>
     <p>
         Type :
-        <a href="{!! action('ReportController@allProjects') !!}">
+        <a href="{!! route('report.projects') !!}">
             All
         </a>
         @foreach ($disciplines as $discipline)
-            <a href="{!! action('ReportController@allProjectsOfDiscipline', $discipline->id) !!}">
+            <a href="{!! route('report.projects_of_discipline', $discipline->id) !!}">
                 {{ $discipline->title }}
             </a>
         @endforeach

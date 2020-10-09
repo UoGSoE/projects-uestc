@@ -5,17 +5,17 @@
         <h2>
             Details for @if ($user->is_student) student @else staff @endif {{ $user->fullName() }}
             @can('edit_users')
-                <a href="{!! action('UserController@edit', $user->id) !!}" class="btn btn-default">Edit</a>
+                <a href="{!! route('user.edit', $user->id) !!}" class="btn btn-default">Edit</a>
             @endcan
             @can('edit_users')
                 <div class="btn-group pull-right">
 
-                <a href="{!! action('UserController@logInAs', $user->id) !!}" class="btn btn-warning">Log in as</a>
+                <a href="{!! route('user.impersonate', $user->id) !!}" class="btn btn-warning">Log in as</a>
                 @if(!$user->is_student and $user->usernameIsEmail())
                     @if($user->hasPasswordReset())
                         <a style="margin-right:10px" href="#" class="btn btn-outline btn-info" disabled>User has awaiting password reset email</a>
                     @else
-                        <a style="margin-right:10px" href="{!! action('StaffController@sendPasswordEmail', $user->id) !!}" class="btn btn-info">Send Password Reset Email</a>
+                        <a style="margin-right:10px" href="{!! route('staff.send_password_email', $user->id) !!}" class="btn btn-info">Send Password Reset Email</a>
                     @endif
                 @endif
                 </div>
@@ -49,7 +49,7 @@
                 <dt>Enrolled On</dt>
                 @if ($user->courses()->count() > 0)
                     <dd>
-                        <a href="{!! action('CourseController@show', $user->courses->first()->id) !!}">
+                        <a href="{!! route('course.show', $user->courses->first()->id) !!}">
                              {{ $user->courses->first()->code }} - {{ $user->courses->first()->title }}
                         </a>
                     </dd>
@@ -76,7 +76,7 @@
                 <ol>
                     @foreach ($user->projects()->UESTC()->orderBy('preference')->get() as $project)
                         <li>
-                            <a href="{!! action('ProjectController@show', $project->id) !!}">
+                            <a href="{!! route('project.show', $project->id) !!}">
                                 {{ $project->title }}
                             </a> ({{ $project->students->count() }} Students)
                             (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})
@@ -90,7 +90,7 @@
                 <ol>
                     @foreach ($user->projects()->UoG()->orderBy('preference')->get() as $project)
                         <li>
-                            <a href="{!! action('ProjectController@show', $project->id) !!}">
+                            <a href="{!! route('project.show', $project->id) !!}">
                                 {{ $project->title }}
                             </a> ({{ $project->students->count() }} Students)
                             (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})
@@ -101,7 +101,7 @@
         @else
             @foreach ($user->projects as $project)
                 <li>
-                    <a href="{!! action('ProjectController@show', $project->id) !!}">
+                    <a href="{!! route('project.show', $project->id) !!}">
                         {{ $project->title }}
                     </a> ({{ $project->students->count() }} Students)
                     (Created {{ $project->created_at->format('d/m/Y') }} / Updated {{ $project->updated_at->format('d/m/Y' )}})

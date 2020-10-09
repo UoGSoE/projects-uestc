@@ -36,7 +36,7 @@ class CourseEnrolmentController extends Controller
         $course->students()->sync($this->studentIds);
         EventLog::log(Auth::user()->id, "Updated student list for course {$course->title} {$course->code}");
 
-        return redirect()->action('CourseController@show', $id);
+        return redirect()->route('course.show', $id);
     }
 
     private function parseExcelRow($row, $students)
@@ -110,6 +110,6 @@ class CourseEnrolmentController extends Controller
         }
         EventLog::log(Auth::user()->id, "Removed all students on course {$course->title} {$course->code}");
 
-        return redirect()->action('CourseController@show', $courseId);
+        return redirect()->route('course.show', $courseId);
     }
 }

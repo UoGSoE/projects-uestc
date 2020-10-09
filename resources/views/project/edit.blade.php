@@ -7,7 +7,7 @@
         <a href="{!! route('project.copy', $project->id) !!}" class="btn btn-default">
             Copy This Project
         </a>
-        <a action-href="{!! action('ProjectController@destroy', $project->id) !!}" data-confirm="Really delete this project?" class="btn btn-danger pull-right data-confirm">
+        <a action-href="{!! route('project.destroy', $project->id) !!}" data-confirm="Really delete this project?" class="btn btn-danger pull-right data-confirm">
             Delete
         </a>
     </h2>

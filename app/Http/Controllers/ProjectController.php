@@ -83,7 +83,7 @@ class ProjectController extends Controller
         }
         EventLog::log(Auth::user()->id, "Created project {$project->title}");
 
-        return redirect()->action('ProjectController@show', $project->id);
+        return redirect()->route('project.show', $project->id);
     }
 
     /**
@@ -165,7 +165,7 @@ class ProjectController extends Controller
         $project->disciplines()->sync($request->disciplines);
         EventLog::log(Auth::user()->id, "Updated project {$project->title}");
 
-        return redirect()->action('ProjectController@show', $project->id);
+        return redirect()->route('project.show', $project->id);
     }
 
     /**

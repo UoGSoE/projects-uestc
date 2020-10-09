@@ -58,8 +58,11 @@ class AdminCourseTest extends DuskTestCase
                     ->clickLink('Remove All Students')
                     ->waitFor('#dataConfirmModal')
                     ->press('Cancel')
+                    ->waitUntilMissing('#dataConfirmModal')
                     ->assertSee('SURNAME1')
                     ->clickLink('Remove All Students')
+                    // Note: this keeps failing when run as part of the suite, but passes individually
+                    // (and works fine in the real browser session)
                     ->waitFor('#dataConfirmModal')
                     ->clickLink('OK')
                     ->assertDontSee('SURNAME1')

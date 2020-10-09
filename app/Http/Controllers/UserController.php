@@ -38,7 +38,7 @@ class UserController extends Controller
     {
         $user = User::createFromForm($request);
 
-        return redirect()->action('UserController@show', $user->id);
+        return redirect()->route('user.show', $user->id);
     }
 
     public function edit($userId)
@@ -54,7 +54,7 @@ class UserController extends Controller
     {
         $user = User::updateFromForm($request);
 
-        return redirect()->action('UserController@show', $user->id);
+        return redirect()->route('user.show', $user->id);
     }
 
     public function destroy($userId)
