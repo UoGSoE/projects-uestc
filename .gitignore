@@ -3,6 +3,7 @@
 public/.htaccess
 Homestead.yaml
 Homestead.json
+*.pdf
 .env
 .env.dusk.local
 .DS_Store
