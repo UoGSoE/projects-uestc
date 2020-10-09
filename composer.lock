@@ -3376,16 +3376,16 @@
         },
         {
             "name": "spatie/simple-excel",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/simple-excel.git",
-                "reference": "8be864d06c24e47352f9f1203d53ba3297f59b11"
+                "reference": "d09471505775dda6ed00c2deb35033d847a89387"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/simple-excel/zipball/8be864d06c24e47352f9f1203d53ba3297f59b11",
-                "reference": "8be864d06c24e47352f9f1203d53ba3297f59b11",
+                "url": "https://api.github.com/repos/spatie/simple-excel/zipball/d09471505775dda6ed00c2deb35033d847a89387",
+                "reference": "d09471505775dda6ed00c2deb35033d847a89387",
                 "shasum": ""
             },
             "require": {
@@ -3423,7 +3423,7 @@
                 "simple-excel",
                 "spatie"
             ],
-            "time": "2020-10-04T19:04:17+00:00"
+            "time": "2020-10-08T16:02:50+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
