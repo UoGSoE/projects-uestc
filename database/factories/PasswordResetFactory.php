@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\PasswordReset;
-use Illuminate\Support\Str;
+use App\Models\PasswordReset;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class PasswordResetFactory extends Factory
 {

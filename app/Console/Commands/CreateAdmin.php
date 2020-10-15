@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\PasswordReset;
+use App\Models\PasswordReset;
 use App\Role;
-use App\User;
+use App\Models\User;
 use Config;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Project;
-use App\ProjectConfig;
+use App\Models\Project;
+use App\Models\ProjectConfig;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller

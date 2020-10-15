@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Project;
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProjectFactory extends Factory
@@ -29,7 +29,7 @@ class ProjectFactory extends Factory
             'discipline_id' => null,
             'institution' => 'UoG',
             'user_id' => function () {
-                return \App\User::factory()->staff()->create()->id;
+                return \App\Models\User::factory()->staff()->create()->id;
             },
         ];
     }

@@ -4,7 +4,7 @@
 
 namespace Tests\Feature;
 
-use App\ProjectConfig;
+use App\Models\ProjectConfig;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

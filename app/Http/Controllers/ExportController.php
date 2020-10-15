@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Project;
-use App\ProjectConfig;
-use App\User;
+use App\Models\Project;
+use App\Models\ProjectConfig;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Spatie\SimpleExcel\SimpleExcelWriter;

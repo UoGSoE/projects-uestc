@@ -87,7 +87,7 @@ class CourseAdminTest extends DuskTestCase
                 ->see("Course {$this->course->code}")
                 ->see('Theres Been Taggart');   // a name from the test spreadsheet
             // now test uploading the same students to another course removes them from the first
-            $course2 = \App\Course::factory()->create();
+            $course2 = \App\Models\Course::factory()->create();
             $this->actingAs($this->staff)
                 ->visit("/course/{$course2->id}")
                 ->click('Import')
@@ -102,13 +102,13 @@ class CourseAdminTest extends DuskTestCase
     */
     private function buildWorld()
     {
-        $this->staff = \App\User::factory()->create(['is_student' => false]);
-        $this->staff2 = \App\User::factory()->create(['is_student' => false]);
-        $this->student = \App\User::factory()->create(['is_student' => true]);
-        $this->student2 = \App\User::factory()->create(['is_student' => true]);
-        $this->course = \App\Course::factory()->create();
+        $this->staff = \App\Models\User::factory()->create(['is_student' => false]);
+        $this->staff2 = \App\Models\User::factory()->create(['is_student' => false]);
+        $this->student = \App\Models\User::factory()->create(['is_student' => true]);
+        $this->student2 = \App\Models\User::factory()->create(['is_student' => true]);
+        $this->course = \App\Models\Course::factory()->create();
         $this->type = \App\ProjectType::factory()->create();
-        $this->project = \App\Project::factory()->create([
+        $this->project = \App\Models\Project::factory()->create([
             'user_id' => $this->staff2->id, 'type_id' => $this->type->id,
         ]);
         $this->role = \App\Role::factory()->create(['title' => 'site_admin']);

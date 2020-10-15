@@ -29,7 +29,7 @@ class StudentChooseProjectsTest extends DuskTestCase
         $course = $this->createCourse();
         $course->students()->sync([$student->id]);
         $discipline = $this->createDiscipline();
-        list($project1, $project2, $project3) = \App\Project::factory()->count(3)->create()->each(function ($project) use ($course) {
+        list($project1, $project2, $project3) = \App\Models\Project::factory()->count(3)->create()->each(function ($project) use ($course) {
             $project->courses()->sync([$course->id]);
         });
         $project1->discipline_id = $discipline->id;
@@ -60,7 +60,7 @@ class StudentChooseProjectsTest extends DuskTestCase
         $course = $this->createCourse();
         $course->students()->sync([$student->id]);
         $discipline = $this->createDiscipline();
-        list($project1, $project2, $project3) = \App\Project::factory()->count(3)->create()->each(function ($project) use ($course, $student2, $student3) {
+        list($project1, $project2, $project3) = \App\Models\Project::factory()->count(3)->create()->each(function ($project) use ($course, $student2, $student3) {
             $project->courses()->sync([$course->id]);
             $project->students()->sync([$student2->id, $student3->id]);
         });
@@ -88,10 +88,10 @@ class StudentChooseProjectsTest extends DuskTestCase
     //     $course = $this->createCourse();
     //     $course->students()->sync([$student->id]);
     //     $discipline = $this->createDiscipline();
-    //     list($uogProject1, $uogProject2, $uogProject3, $uogProject4) = \App\Project::factory()->count(4)->create()->each(function ($uogProject) use ($course) {
+    //     list($uogProject1, $uogProject2, $uogProject3, $uogProject4) = \App\Models\Project::factory()->count(4)->create()->each(function ($uogProject) use ($course) {
     //         $uogProject->courses()->sync([$course->id]);
     //     });
-    //     list($uestcProject1, $uestcProject2, $uestcProject3, $uestcProject4, $uestcProject5, $uestcProject6, $uestcProject7) = \App\Project::factory()->count(7)->create(['institution' => 'UESTC'])->each(function ($uestcProject) use ($course) {
+    //     list($uestcProject1, $uestcProject2, $uestcProject3, $uestcProject4, $uestcProject5, $uestcProject6, $uestcProject7) = \App\Models\Project::factory()->count(7)->create(['institution' => 'UESTC'])->each(function ($uestcProject) use ($course) {
     //         $uestcProject->courses()->sync([$course->id]);
     //     });
 
@@ -147,7 +147,7 @@ class StudentChooseProjectsTest extends DuskTestCase
         $course = $this->createCourse();
         $course->students()->sync([$student->id]);
         $discipline = $this->createDiscipline();
-        $project = \App\Project::factory()->create();
+        $project = \App\Models\Project::factory()->create();
         $project->courses()->sync([$course->id]);
         $project->syncLinks([['url' => 'http://www.example.com'], ['url' => 'http://www.blah.com']]);
         $filename = 'tests/data/test_cv.pdf';

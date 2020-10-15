@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Course;
-use App\Project;
-use App\ProjectConfig;
-use App\User;
+use App\Models\Course;
+use App\Models\Project;
+use App\Models\ProjectConfig;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller

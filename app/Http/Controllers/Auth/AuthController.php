@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\EventLog;
+use App\Models\EventLog;
 use App\FundingType;
 use App\Http\Controllers\Auth\Ldap;
 use App\Http\Controllers\Controller;
 use App\Location;
-use App\PasswordReset;
-use App\ProjectConfig;
-use App\User;
+use App\Models\PasswordReset;
+use App\Models\ProjectConfig;
+use App\Models\User;
 use App\UserGroup;
 use App\UserType;
 use Auth;

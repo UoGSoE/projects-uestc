@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\ProjectConfig;
-use App\ProjectRound;
-use App\User;
+use App\Models\ProjectConfig;
+use App\Models\ProjectRound;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

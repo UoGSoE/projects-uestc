@@ -1,12 +1,12 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Course;
-use App\EventLog;
+use App\Models\Course;
+use App\Models\EventLog;
 use App\Notifications\StaffPasswordNotification;
-use App\PasswordReset;
-use App\ProjectRound;
+use App\Models\PasswordReset;
+use App\Models\ProjectRound;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -186,7 +186,7 @@ class User extends Model implements
     /**
      * Used to get the first course a student belongs to.  In reality a student should only ever be on
      * one course - need confirmation from Scott/Kathleen before changing the relationship though.
-     * @return App\Course
+     * @return App\Models\Course
      */
     public function course()
     {

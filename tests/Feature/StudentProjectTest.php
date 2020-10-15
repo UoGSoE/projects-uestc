@@ -4,11 +4,11 @@
 
 namespace Tests\Feature;
 
-use App\Course;
-use App\Discipline;
-use App\Project;
-use App\ProjectConfig;
-use App\User;
+use App\Models\Course;
+use App\Models\Discipline;
+use App\Models\Project;
+use App\Models\ProjectConfig;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -541,11 +541,11 @@ class StudentProjectTest extends TestCase
         $student = $this->createStudent(['degree_type' => 'Dual']);
         $course = $this->createCourse();
         $course->students()->sync([$student->id]);
-        list($uogProject1, $uogProject2, $uogProject3) = \App\Project::factory()->count(3)->create(['institution' => 'UoG'])
+        list($uogProject1, $uogProject2, $uogProject3) = \App\Models\Project::factory()->count(3)->create(['institution' => 'UoG'])
             ->each(function ($project) use ($course) {
                 $project->courses()->sync([$course->id]);
             });
-        list($uestcProject1, $uestcProject2, $uestcProject3, $uestcProject4, $uestcProject5, $uestcProject6) = \App\Project::factory()->count(6)->create(['institution' => 'UESTC'])
+        list($uestcProject1, $uestcProject2, $uestcProject3, $uestcProject4, $uestcProject5, $uestcProject6) = \App\Models\Project::factory()->count(6)->create(['institution' => 'UESTC'])
             ->each(function ($project) use ($course) {
                 $project->courses()->sync([$course->id]);
             });

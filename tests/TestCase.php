@@ -34,42 +34,42 @@ abstract class TestCase extends BaseTestCase
 
     protected function createStudent($attribs = [])
     {
-        return \App\User::factory()->student()->create($attribs);
+        return \App\Models\User::factory()->student()->create($attribs);
     }
 
     protected function createStaff($attribs = [])
     {
-        return \App\User::factory()->staff()->create($attribs);
+        return \App\Models\User::factory()->staff()->create($attribs);
     }
 
     protected function createProject($attribs = [])
     {
-        return \App\Project::factory()->create($attribs);
+        return \App\Models\Project::factory()->create($attribs);
     }
 
     protected function createAdmin($attribs = [])
     {
-        return \App\User::factory()->admin()->create($attribs);
+        return \App\Models\User::factory()->admin()->create($attribs);
     }
 
     protected function createConvenor($attribs = [])
     {
-        return \App\User::factory()->convenor()->create($attribs);
+        return \App\Models\User::factory()->convenor()->create($attribs);
     }
 
     protected function createDiscipline($attribs = [])
     {
-        return \App\Discipline::factory()->create($attribs);
+        return \App\Models\Discipline::factory()->create($attribs);
     }
 
     protected function createCourse($attribs = [])
     {
-        return \App\Course::factory()->create($attribs);
+        return \App\Models\Course::factory()->create($attribs);
     }
 
     protected function createToken($attribs = [])
     {
-        return \App\PasswordReset::factory()->create($attribs);
+        return \App\Models\PasswordReset::factory()->create($attribs);
     }
 
     protected function disableExceptionHandling()
