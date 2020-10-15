@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Discipline;
+use App\Models\Discipline;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Project;
-use App\ProjectConfig;
-use App\User;
+use App\Models\Project;
+use App\Models\ProjectConfig;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller

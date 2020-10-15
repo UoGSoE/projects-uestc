@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Exceptions\ProjectOversubscribedException;
 use App\Exceptions\StudentAlreadyAllocatedException;
 use App\Notifications\AllocatedToProject;
-use App\ProjectConfig;
+use App\Models\ProjectConfig;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

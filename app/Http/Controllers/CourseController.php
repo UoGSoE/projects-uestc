@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Course;
-use App\EventLog;
+use App\Models\Course;
+use App\Models\EventLog;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\PasswordReset;
-use App\ProjectConfig;
-use App\User;
+use App\Models\PasswordReset;
+use App\Models\ProjectConfig;
+use App\Models\User;
 use Auth;
 use Excel;
 use Illuminate\Http\Request;

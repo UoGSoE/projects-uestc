@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Discipline;
+use App\Models\Discipline;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 

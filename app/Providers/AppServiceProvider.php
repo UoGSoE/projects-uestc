@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Programme;
+use App\Models\Programme;
 use DB;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;

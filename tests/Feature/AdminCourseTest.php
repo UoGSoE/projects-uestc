@@ -112,8 +112,8 @@ class AdminCourseTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect(route('course.show', $course->id));
-        $student1 = \App\User::orderBy('id')->students()->first();
-        $student2 = \App\User::orderBy('id', 'desc')->students()->first();
+        $student1 = \App\Models\User::orderBy('id')->students()->first();
+        $student2 = \App\Models\User::orderBy('id', 'desc')->students()->first();
         $this->assertDatabaseHas('course_student', ['course_id' => $course->id, 'user_id' => $student1->id]);
         $this->assertDatabaseHas('course_student', ['course_id' => $course->id, 'user_id' => $student2->id]);
         $this->assertDatabaseHas('users', ['username' => '1234567s', 'surname' => 'SURNAME1']);
@@ -135,8 +135,8 @@ class AdminCourseTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect(route('course.show', $course->id));
-        $student1 = \App\User::orderBy('id')->students()->first();
-        $student2 = \App\User::orderBy('id', 'desc')->students()->first();
+        $student1 = \App\Models\User::orderBy('id')->students()->first();
+        $student2 = \App\Models\User::orderBy('id', 'desc')->students()->first();
         $this->assertDatabaseMissing('course_student', ['course_id' => $course->id, 'user_id' => $student->id]);
     }
 }

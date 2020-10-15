@@ -48,41 +48,41 @@ abstract class DuskTestCase extends BaseTestCase
 
     protected function createProjectFile($attribs)
     {
-        return \App\ProjectFile::factory()->create($attribs);
+        return \App\Models\ProjectFile::factory()->create($attribs);
     }
 
     protected function createProjectLink($attribs)
     {
-        return \App\ProjectLink::factory()->create($attribs);
+        return \App\Models\ProjectLink::factory()->create($attribs);
     }
 
     protected function createStudent($attribs = [])
     {
-        return \App\User::factory()->student()->create($attribs);
+        return \App\Models\User::factory()->student()->create($attribs);
     }
 
     protected function createStaff($attribs = [])
     {
-        return \App\User::factory()->staff()->create($attribs);
+        return \App\Models\User::factory()->staff()->create($attribs);
     }
 
     protected function createAdmin($attribs = [])
     {
-        return \App\User::factory()->admin()->create($attribs);
+        return \App\Models\User::factory()->admin()->create($attribs);
     }
 
     protected function createProject($attribs = [])
     {
-        return \App\Project::factory()->create($attribs);
+        return \App\Models\Project::factory()->create($attribs);
     }
 
     protected function createCourse($attribs = [])
     {
-        return \App\Course::factory()->create($attribs);
+        return \App\Models\Course::factory()->create($attribs);
     }
 
     protected function createDiscipline($attribs = [])
     {
-        return \App\Discipline::factory()->create($attribs);
+        return \App\Models\Discipline::factory()->create($attribs);
     }
 }

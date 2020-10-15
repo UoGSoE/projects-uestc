@@ -5,8 +5,8 @@
 namespace Tests\Feature;
 
 use App\Notifications\StaffPasswordNotification;
-use App\ProjectConfig;
-use App\User;
+use App\Models\ProjectConfig;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
