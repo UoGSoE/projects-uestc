@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Course;
-use App\Discipline;
-use App\EventLog;
+use App\Models\Course;
+use App\Models\Discipline;
+use App\Models\EventLog;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Project;
-use App\ProjectConfig;
-use App\User;
+use App\Models\Project;
+use App\Models\ProjectConfig;
+use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Gate;

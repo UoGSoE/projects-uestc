@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\PasswordReset;
+use App\Models\PasswordReset;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 

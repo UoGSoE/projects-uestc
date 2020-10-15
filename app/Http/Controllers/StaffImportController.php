@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\EventLog;
-use App\User;
+use App\Models\EventLog;
+use App\Models\User;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\EventLog;
+use App\Models\EventLog;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use Carbon\Carbon;

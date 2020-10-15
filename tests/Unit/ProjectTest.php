@@ -5,9 +5,9 @@
 namespace Tests\Unit;
 
 use App\Exceptions\ProjectOversubscribedException;
-use App\Project;
-use App\ProjectConfig;
-use App\User;
+use App\Models\Project;
+use App\Models\ProjectConfig;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;

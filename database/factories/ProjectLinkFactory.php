@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\ProjectLink;
+use App\Models\ProjectLink;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProjectLinkFactory extends Factory
@@ -24,7 +24,7 @@ class ProjectLinkFactory extends Factory
         return [
             'url' => $this->faker->url,
             'project_id' => function () {
-                return \App\Project::factory()->create()->id;
+                return \App\Models\Project::factory()->create()->id;
             },
         ];
     }

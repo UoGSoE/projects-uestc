@@ -4,12 +4,12 @@
 
 namespace Tests\Feature;
 
-use App\Course;
-use App\Discipline;
+use App\Models\Course;
+use App\Models\Discipline;
 use App\Notifications\AllocatedToProject;
-use App\Project;
-use App\ProjectConfig;
-use App\User;
+use App\Models\Project;
+use App\Models\ProjectConfig;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

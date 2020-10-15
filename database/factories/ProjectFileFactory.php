@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\ProjectFile;
+use App\Models\ProjectFile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProjectFileFactory extends Factory
@@ -26,7 +26,7 @@ class ProjectFileFactory extends Factory
             'original_filename' => $this->faker->word.'.'.$this->faker->fileExtension,
             'file_size' => $this->faker->numberBetween(1000, 10000),
             'project_id' => function () {
-                return \App\Project::factory()->create()->id;
+                return \App\Models\Project::factory()->create()->id;
             },
         ];
     }

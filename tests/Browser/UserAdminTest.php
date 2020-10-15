@@ -5,7 +5,7 @@
 namespace Tests\Browser;
 
 use App\Notifications\StaffPasswordNotification;
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Notification;
 use Tests\DuskTestCase;

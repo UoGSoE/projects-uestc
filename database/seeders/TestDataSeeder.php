@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Course;
-use App\Discipline;
-use App\Project;
-use App\User;
+use App\Models\Course;
+use App\Models\Discipline;
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Mail;
 

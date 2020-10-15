@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Course;
-use App\EventLog;
-use App\User;
+use App\Models\Course;
+use App\Models\EventLog;
+use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;

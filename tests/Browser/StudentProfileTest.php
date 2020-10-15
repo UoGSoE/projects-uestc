@@ -4,7 +4,7 @@
 
 namespace Tests\Browser;
 
-use App\ProjectConfig;
+use App\Models\ProjectConfig;
 use Tests\DuskTestCase;
 
 class StudentProfileTest extends DuskTestCase
