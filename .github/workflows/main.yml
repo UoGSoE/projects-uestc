@@ -1,12 +1,14 @@
 name: build-images
 
 on:
-  # push:
+  push:
   workflow_dispatch:
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      PHP_VERSION: "7.4"
     services:
       mysql:
         image: mysql:5.7
@@ -46,7 +48,7 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
           target: ci
           build-args: |
-            PHP_VERSION=7.4
+            PHP_VERSION=${PHP_VERSION}
           tags: |
             uogsoe/${{ github.event.repository.name }}:qa-${{ github.sha }}
       - name: Run tests
@@ -69,6 +71,6 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           build-args: |
-            PHP_VERSION=7.4
+            PHP_VERSION=${PHP_VERSION}
           tags: |
             uogsoe/${{ github.event.repository.name }}:prod-${{ github.sha }}
