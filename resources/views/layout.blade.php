@@ -21,7 +21,7 @@
         }
     </style>
 </head>
-<body>
+<body style="padding-top: 70px;">
 	@include ('partials.navbar')
 
 	<div class="container">
