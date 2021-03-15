@@ -33,7 +33,7 @@ RUN npm install && \
 
 
 ### Prod php dependencies
-FROM uogsoe/soe-php-apache:${PHP_VERSION} as prod-composer
+FROM dev as prod-composer
 ENV APP_ENV=production
 ENV APP_DEBUG=0
 
@@ -121,7 +121,8 @@ ENV APP_DEBUG=1
 COPY --from=qa-composer /var/www/html/vendor /var/www/html/vendor
 
 #- Install sensiolabs security scanner and clear the caches
-RUN curl -OL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
+RUN composer global require enlightn/security-checker && \
+    curl -OL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
     php /var/www/html/artisan view:clear && \
     php /var/www/html/artisan cache:clear
 
