@@ -1,6 +1,6 @@
 /vendor
 /node_modules
-public/.htaccess
+#public/.htaccess
 Homestead.yaml
 Homestead.json
 *.pdf
@@ -9,4 +9,3 @@ Homestead.json
 .DS_Store
 public/*.xlsx
 .phpunit.result.cache
-
