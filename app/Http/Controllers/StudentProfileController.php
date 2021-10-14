@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class StudentProfileController extends Controller
 {
@@ -45,6 +46,6 @@ class StudentProfileController extends Controller
     {
         $student = User::findOrFail($id);
 
-        return response()->download($student->cvPath());
+        return Storage::disk(config('projects.default_disk'))->download($student->cvPath());
     }
 }

@@ -4,10 +4,11 @@
 
 namespace Tests\Feature;
 
+use Tests\TestCase;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Tests\TestCase;
 
 class StudentProfileTest extends TestCase
 {
@@ -37,6 +38,9 @@ class StudentProfileTest extends TestCase
 
     public function test_a_student_can_upload_a_cv()
     {
+        config(['projects.default_disk' => 'local']);
+        Storage::fake('local');
+
         $student = $this->createStudent();
         $filename = 'tests/data/test_cv.pdf';
         $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
@@ -47,7 +51,27 @@ class StudentProfileTest extends TestCase
         $response->assertRedirect('/');
         $response->assertSessionHas('success_message');
         $this->assertDatabaseHas('users', ['id' => $student->id, 'cv_file' => "{$student->id}_cv.pdf"]);
+        Storage::disk(config('projects.default_disk'))->assertExists("cvs/{$student->id}_cv.pdf");
         $student->deleteCV();   // just to tidy up after the test so we don't leave artifacts around
+    }
+
+    public function test_deleting_a_cv_does_remove_the_file_and_db_entry()
+    {
+        config(['projects.default_disk' => 'local']);
+        Storage::fake('local');
+
+        $student = $this->createStudent();
+        $filename = 'tests/data/test_cv.pdf';
+        $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+        $student->storeCV($file);
+
+        Storage::disk(config('projects.default_disk'))->assertExists("cvs/{$student->id}_cv.pdf");
+        $this->assertEquals("{$student->id}_cv.pdf", $student->fresh()->cv_file);
+
+        $student->deleteCV();
+
+        Storage::disk(config('projects.default_disk'))->assertMissing("cvs/{$student->id}_cv.pdf");
+        $this->assertNull($student->fresh()->cv_file);
     }
 
     public function test_staff_can_view_a_students_profile()
@@ -75,18 +99,20 @@ class StudentProfileTest extends TestCase
         $this->assertDatabaseHas('users', ['id' => $student->id, 'degree_type' => 'Single']);
     }
 
-    // public function test_staff_can_download_a_students_cv()
-    // {
-    //     $student = $this->createStudent();
-    //     $filename = 'tests/data/test_cv.pdf';
-    //     $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
-    //     $student->storeCV($file);
-    //     $student->save();
-    //     $staff = $this->createStaff();
+    public function test_staff_can_download_a_students_cv()
+    {
+        config(['projects.default_disk' => 'local']);
+        Storage::fake(config('projects.default_disk'));
+        $student = $this->createStudent();
+        $staff = $this->createStaff();
+        $filename = 'tests/data/test_cv.pdf';
+        $file = new \Illuminate\Http\UploadedFile($filename, 'test_cv.pdf', 'application/pdf', filesize($filename), UPLOAD_ERR_OK, true);
+        $student->storeCV($file);
 
-    //     $response = $this->actingAs($staff)->get(route('student.cv', $student->id));
+        $response = $this->actingAs($staff)->get(route('student.cv', $student->id));
 
-    //     $response->assertStatus(200);
-    //     $response->assertHeader('attachment');
-    // }
+        $response->assertStatus(200);
+        // $response->dumpHeaders();
+        $response->assertHeader('content-disposition', 'attachment; filename=' . $student->cv_file);
+    }
 }

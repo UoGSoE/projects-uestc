@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Validator;
 
@@ -473,24 +474,25 @@ class User extends Model implements
             $ext = $cv->getClientOriginalExtension();
         }
         $filename = $this->id.'_cv.'.$ext;
-        $cv->storeAs('cvs', $filename);
+        $cv->storeAs('cvs', $filename, config('projects.default_disk'));
         $this->cv_file = $filename;
         $this->save();
     }
 
-    public function deleteCV()
+    public function deleteCV(): void
     {
         if (! $this->hasCV()) {
-            return true;
+            return;
         }
-        \Storage::delete("cvs/{$this->cv_file}");
+        Storage::delete("cvs/{$this->cv_file}");
         $this->cv_file = null;
         $this->save();
     }
 
-    public function cvPath()
+    public function cvPath(): string
     {
-        return storage_path("app/cvs/{$this->cv_file}");
+        return "cvs/{$this->cv_file}";
+        // dd(storage_path("app/cvs/{$this->cv_file}"));
     }
 
     public function allocateToProjects($choices)

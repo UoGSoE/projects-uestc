@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'default_disk' => env('DEFAULT_DISK', 'local'),
     'uog_required_choices' => 3,
     'uestc_required_choices' => 6,
     'single_uog_required_choices' => 0,
